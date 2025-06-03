@@ -38,4 +38,4 @@ Diffs:
     - is the <h1> showing?
     - is it styled correctly?
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-02-Configure_Tailwind
