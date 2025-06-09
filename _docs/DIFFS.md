@@ -39,3 +39,11 @@ Diffs:
     - is it styled correctly?
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-02-Configure_Tailwind
+
+# 05-03-Configure_fontawesome
+
+Diffs: 
+- Different flow to create fontawesome script, follow online flow, but added to the app in the same way described
+- Codebase: more refactoring changes because I use the router example 
+
+Release: 
