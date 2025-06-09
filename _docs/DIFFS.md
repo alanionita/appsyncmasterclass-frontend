@@ -46,4 +46,4 @@ Diffs:
 - Different flow to create fontawesome script, follow online flow, but added to the app in the same way described
 - Codebase: more refactoring changes because I use the router example 
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-03-Configure_fontawesome
