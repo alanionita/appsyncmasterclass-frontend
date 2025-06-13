@@ -47,3 +47,22 @@ Diffs:
 - Codebase: more refactoring changes because I use the router example 
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-03-Configure_fontawesome
+
+# 05-04-Integrate_backend
+
+Diffs: 
+- Amplify requirements: adds boilerplate code to `index.html` and `vite.config.js`, recommended by new Amplify UI docs
+- Adds AppSync methods using Amplify CLI codegen features
+- Packages: did not use `graphql-tag` as requested by course; added `aws-sdk` since it seems to be a requirement for Amplify; used `@aws-amplify/ui-vue` v4, and `aws-amplify` v6
+- main.js: Amplify config required a different structure, also implemented sensitive info via environment variables
+- Did not define GraphQL calls within `lib/backend`; used the `@amplify-cli` command to codegen the methods from the API 
+```
+npx @aws-amplify/cli codegen add --apiId APPSYNC_API_ID --region APPSYNC_API_REGION
+```
+- Did not use the `graphql-tag` module because the `Amplify.API.graphql()` method supports strings  
+- services: adds Amplify config file within services/amplify; config is different than the recommended config in the video
+- main.js: adds logic to store Cognito tokens in sessionStorage
+- App.vue: configuration of the Amplify UI form fields is done via `formFields {}` config object; adds special designation for phone_number dialcode; order is defined with the `order` key; supports much more config that used here; `type` is not required if it both matches the key and the Cognito mapping, see docs for list
+- serivices/graphql: adds utils and controller into services/graphql; utils handle common GraphQL tasks, instantiates the client, handles auth checks; controllers call each method and handle any post-processing
+
+Release: 
