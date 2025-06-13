@@ -15,21 +15,18 @@ const formFields = {
   },
   signUp: {
     username: {
-      type: 'username',
       label: 'Username (Email) *',
       placeholder: 'Please enter your email',
       isRequired: true,
       order: 1
     },
     name: {
-      type: 'name',
       label: 'Name *',
       placeholder: 'Please enter your name',
       isRequired: true,
       order: 1
     },
     password: {
-      type: 'password',
       label: 'Password *',
       placeholder: 'Please enter your password',
       isRequired: true,
@@ -38,10 +35,10 @@ const formFields = {
       label: 'Confirm Password *',
       isRequired: true,
     },
-    phoneNo: {
-      type: 'phone_number',
+    phone_number: {
       label: 'Phone number *',
-      placeholder: 'Please enter your phone number +44...',
+      placeholder: 'Please enter your phone number',
+      dialCodeList: ['+44'],
       isRequired: true
     }
   }
