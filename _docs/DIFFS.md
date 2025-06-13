@@ -65,4 +65,4 @@ npx @aws-amplify/cli codegen add --apiId APPSYNC_API_ID --region APPSYNC_API_REG
 - App.vue: configuration of the Amplify UI form fields is done via `formFields {}` config object; adds special designation for phone_number dialcode; order is defined with the `order` key; supports much more config that used here; `type` is not required if it both matches the key and the Cognito mapping, see docs for list
 - serivices/graphql: adds utils and controller into services/graphql; utils handle common GraphQL tasks, instantiates the client, handles auth checks; controllers call each method and handle any post-processing
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/compare/05-03-Configure_fontawesome...05-04-Integrate_backend
