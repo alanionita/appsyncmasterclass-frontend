@@ -1,9 +1,9 @@
 const awsRegion = import.meta.env.VITE_AWS_REGION;
 const awsCognitoPool = import.meta.env.VITE_AWS_COGNITO_POOL
 const awsCognitoClient = import.meta.env.VITE_AWS_COGNITO_CLIENT
-const awsAppSyncHttp = import.meta.env.VITE_AWS_APPSYNC_ENDPOINT
+const awsAppSyncEndpoint = import.meta.env.VITE_AWS_APPSYNC_ENDPOINT
 
-const envVars = [awsRegion, awsCognitoPool, awsCognitoClient, awsAppSyncHttp]
+const envVars = [awsRegion, awsCognitoPool, awsCognitoClient, awsAppSyncEndpoint]
 
 envVars.forEach(v => {
   if (!v) {
@@ -23,7 +23,7 @@ export const config = {
     },
     API: {
         GraphQL: {
-            endpoint: awsAppSyncHttp,
+            endpoint: awsAppSyncEndpoint,
             region: awsRegion,
             defaultAuthMode: 'userPool'
         }
