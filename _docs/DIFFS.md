@@ -80,4 +80,4 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 Diffs:
 - Followed the requested changes, but commented out previous <authenticator> code; confusing that we're not dealing with an app that's not got the authenticator after working to add it
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-06-Add_public_pages
