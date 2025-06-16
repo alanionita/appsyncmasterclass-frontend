@@ -66,3 +66,10 @@ npx @aws-amplify/cli codegen add --apiId APPSYNC_API_ID --region APPSYNC_API_REG
 - serivices/graphql: adds utils and controller into services/graphql; utils handle common GraphQL tasks, instantiates the client, handles auth checks; controllers call each method and handle any post-processing
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/compare/05-03-Configure_fontawesome...05-04-Integrate_backend
+
+# 05-05-Configure_routing
+
+- Routing: since I used the latest `npm create vue@latest` at the beginning I already had a router
+- Since the graphql lib wasn't implemented, decided to call it on the HomeView and render the data from getMyProfile
+
+Release: 
