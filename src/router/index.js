@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RootView from '../views/RootView.vue'
+import authMiddleware from './auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,5 +24,7 @@ const router = createRouter({
     },
   ],
 })
+
+router.beforeEach(authMiddleware)
 
 export default router
