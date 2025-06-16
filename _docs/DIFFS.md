@@ -69,7 +69,15 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/compare/05-03
 
 # 05-05-Configure_routing
 
+Diffs:
 - Routing: since I used the latest `npm create vue@latest` at the beginning I already had a router
 - Since the graphql lib wasn't implemented, decided to call it on the HomeView and render the data from getMyProfile
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-05-Configure_routing
+
+# 05-06-Add_public_pages
+
+Diffs:
+- Followed the requested changes, but commented out previous <authenticator> code; confusing that we're not dealing with an app that's not got the authenticator after working to add it
+
+Release: 

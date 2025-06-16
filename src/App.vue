@@ -47,7 +47,7 @@ const formFields = {
 </script>
 
 <template>
-  <template v-if="authStatus === 'unauthenticated'">
+  <!-- <template v-if="authStatus === 'unauthenticated'">
     <authenticator :form-fields="formFields">
       <template v-slot:sign-in-footer>
         <div style="text-align: center">
@@ -62,18 +62,19 @@ const formFields = {
   <template v-if="authStatus === 'configuring'">
     <button @click="auth.signOut">Loading...</button>
   </template>
-  <template v-if="authStatus === 'authenticated'">
+  <template v-if="authStatus === 'authenticated'"> -->
     <header>
       <nav class="nav">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <button @click="signOut">Sign out</button>
+        <RouterLink to="/">Root</RouterLink>
+        <RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/home">Home</RouterLink>
+        <!-- <button @click="signOut">Sign out</button> -->
       </nav>
     </header>
 
     <RouterView />
   </template>
-</template>
+<!-- </template>
 
 <style scoped>
 .nav {
@@ -81,4 +82,4 @@ const formFields = {
   display: flex;
   justify-content: flex-end;
 }
-</style>
+</style> -->
