@@ -14,7 +14,7 @@ const checkAuth = async () => {
   }
 }
 
-export async function callQuery(queryStr) {
+export async function query(queryStr) {
   try {
     const isAuthenticated = await checkAuth()
     if (!isAuthenticated) {

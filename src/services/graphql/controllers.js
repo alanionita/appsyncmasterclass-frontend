@@ -1,9 +1,9 @@
 import * as Queries from "@/services/appsync/queries";
-import { callQuery } from "./utils";
+import * as gql from "./utils";
 
 export const getMyProfile = async () => {
   try {
-    const res = await callQuery(Queries.getMyProfile)
+    const res = await gql.query(Queries.getMyProfile)
     
     const profile = res.data.getMyProfile;
 
