@@ -89,4 +89,4 @@ Diffs:
 - <authenticator>: left the RootView untouched and added the Amplify <authenticator> ui to the LoginView instead, where it should be really
 - Amplify: moved `formFields` to services/amplify
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-07-Add_router_guard
