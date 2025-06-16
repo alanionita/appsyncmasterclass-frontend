@@ -29,3 +29,41 @@ export const config = {
         }
     }
 }
+
+export const formFields = {
+    signIn: {
+      username: {
+        placeholder: 'Enter your email',
+        label: 'Username (Email)'
+      },
+    },
+    signUp: {
+      username: {
+        label: 'Username (Email) *',
+        placeholder: 'Please enter your email',
+        isRequired: true,
+        order: 1
+      },
+      name: {
+        label: 'Name *',
+        placeholder: 'Please enter your name',
+        isRequired: true,
+        order: 1
+      },
+      password: {
+        label: 'Password *',
+        placeholder: 'Please enter your password',
+        isRequired: true,
+      },
+      confirm_password: {
+        label: 'Confirm Password *',
+        isRequired: true,
+      },
+      phone_number: {
+        label: 'Phone number *',
+        placeholder: 'Please enter your phone number',
+        dialCodeList: ['+44'],
+        isRequired: true
+      }
+    }
+  };
