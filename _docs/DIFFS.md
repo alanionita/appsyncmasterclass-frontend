@@ -104,4 +104,6 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 - Pinia: doesn't require mutation, just actions; getters make use of this.*; actions no longer use `state.*` just `this.*`; removes the need to use `commit(LABEL)` boilerplate - Pinia uses direct calls; actions have direct state access; defining the getters and actions and state in one file, will split up into separate files when the state grows
 - Amplify: signOut api has a different location in 'aws-amplify' v6, `import { signOut } from 'aws-amplify/auth';
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-09-Add_authentication_module
+
+# 
