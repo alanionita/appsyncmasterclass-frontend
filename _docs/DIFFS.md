@@ -72,4 +72,4 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/compare/05-03
 - Routing: since I used the latest `npm create vue@latest` at the beginning I already had a router
 - Since the graphql lib wasn't implemented, decided to call it on the HomeView and render the data from getMyProfile
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-05-Configure_routing
