@@ -67,11 +67,9 @@ const formFields = {
       <nav class="nav">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <button @click="signOut">Sign out</button>
       </nav>
     </header>
-
-    <h1>Hello {{ user.username }}!</h1>
-    <button @click="signOut">Sign out</button>
 
     <RouterView />
   </template>
