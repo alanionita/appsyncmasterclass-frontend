@@ -90,3 +90,11 @@ Diffs:
 - Amplify: moved `formFields` to services/amplify
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-07-Add_router_guard
+
+# 05-08-Configure_multimodule_vuex_store
+
+- Vuex: replaced with Pinia, since it's officially recommended as transition from Vuex
+- Pinia: Pinia states are isolated by default, so none of the module definition and registration is required; equally Pinia stores are already scoped so there's no need to `export default { namespaced: true}`; Pinia API for has a createPinia that needs to be passed to Vue via the `.use()` directive
+- Vuex: unlike Vuex which is a nested state, Pinia is a flat state
+
+Release: 
