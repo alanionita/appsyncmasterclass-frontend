@@ -81,3 +81,12 @@ Diffs:
 - Followed the requested changes, but commented out previous <authenticator> code; confusing that we're not dealing with an app that's not got the authenticator after working to add it
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-06-Add_public_pages
+
+#  05-07-Add_router_guard 
+
+Diffs: 
+- router/auth: rename this file vs the video; getting the authenticated user is different in newer versions of `aws-amplify`; here leveraging authenticated sessions via `fetchAuthSession()` from `aws-amplify/auth` module; sessions are more reliable because they are an api that can be called without auth, unlike `getCurrentUser()` a parallel to the api in the video
+- <authenticator>: left the RootView untouched and added the Amplify <authenticator> ui to the LoginView instead, where it should be really
+- Amplify: moved `formFields` to services/amplify
+
+Release: 
