@@ -97,4 +97,11 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 - Pinia: Pinia states are isolated by default, so none of the module definition and registration is required; equally Pinia stores are already scoped so there's no need to `export default { namespaced: true}`; Pinia API for has a createPinia that needs to be passed to Vue via the `.use()` directive
 - Vuex: unlike Vuex which is a nested state, Pinia is a flat state
 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-08-Configure_multimodule_vuex_store
+
+# 05-09-Add_authentication_module
+
+- Pinia: doesn't require mutation, just actions; getters make use of this.*; actions no longer use `state.*` just `this.*`; removes the need to use `commit(LABEL)` boilerplate - Pinia uses direct calls; actions have direct state access; defining the getters and actions and state in one file, will split up into separate files when the state grows
+- Amplify: signOut api has a different location in 'aws-amplify' v6, `import { signOut } from 'aws-amplify/auth';
+
 Release: 
