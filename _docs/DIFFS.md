@@ -101,9 +101,20 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 
 # 05-09-Add_authentication_module
 
+Diffs:
 - Pinia: doesn't require mutation, just actions; getters make use of this.*; actions no longer use `state.*` just `this.*`; removes the need to use `commit(LABEL)` boilerplate - Pinia uses direct calls; actions have direct state access; defining the getters and actions and state in one file, will split up into separate files when the state grows
 - Amplify: signOut api has a different location in 'aws-amplify' v6, `import { signOut } from 'aws-amplify/auth';
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-09-Add_authentication_module
 
-# 
+#  05-10-Add_store_to_UI_components 
+
+Diffs:
+- Ended up having a lot of issues with the reactivity between @aws-amplify/ui-vue and the Pinia auth store
+- Found a reliable solution using the Amplify Hub listener, an internal event listener API
+- service/amplify/hub: defines the auth listener and registers it to listen to all auth events; listener is then checking for 'signIn' event, fetching the current Amplify user, and sets that user within Pinia authentication store; it also redirects to `/home` (protected route) and cancels the listener; the canceling may be premature, but we mostly care about the 'signIn' event in this case
+- stores/authentication: in addition to login() logic it also contains methods to start and stop the Amplify Hub listener
+- *View.vue: the views themselves only care about starting the auth listener onMount, reducing some of the complexity
+- LoginView.vue: still relies on reactive values from useAuthenticator (Amplify UI), but here they're only used in the UI, rather being required for usage within Pinia
+
+Release: 
