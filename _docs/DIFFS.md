@@ -196,4 +196,4 @@ Diff:
 - UI: adds eye icon for pwd visibility instead of reveal password link
 - adds local `showPassword` state with ref()
 
-Release:
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-06-Root_page_add_signup_step3
