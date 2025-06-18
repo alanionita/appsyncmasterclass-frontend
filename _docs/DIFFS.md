@@ -206,4 +206,4 @@ Diff:
 - RootView: component has a handleSignUp methods that orchestrates the calls
 - Needed to make sure that the module value are no longer reactive before sending them to AppSync
 
-Release:
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-07-Root_page_add_signup_step4
