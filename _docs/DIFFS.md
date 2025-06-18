@@ -177,3 +177,12 @@ Diffs:
 - HTML: improved the semantics, with a <form> and properly defined <input> and <label> elements
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-04-Root_page_add_signup_step1
+
+# 05-12-05-Root_page_add_signup_step2 
+
+Diff:
+- declares a new `goTo(step)` fn in order to validate states before moving to a new 
+- html & css: implements <fieldset> and in general tidies the styling to use generic rules, rather than minor adjustments
+- Vue: also connects the checkboxes to models
+
+Release:

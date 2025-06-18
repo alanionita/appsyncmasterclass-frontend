@@ -10,12 +10,25 @@ const signUpStore = useSignupStore();
 const name = defineModel('name', { required: true });
 const email = defineModel('email', { required: true });
 const birthdate = defineModel('birthdate');
+const consentNotifications = defineModel('consentNotifications', { required: true });
+const consentVisibility = defineModel('consentVisibility', { required: true });
+const consentAds = defineModel('consentAds', { required: true });
 
 onMounted(() => {
   if (!authStore.listener && !authStore.loggedIn) {
     authStore.startListener();
   }
 })
+
+function goTo(step) {
+  if (step === 'step2') {
+    if (!name && !email && !birthdate) {
+      return;
+    }
+    signUpStore.set(step)
+  }
+  signUpStore.set(step);
+}
 
 </script>
 
@@ -45,7 +58,7 @@ onMounted(() => {
         <i class="fab fa-twitter text-blue text-4xl"></i>
         <p class="text-3xl mb-12">See what's happening in the world, right now!</p>
         <p>Join Twitter today.</p>
-        <button @click.prevent="signUpStore.set('step1')"
+        <button @click.prevent="goTo('step1')"
           class="w-1/2 rounded-full bg-blue font-semibold text-lg text-white p-4 hover:bg-white hover:text-blue hover:border hover:border-blue">
           Sign up
         </button>
@@ -64,14 +77,14 @@ onMounted(() => {
       <div class="absolute w-full h-full bg-gray-900 opacity-50" @click.prevent="signUpStore.reset()">
       </div>
       <form class="modal-main bg-white w-11/12 mx-auto rounded-lg z-3 overflow-y-auto max-h-full">
-        <div v-if="signUpStore.getStep === 'step1'">
+        <fieldset v-if="signUpStore.getStep === 'step1'">
           <div class="flex gap-4 justify-between p-8">
             <div class="flex-2 flex justify-center">
               <i class="fab fa-twitter text-blue text-4xl"></i>
             </div>
-            <button @click.prevent="signUpStore.set('step2')"
-              class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 cursor-not-allowed"
-              :disabled="!name && !email">Next</button>
+            <button @click.prevent="goTo('step2')"
+              class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="!name && !email && !birthdate">Next</button>
           </div>
           <div class="px-16 flex flex-col gap-4">
             <p class="text-2xl font-semibold">Create your account</p>
@@ -93,7 +106,67 @@ onMounted(() => {
               </input>
             </div>
           </div>
-        </div>
+        </fieldset>
+        <fieldset v-if="signUpStore.getStep === 'step2'">
+          <div class="flex gap-4 justify-between p-8">
+            <div class="flex-2 flex justify-center">
+              <i class="fab fa-twitter text-blue text-4xl"></i>
+            </div>
+            <button @click.prevent="goTo('step1')"
+              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed"
+              :disabled="!name && !email">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button @click.prevent="goTo('step3')"
+              class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-lightblue disabled:opacity-50 cursor-not-allowed"
+              :disabled="!name && !email">Next</button>
+          </div>
+          <div class="px-16 flex flex-col gap-4">
+            <p class="text-2xl font-semibold">Customise your experience</p>
+            <div>
+              <p class="text-xl font-semibold mb-2">Get more out of Twitter</p>
+              <div class="flex justify-between items-top mb-2 py-4">
+                <label for="notifications" class="text-dark">Receive email about your Twitter activity and recommendations.</label>
+                <input 
+                  v-model="consentNotifications" 
+                  id="notifications" 
+                  name="consent"
+                  true-value="yes"
+                  false-value="no" 
+                  class="m-2 w-6 h-6 text-blue" 
+                  type="checkbox">
+              </div>
+            </div>
+            <div>
+              <p class="text-xl font-semibold mb-2">Connect with people you know</p>
+              <div class="flex justify-between items-top mb-2 py-4">
+                <label for="visibility" class="text-dark">Let others find your Twitter account by email address.</label>
+                <input 
+                  v-model="consentVisibility" 
+                  id="visibility" 
+                  name="consent" 
+                  true-value="yes"
+                  false-value="no"
+                  class="m-2 w-6 h-6 text-blue" 
+                  type="checkbox">
+              </div>
+            </div>
+            <div>
+              <p class="text-xl font-semibold mb-2">Personalised ads</p>
+              <div class="flex justify-between items-top mb-2 py-4">
+                <label for="ads" class="text-dark">You will always see ads on Twitter based on your Twitter activity. When this setting is enabled, Twitter may further personalize ads from Twitter advertisers, on and off Twitter, by combining your Twitter activity with other online activity and information from partners.</label>
+                <input 
+                  v-model="consentAds" 
+                  id="ads" 
+                  name="consent" 
+                  true-value="yes"
+                  false-value="no"
+                  class="m-2 w-6 h-6 text-blue" 
+                  type="checkbox">
+              </div>
+            </div>
+          </div>
+        </fieldset>
       </form>
     </section>
   </main>
