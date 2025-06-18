@@ -16,7 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="flex w-full h-screen">
+  <main class="flex w-full h-screen" @keyup.esc="signUpStore.reset()">
     <section class="flex w-1/2 bg-blue">
       <div class="flex items-center justify-center w-full h-full">
         <div class="flex flex-col">
