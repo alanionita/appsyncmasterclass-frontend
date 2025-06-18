@@ -176,4 +176,4 @@ Diffs:
         - styles are now defined for the `disabled:` state
 - HTML: improved the semantics, with a <form> and properly defined <input> and <label> elements
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-04-Root_page_add_signup_step1
