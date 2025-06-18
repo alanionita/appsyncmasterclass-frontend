@@ -117,4 +117,4 @@ Diffs:
 - *View.vue: the views themselves only care about starting the auth listener onMount, reducing some of the complexity
 - LoginView.vue: still relies on reactive values from useAuthenticator (Amplify UI), but here they're only used in the UI, rather being required for usage within Pinia
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-10-Add_store_to_UI_components
