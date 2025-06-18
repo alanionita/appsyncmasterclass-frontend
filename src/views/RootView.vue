@@ -1,18 +1,22 @@
 <script setup>
 import { useAuthStore } from '@/stores/authentication';
 import { useSignupStore } from '@/stores/signup';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router'
 
 const authStore = useAuthStore();
 const signUpStore = useSignupStore();
 
+const showPassword = ref(false);
+
 const name = defineModel('name', { required: true });
 const email = defineModel('email', { required: true });
 const birthdate = defineModel('birthdate');
-const consentNotifications = defineModel('consentNotifications', { required: true });
-const consentVisibility = defineModel('consentVisibility', { required: true });
-const consentAds = defineModel('consentAds', { required: true });
+const consentNotifications = defineModel('consentNotifications', { required: true, default: '' });
+const consentVisibility = defineModel('consentVisibility', { required: true, default: '' });
+const consentAds = defineModel('consentAds', { required: true, default: '' });
+const password = defineModel('password', { required: true });
+const confirmPassword = defineModel('confirmPassword', { required: true });
 
 onMounted(() => {
   if (!authStore.listener && !authStore.loggedIn) {
@@ -21,13 +25,39 @@ onMounted(() => {
 })
 
 function goTo(step) {
-  if (step === 'step2') {
-    if (!name && !email && !birthdate) {
-      return;
-    }
-    signUpStore.set(step)
+  switch (step) {
+    case 'step2':
+      if (!name && !email && !birthdate) {
+        return;
+      }
+      signUpStore.set(step)
+      break;
+    case 'step3':
+      if (!consentAds && !consentNotifications && !consentVisibility) {
+        return;
+      }
+      signUpStore.set(step)
+      break;
+    case 'step4':
+      if (!password && !confirmPassword) {
+        return;
+      }
+      if (password && confirmPassword) {
+        if (password.length > 8 && confirmPassword.length > 8) {
+          if (password !== confirmPassword) {
+            return;
+          }
+        }
+      }
+      signUpStore.set(step)
+      break;
+    default:
+      signUpStore.set(step);
   }
-  signUpStore.set(step);
+}
+
+function togglePwdVisibility() {
+  showPassword.value = !showPassword.value
 }
 
 </script>
@@ -87,7 +117,7 @@ function goTo(step) {
               :disabled="!name && !email && !birthdate">Next</button>
           </div>
           <div class="px-16 flex flex-col gap-4">
-            <p class="text-2xl font-semibold">Create your account</p>
+            <p class="text-2xl font-semibold p-4">Create your account</p>
             <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
               <label for="name" class="text-dark">Name</label>
               <input v-model="name" id="name" name="name" class="w-full bg-lightblue text-lg" type="text">
@@ -113,56 +143,80 @@ function goTo(step) {
               <i class="fab fa-twitter text-blue text-4xl"></i>
             </div>
             <button @click.prevent="goTo('step1')"
-              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed"
-              :disabled="!name && !email">
+              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
               <i class="fas fa-arrow-left"></i>
             </button>
             <button @click.prevent="goTo('step3')"
-              class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-lightblue disabled:opacity-50 cursor-not-allowed"
-              :disabled="!name && !email">Next</button>
+              class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="consentNotifications === '' && consentVisibility === '' && consentAds === ''">Next</button>
           </div>
           <div class="px-16 flex flex-col gap-4">
-            <p class="text-2xl font-semibold">Customise your experience</p>
+            <p class="text-2xl font-semibold p-4">Customise your experience</p>
             <div>
               <p class="text-xl font-semibold mb-2">Get more out of Twitter</p>
               <div class="flex justify-between items-top mb-2 py-4">
-                <label for="notifications" class="text-dark">Receive email about your Twitter activity and recommendations.</label>
-                <input 
-                  v-model="consentNotifications" 
-                  id="notifications" 
-                  name="consent"
-                  true-value="yes"
-                  false-value="no" 
-                  class="m-2 w-6 h-6 text-blue" 
-                  type="checkbox">
+                <label for="notifications" class="text-dark">Receive email about your Twitter activity and
+                  recommendations.</label>
+                <input v-model="consentNotifications" id="notifications" name="consent" true-value="yes"
+                  false-value="no" class="m-2 w-6 h-6 text-blue" type="checkbox">
               </div>
             </div>
             <div>
               <p class="text-xl font-semibold mb-2">Connect with people you know</p>
               <div class="flex justify-between items-top mb-2 py-4">
                 <label for="visibility" class="text-dark">Let others find your Twitter account by email address.</label>
-                <input 
-                  v-model="consentVisibility" 
-                  id="visibility" 
-                  name="consent" 
-                  true-value="yes"
-                  false-value="no"
-                  class="m-2 w-6 h-6 text-blue" 
-                  type="checkbox">
+                <input v-model="consentVisibility" id="visibility" name="consent" true-value="yes" false-value="no"
+                  class="m-2 w-6 h-6 text-blue" type="checkbox">
               </div>
             </div>
             <div>
               <p class="text-xl font-semibold mb-2">Personalised ads</p>
               <div class="flex justify-between items-top mb-2 py-4">
-                <label for="ads" class="text-dark">You will always see ads on Twitter based on your Twitter activity. When this setting is enabled, Twitter may further personalize ads from Twitter advertisers, on and off Twitter, by combining your Twitter activity with other online activity and information from partners.</label>
-                <input 
-                  v-model="consentAds" 
-                  id="ads" 
-                  name="consent" 
-                  true-value="yes"
-                  false-value="no"
-                  class="m-2 w-6 h-6 text-blue" 
-                  type="checkbox">
+                <label for="ads" class="text-dark">You will always see ads on Twitter based on your Twitter activity.
+                  When this setting is enabled, Twitter may further personalize ads from Twitter advertisers, on and off
+                  Twitter, by combining your Twitter activity with other online activity and information from
+                  partners.</label>
+                <input v-model="consentAds" id="ads" name="consent" true-value="yes" false-value="no"
+                  class="m-2 w-6 h-6 text-blue" type="checkbox">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset v-if="signUpStore.getStep === 'step3'">
+          <div class="flex gap-4 justify-between p-8">
+            <div class="flex-2 flex justify-center">
+              <i class="fab fa-twitter text-blue text-4xl"></i>
+            </div>
+            <button @click.prevent="goTo('step2')"
+              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button @click.prevent="goTo('step4')"
+              class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="!password">Next</button>
+          </div>
+          <div class="px-16 flex flex-col gap-4">
+            <p class="text-2xl font-semibold p-4">You'll need a password</p>
+            <div class="flex flex-col gap-4">
+              <p class="text-dark mb-2">Make sure it's 8 characters or more.</p>
+              <div class="w-full h-fit relative bg-lightblue border-b-2 border-dark mb-2 p-2">
+                <label for="password" class="text-dark flex-2/3">Enter password</label>
+                <div class="flex justify-between items-center pr-4">
+                  <input v-model="password" id="password" name="password" class="w-full bg-lightblue text-lg flex-1"
+                    :type="`${showPassword ? 'text' : 'password'}`">
+                  <i :class="`${showPassword ? 'fa-solid fa-eye-slash text-dark flex-0 text-2xl' : 'fa-solid fa-eye text-dark flex-0 text-2xl'}`"
+                    @click="togglePwdVisibility"></i>
+                </div>
+              </div>
+              <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
+                <label for="confirmPassword" class="text-dark">Please confirm passsword</label>
+                <div class="flex justify-between items-center pr-4">
+
+                  <input v-model="confirmPassword" id="confirmPassword" name="confirmPassword"
+                    class="w-full bg-lightblue text-lg" :type="`${showPassword ? 'text' : 'password'}`">
+                  <i :class="`${showPassword ? 'fa-solid fa-eye-slash text-dark flex-0 text-2xl' : 'fa-solid fa-eye text-dark flex-0 text-2xl'}`"
+                    @click="togglePwdVisibility"></i>
+                </div>
               </div>
             </div>
           </div>

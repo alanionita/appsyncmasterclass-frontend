@@ -186,3 +186,14 @@ Diff:
 - Vue: also connects the checkboxes to models
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-05-Root_page_add_signup_step2
+
+# 05-12-06-Root_page_add_signup_step3 
+
+Diff: 
+- added a new field for confirming the password
+- add models for password and confirmPassword
+- consent*: add defaults to all the consent models
+- UI: adds eye icon for pwd visibility instead of reveal password link
+- adds local `showPassword` state with ref()
+
+Release:
