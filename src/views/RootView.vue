@@ -14,23 +14,45 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="root">
-    <h1>This is an Root page</h1>
-    <h2 v-if="authStore.loggedIn === true">Hello {{ authStore.user.username }}</h2>
-    <p v-if="authStore.loggedIn === false">
-      Please sign in <RouterLink to="/login">here</RouterLink>
-    </p>
-  </div>
-</template>
+  <main class="flex w-full h-screen">
+    <section class="flex w-1/2 bg-blue">
+      <div class="flex items-center justify-center w-full h-full">
+        <div class="flex flex-col">
+          <div class="flex items-center">
+            <i class="fas fa-search text-white text-2xl p-4"></i>
+            <p class="text-white font-semibold text-xl">Follow your interests</p>
+          </div>
+          <div class="flex items-center">
+            <i class="fas fa-user-friends text-white text-2xl p-4"></i>
+            <p class="text-white font-semibold text-xl">Hear what people are talking about</p>
+          </div>
+          <div class="flex items-center">
+            <i class="fas fa-comment text-white text-2xl p-4"></i>
+            <p class="text-white font-semibold text-xl">Join the conversation</p>
+          </div>
+        </div>
 
-<style>
-@media (min-width: 1024px) {
-  .root {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  }
-}
-</style>
+      </div>
+    </section>
+    <section class="flex items-center justify-center w-1/2 h-full">
+      <div class="flex flex-col w-1/2 font-semibold gap-5">
+        <i class="fab fa-twitter text-blue text-4xl"></i>
+        <p class="text-3xl mb-12">See what's happening in the world, right now!</p>
+        <p>Join Twitter today.</p>
+        <RouterLink to="/login" class="w-full">
+          <button
+            class="w-full rounded-full bg-blue font-semibold text-lg text-white p-4 hover:bg-white hover:text-blue hover:border hover:border-blue">
+              Sign up
+          </button>
+        </RouterLink>
+        <RouterLink to="/login" class="w-full">
+          <button
+            class="w-full rounded-full border border-blue bg-white font-semibold text-lg text-blue p-4 hover:bg-blue hover:text-white ">
+            Log in
+          </button>
+        </RouterLink>
+
+      </div>
+    </section>
+  </main>
+</template>
