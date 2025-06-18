@@ -160,4 +160,4 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
     - built-in directives like `v-on` handle clean up by default
 - RootView.vue: massively simplified by improved framework features to a single line of code; because of this there's no need to create a custom directive
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-03-Root_page_add_escape_directive
