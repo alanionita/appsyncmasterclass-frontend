@@ -139,4 +139,4 @@ Diffs
 - Vue: in v4 Composition API is recommended with reactive states
 - RootView: used ref() for `displayModal` state with custom functions to `showModal(), hideModal()`
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-01-Root_page_add_modal
