@@ -161,3 +161,19 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 - RootView.vue: massively simplified by improved framework features to a single line of code; because of this there's no need to create a custom directive
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-03-Root_page_add_escape_directive
+
+# 05-12-04-Root_page_add_signup_step1 
+
+Diffs: 
+- Vue v3 recommends using the defineModel() macro models; output of a model is a ref, which can be updated in the same way with `.value`;
+- CSS: used a flex container to refactor the step1 nav
+        - reduced the amount of padding tweaks, more reliable
+- CSS: used a flex column container for the form
+        - easier to consistently style gaps
+- CSS: Next button
+        - refactored to use `:disabled` vue attribute setting instead of the classes
+        - this allows the button to be fully unfunctional, whilst before click events would still be allowed regardless of the disabled styles
+        - styles are now defined for the `disabled:` state
+- HTML: improved the semantics, with a <form> and properly defined <input> and <label> elements
+
+Release: 
