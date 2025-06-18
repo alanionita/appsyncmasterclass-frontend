@@ -149,4 +149,5 @@ Diffs:
 - Vue: using Pinia store instead vuex
 - src/stores: moved existing `Root.vue` local store to Pinia stores; updated HTML to trigger Pinia actions, and depend on Pinia getters
 
-Release:
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-02-
+
