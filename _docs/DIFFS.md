@@ -197,3 +197,13 @@ Diff:
 - adds local `showPassword` state with ref()
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-06-Root_page_add_signup_step3
+
+# 05-12-07-Root_page_add_signup_step4
+
+Diff:
+- Amplify: auth.signUp() requires attributes within options.userAttributes
+- auth.signUp(): implemented in the Pinia state
+- RootView: component has a handleSignUp methods that orchestrates the calls
+- Needed to make sure that the module value are no longer reactive before sending them to AppSync
+
+Release:

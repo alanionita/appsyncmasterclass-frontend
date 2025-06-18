@@ -60,6 +60,15 @@ function togglePwdVisibility() {
   showPassword.value = !showPassword.value
 }
 
+async function handleSignUp() {
+  await authStore.signUp({
+    email: email.value, 
+    name: name.value, 
+    password: password.value
+  });
+  goTo('step5');
+}
+
 </script>
 
 <template>
@@ -139,13 +148,13 @@ function togglePwdVisibility() {
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step2'">
           <div class="flex gap-4 justify-between p-8">
+            <button @click.prevent="goTo('step1')"
+              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 border border-blue hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
+              <i class="fas fa-arrow-left"></i>
+            </button>
             <div class="flex-2 flex justify-center">
               <i class="fab fa-twitter text-blue text-4xl"></i>
             </div>
-            <button @click.prevent="goTo('step1')"
-              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
-              <i class="fas fa-arrow-left"></i>
-            </button>
             <button @click.prevent="goTo('step3')"
               class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="consentNotifications === '' && consentVisibility === '' && consentAds === ''">Next</button>
@@ -184,13 +193,13 @@ function togglePwdVisibility() {
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step3'">
           <div class="flex gap-4 justify-between p-8">
+            <button @click.prevent="goTo('step2')"
+              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 border border-blue hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
+              <i class="fas fa-arrow-left"></i>
+            </button>
             <div class="flex-2 flex justify-center">
               <i class="fab fa-twitter text-blue text-4xl"></i>
             </div>
-            <button @click.prevent="goTo('step2')"
-              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
-              <i class="fas fa-arrow-left"></i>
-            </button>
             <button @click.prevent="goTo('step4')"
               class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="!password">Next</button>
@@ -218,6 +227,41 @@ function togglePwdVisibility() {
                     @click="togglePwdVisibility"></i>
                 </div>
               </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset v-if="signUpStore.getStep === 'step4'">
+          <div class="flex gap-4 justify-between p-8">
+            <button @click.prevent="goTo('step3')"
+              class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 border border-blue hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="flex-2 flex justify-center">
+              <i class="fab fa-twitter text-blue text-4xl"></i>
+            </div>
+          </div>
+          <div class="px-16 flex flex-col gap-4">
+            <p class="text-2xl font-semibold p-4">Create your account</p>
+            <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
+              <label for="name" class="text-dark">Name</label>
+              <input v-model="name" id="name" name="name" class="w-full bg-lightblue text-lg" type="text">
+            </div>
+            <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
+              <label for="email" class="text-dark">Email</label>
+              <input v-model="email" id="email" name="email" class="w-full bg-lightblue text-lg" type="text">
+            </div>
+            <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
+              <label for="birthdate" class="text-dark opacity-0">Date of birth</label>
+              <input v-model="birthdate" id="birthdate" name="birthdate" class="w-full bg-lightblue text-lg"
+                type="text">
+              </input>
+            </div>
+            <p>By signing up, you agree to our <a href="#" class="text-blue">Terms</a>, <a href="#"
+                class="text-blue">Privacy Policy</a> and <a href="#" class="text-blue">Cookie Use</a>.</p>
+            <div class="w-full flex justify-end">
+              <button @click="handleSignUp"
+                class="rounded-full px-8 py-4 bg-blue text-white font-semibold hover:bg-darkblue">Sign
+                up</button>
             </div>
           </div>
         </fieldset>

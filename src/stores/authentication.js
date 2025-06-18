@@ -22,6 +22,30 @@ export const useAuthStore = defineStore('authentication', {
             this.user = undefined
             router.push('/')
         },
+
+        async signUp(userData) {
+            try {
+                const { email, name, password } = userData;
+
+                if (!email || !name || !password) {
+                    throw Error('Invalid user data')
+                }
+
+                const { isSignUpComplete } = await AmplifyAuth.signUp({
+                    username: email,
+                    password,
+                    options: {
+                        userAttributes: {
+                            email,
+                            name
+                        },
+                    }
+                })
+            } catch (err) {
+                console.error('Err [auth.signUp] :', err.message)
+                return err;
+            }
+        },
         startListener() {
             this.listener = startAuthListener();
         },
