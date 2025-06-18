@@ -118,3 +118,16 @@ Diffs:
 - LoginView.vue: still relies on reactive values from useAuthenticator (Amplify UI), but here they're only used in the UI, rather being required for usage within Pinia
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-10-Add_store_to_UI_components
+
+# 05-11-Root_page_styling_with_tailwind 
+
+Diffs:
+- packages: using Tailwind v4 (not v2), so a few things have changed
+- tailwind.config.js: no longer loaded by default, but still supported for backwards compatibility; chose to not use it see https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file
+- theme: color variables are defined in `src/assets/main.css` using the @theme directory; all colors are defined as CSS variables; all initial config colours are removed
+- theme: imported Roboto font from Google Fonts to show the font customisation in v4
+- theme: container "To customize the container utility in v4, extend it using the @utility directive"; to center used `margin-inline: auto; padding-inline: 2rem;`; will need to be implemented in html via the @container util
+- Root.vue: adds semantic HTML tags where possible
+- Root.vue: replaced the click handlers for routing via <RouterLink>; wraps each button with an <a> so added a bit more styling;
+
+Release: 
