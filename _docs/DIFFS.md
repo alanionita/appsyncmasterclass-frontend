@@ -130,4 +130,4 @@ Diffs:
 - Root.vue: adds semantic HTML tags where possible
 - Root.vue: replaced the click handlers for routing via <RouterLink>; wraps each button with an <a> so added a bit more styling;
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-11-Root_page_styling_with_tailwind
