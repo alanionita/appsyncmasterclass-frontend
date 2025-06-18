@@ -131,3 +131,12 @@ Diffs:
 - Root.vue: replaced the click handlers for routing via <RouterLink>; wraps each button with an <a> so added a bit more styling;
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-11-Root_page_styling_with_tailwind
+
+# 05-12-01-Root_page_add_modal 
+
+Diffs
+
+- Vue: in v4 Composition API is recommended with reactive states
+- RootView: used ref() for `displayModal` state with custom functions to `showModal(), hideModal()`
+
+Release: 

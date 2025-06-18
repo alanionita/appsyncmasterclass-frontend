@@ -1,9 +1,18 @@
 <script setup>
 import { useAuthStore } from '@/stores/authentication';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router'
 
 const authStore = useAuthStore();
+const displayModal = ref(false);
+
+function hideModal () {
+  displayModal.value = false;
+}
+
+function showModal () {
+  displayModal.value = true;
+}
 
 onMounted(() => {
   if (!authStore.listener && !authStore.loggedIn) {
@@ -39,12 +48,13 @@ onMounted(() => {
         <i class="fab fa-twitter text-blue text-4xl"></i>
         <p class="text-3xl mb-12">See what's happening in the world, right now!</p>
         <p>Join Twitter today.</p>
-        <RouterLink to="/login" class="w-full">
+        <!-- <RouterLink to="/login" class="w-full"> -->
           <button
+            @click.prevent="showModal"
             class="w-full rounded-full bg-blue font-semibold text-lg text-white p-4 hover:bg-white hover:text-blue hover:border hover:border-blue">
               Sign up
           </button>
-        </RouterLink>
+        <!-- </RouterLink> -->
         <RouterLink to="/login" class="w-full">
           <button
             class="w-full rounded-full border border-blue bg-white font-semibold text-lg text-blue p-4 hover:bg-blue hover:text-white ">
@@ -52,6 +62,14 @@ onMounted(() => {
           </button>
         </RouterLink>
 
+      </div>
+    </section>
+
+    <section v-if="displayModal" class="fixed w-full h-full top-0 left-0 flex items-center justify-center">
+      <div class="absolute w-full h-full bg-gray-900 opacity-50" @click.prevent="hideModal">
+      </div>
+      <div class="modal-main bg-white w-11/12 mx-auto rounded-lg z-3 overflow-y-auto max-h-full">
+        <p>Modal</p>
       </div>
     </section>
   </main>

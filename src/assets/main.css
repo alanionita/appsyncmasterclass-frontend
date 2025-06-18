@@ -4,7 +4,6 @@
 
 @theme {
   /* Colours */
-  --color-*: initial; /* Remove all initial vars and only uses the below */
   --color-blue: #1DA1F2;
   --color-darkblue: #2795D9;
   --color-lightblue: #EFF9FF;
@@ -29,4 +28,8 @@
 
 button:focus, input:focus {
   outline: none;
+}
+
+.modal-main {
+  height: 40rem
 }
