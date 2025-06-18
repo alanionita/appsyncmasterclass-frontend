@@ -185,4 +185,4 @@ Diff:
 - html & css: implements <fieldset> and in general tidies the styling to use generic rules, rather than minor adjustments
 - Vue: also connects the checkboxes to models
 
-Release:
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-05-Root_page_add_signup_step2
