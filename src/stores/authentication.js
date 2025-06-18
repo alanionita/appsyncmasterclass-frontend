@@ -25,22 +25,27 @@ export const useAuthStore = defineStore('authentication', {
 
         async signUp(userData) {
             try {
-                const { email, name, password } = userData;
+                const { email, name, password, phone, birthdate } = userData;
 
-                if (!email || !name || !password) {
+                if (!email || !name || !password || !phone || !birthdate) {
                     throw Error('Invalid user data')
                 }
 
-                const { isSignUpComplete } = await AmplifyAuth.signUp({
+                const { isSignUpComplete, userId, nextStep } = await AmplifyAuth.signUp({
                     username: email,
                     password,
                     options: {
                         userAttributes: {
                             email,
-                            name
+                            name,
+                            phone_number: phone,
+                            birthdate
                         },
                     }
                 })
+                return {
+                    isSignUpComplete, userId, nextStep
+                }
             } catch (err) {
                 console.error('Err [auth.signUp] :', err.message)
                 return err;

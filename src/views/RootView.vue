@@ -11,6 +11,7 @@ const showPassword = ref(false);
 
 const name = defineModel('name', { required: true });
 const email = defineModel('email', { required: true });
+const phone = defineModel('phone', { required: true });
 const birthdate = defineModel('birthdate');
 const consentNotifications = defineModel('consentNotifications', { required: true, default: '' });
 const consentVisibility = defineModel('consentVisibility', { required: true, default: '' });
@@ -27,7 +28,7 @@ onMounted(() => {
 function goTo(step) {
   switch (step) {
     case 'step2':
-      if (!name && !email && !birthdate) {
+      if (!name && !email && !birthdate && !phone) {
         return;
       }
       signUpStore.set(step)
@@ -61,12 +62,16 @@ function togglePwdVisibility() {
 }
 
 async function handleSignUp() {
-  await authStore.signUp({
-    email: email.value, 
-    name: name.value, 
-    password: password.value
+  const { isSignUpComplete, userId, nextStep } = await authStore.signUp({
+    email: email.value,
+    name: name.value,
+    password: password.value,
+    phone: phone.value,
+    birthdate: birthdate.value
   });
-  goTo('step5');
+  if (isSignUpComplete) {
+    goTo('step5');
+  }
 }
 
 </script>
@@ -123,7 +128,7 @@ async function handleSignUp() {
             </div>
             <button @click.prevent="goTo('step2')"
               class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
-              :disabled="!name && !email && !birthdate">Next</button>
+              :disabled="!name && !email && !birthdate && !phone">Next</button>
           </div>
           <div class="px-16 flex flex-col gap-4">
             <p class="text-2xl font-semibold p-4">Create your account</p>
@@ -135,15 +140,18 @@ async function handleSignUp() {
               <label for="email" class="text-dark">Email</label>
               <input v-model="email" id="email" name="email" class="w-full bg-lightblue text-lg" type="text">
             </div>
-            <p class="font-semibold">Date of birth</p>
-            <p class="text-dark">This will not be shown publicly. Confirm your own age, even if this account is for
-              business, a pet, or something else.</p>
             <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
-              <label for="birthdate" class="text-dark opacity-0">Date of birth</label>
+              <label for="phone" class="text-dark">Phone number</label>
+              <input v-model="phone" id="phone" name="phone" class="w-full bg-lightblue text-lg" type="text">
+            </div>
+            <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
+              <label for="birthdate" class="text-dark">Date of birth</label>
               <input v-model="birthdate" id="birthdate" name="birthdate" class="w-full bg-lightblue text-lg"
                 type="text">
               </input>
             </div>
+            <p class="text-dark">* This will not be shown publicly. Confirm your own age, even if this account is for
+              business, a pet, or something else.</p>
           </div>
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step2'">
@@ -251,19 +259,28 @@ async function handleSignUp() {
               <input v-model="email" id="email" name="email" class="w-full bg-lightblue text-lg" type="text">
             </div>
             <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
-              <label for="birthdate" class="text-dark opacity-0">Date of birth</label>
+              <label for="birthdate" class="text-dark">Date of birth</label>
               <input v-model="birthdate" id="birthdate" name="birthdate" class="w-full bg-lightblue text-lg"
+                type="text">
+              </input>
+            </div>
+            <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
+              <label for="phone" class="text-dark">Phone number</label>
+              <input v-model="phone" id="phone" name="phone" class="w-full bg-lightblue text-lg"
                 type="text">
               </input>
             </div>
             <p>By signing up, you agree to our <a href="#" class="text-blue">Terms</a>, <a href="#"
                 class="text-blue">Privacy Policy</a> and <a href="#" class="text-blue">Cookie Use</a>.</p>
             <div class="w-full flex justify-end">
-              <button @click="handleSignUp"
+              <button @click.prevent="handleSignUp"
                 class="rounded-full px-8 py-4 bg-blue text-white font-semibold hover:bg-darkblue">Sign
                 up</button>
             </div>
           </div>
+        </fieldset>
+        <fieldset v-if="signUpStore.getStep === 'step5'">
+          <h1>Step 5</h1>
         </fieldset>
       </form>
     </section>
