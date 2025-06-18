@@ -134,9 +134,19 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 
 # 05-12-01-Root_page_add_modal 
 
-Diffs
+Diffs:
 
-- Vue: in v4 Composition API is recommended with reactive states
+- Vue: in v3 Composition API is recommended with reactive states
 - RootView: used ref() for `displayModal` state with custom functions to `showModal(), hideModal()`
+> fault in the course re;eases means that 05-12-01 and 05-12-02 releases are combined; they are separate here
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-01-Root_page_add_modal
+
+# 05-12-02-Root_page_add_modal
+
+Diffs:
+
+- Vue: using Pinia store instead vuex
+- src/stores: moved existing `Root.vue` local store to Pinia stores; updated HTML to trigger Pinia actions, and depend on Pinia getters
+
+Release:
