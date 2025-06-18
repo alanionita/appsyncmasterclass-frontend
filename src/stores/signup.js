@@ -7,12 +7,15 @@ export const useSignupStore = defineStore('signup', {
         step: ''
     }),
     actions: {
-        setSignupStep(step) {
+        set(step) {
             this.step = step;
+        },
+        reset() {
+            this.step = '';
         },
     },
     getters: {
-        displayModal({step}) {
+        getStep({step}) {
             return step;
         }
     },
