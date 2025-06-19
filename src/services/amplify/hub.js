@@ -11,7 +11,7 @@ async function authListener({ payload }) {
             console.info(prefix + 'user have been signedIn successfully.');
             const user = await getCurrentUser();
             authStore.login(user);
-            router.push('/home');
+            // router.push('/home');
             authStore.stopListener();
             break;
         case 'signedOut':

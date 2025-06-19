@@ -207,3 +207,13 @@ Diff:
 - Needed to make sure that the module value are no longer reactive before sending them to AppSync
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-07-Root_page_add_signup_step4
+
+# 05-12-08-Root_page_add_signup_step5 
+
+Diff:
+- My api auto-verifies users, to avoid email notification costs, most of the logic here will bypassed in real usage, but added the logic for reference
+- stores/authentication: adds new methods to confirmSignUp, signUp, resendVerificationCode
+- Amplify: new source locations for the apis and new api signatures in Amplify v2
+- Root.vue: UI contains logic to display resend code message, shows Sign up status at the end of step4, contains new local states to keep track of isSignUpComplete
+
+Release: 

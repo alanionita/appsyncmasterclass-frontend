@@ -8,6 +8,9 @@ const authStore = useAuthStore();
 const signUpStore = useSignupStore();
 
 const showPassword = ref(false);
+const localIsSignUpComplete = ref('');
+const localNextStep = ref('')
+const resendConfirmMsg = ref('');
 
 const name = defineModel('name', { required: true });
 const email = defineModel('email', { required: true });
@@ -18,6 +21,7 @@ const consentVisibility = defineModel('consentVisibility', { required: true, def
 const consentAds = defineModel('consentAds', { required: true, default: '' });
 const password = defineModel('password', { required: true });
 const confirmPassword = defineModel('confirmPassword', { required: true });
+const verificationCode = defineModel('verificationCode');
 
 onMounted(() => {
   if (!authStore.listener && !authStore.loggedIn) {
@@ -62,15 +66,76 @@ function togglePwdVisibility() {
 }
 
 async function handleSignUp() {
-  const { isSignUpComplete, userId, nextStep } = await authStore.signUp({
-    email: email.value,
-    name: name.value,
-    password: password.value,
-    phone: phone.value,
-    birthdate: birthdate.value
-  });
-  if (isSignUpComplete) {
-    goTo('step5');
+  try {
+    const { isSignUpComplete, userId, nextStep } = await authStore.signUp({
+      email: email.value,
+      name: name.value,
+      password: password.value,
+      phone: phone.value,
+      birthdate: birthdate.value
+    });
+    if (isSignUpComplete) {
+      localIsSignUpComplete.value = isSignUpComplete;
+      localNextStep.value = nextStep
+      showSignUpComplete()
+      goTo('step5');
+    }
+  } catch (err) {
+    alert('Error with sign up!')
+    console.error('Err [handleSignUp] : ' + err.message)
+    return err
+  }
+}
+
+async function handleCompleteSignUp() {
+  try {
+    if (!verificationCode) { throw Error('Missing verification code') }
+    const {
+      isSignUpComplete,
+      nextStep
+    } = await authStore.completeSignUp({
+      verificationCode: verificationCode.value,
+      email: email.value,
+      password: password.value
+    })
+
+    if (isSignUpComplete) localIsSignUpComplete.value = isSignUpComplete;
+    if (nextStep) localNextStep.value = nextStep
+    showSignUpComplete()
+  } catch (err) {
+    alert('Error confirming verification code!')
+    console.error('Err [handleCompleteSignUp] : ' + err.message)
+    return err
+  }
+}
+
+function generateResendMsg({ destination, deliveryMedium }) {
+  const msg = `A confirmation code has been sent to ${destination}. Please check your ${deliveryMedium} for the code.`
+  this.resendConfirmMsg.value = msg;
+}
+
+async function resendVerificationCode() {
+  try {
+    if (!verificationCode) { throw Error('Missing verification code') }
+    const { destination, deliveryMedium } = await authStore.resendVerificationCode(email.value)
+    generateResendMsg({ destination, deliveryMedium })
+  } catch (err) {
+    alert('Error resending verification code!')
+    console.error('Err [resendVerificationCode] : ' + err.message)
+    return err
+  }
+}
+
+function showSignUpComplete() {
+  const processKeys = (acc, key) => {
+    acc += `${key} is [${localNextStep.value[key]}]`
+    return acc;
+  }
+  if (localIsSignUpComplete.value) {
+    alert("Sign up status complete!")
+  } else {
+    const msg = Object.keys(localNextStep.value).reduce(processKeys, '')
+    alert(`Next steps are: ${msg}`)
   }
 }
 
@@ -175,7 +240,7 @@ async function handleSignUp() {
                 <label for="notifications" class="text-dark">Receive email about your Twitter activity and
                   recommendations.</label>
                 <input v-model="consentNotifications" id="notifications" name="consent" true-value="yes"
-                  false-value="no" class="m-2 w-6 h-6 text-blue" type="checkbox">
+                  false-value="no" class="m-2 w-8 h-8 text-blue" type="checkbox">
               </div>
             </div>
             <div>
@@ -183,18 +248,18 @@ async function handleSignUp() {
               <div class="flex justify-between items-top mb-2 py-4">
                 <label for="visibility" class="text-dark">Let others find your Twitter account by email address.</label>
                 <input v-model="consentVisibility" id="visibility" name="consent" true-value="yes" false-value="no"
-                  class="m-2 w-6 h-6 text-blue" type="checkbox">
+                  class="m-2 w-8 h-8 text-blue" type="checkbox">
               </div>
             </div>
             <div>
               <p class="text-xl font-semibold mb-2">Personalised ads</p>
               <div class="flex justify-between items-top mb-2 py-4">
-                <label for="ads" class="text-dark">You will always see ads on Twitter based on your Twitter activity.
+                <label for="ads" class="text-dark flex-1">You will always see ads on Twitter based on your Twitter activity.
                   When this setting is enabled, Twitter may further personalize ads from Twitter advertisers, on and off
                   Twitter, by combining your Twitter activity with other online activity and information from
                   partners.</label>
                 <input v-model="consentAds" id="ads" name="consent" true-value="yes" false-value="no"
-                  class="m-2 w-6 h-6 text-blue" type="checkbox">
+                  class="m-2 w-8 h-8 text-blue" type="checkbox">
               </div>
             </div>
           </div>
@@ -266,8 +331,7 @@ async function handleSignUp() {
             </div>
             <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
               <label for="phone" class="text-dark">Phone number</label>
-              <input v-model="phone" id="phone" name="phone" class="w-full bg-lightblue text-lg"
-                type="text">
+              <input v-model="phone" id="phone" name="phone" class="w-full bg-lightblue text-lg" type="text">
               </input>
             </div>
             <p>By signing up, you agree to our <a href="#" class="text-blue">Terms</a>, <a href="#"
@@ -280,7 +344,27 @@ async function handleSignUp() {
           </div>
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step5'">
-          <h1>Step 5</h1>
+          <div class="flex gap-4 justify-between p-8">
+            <div class="flex-2 flex justify-center">
+              <i class="fab fa-twitter text-blue text-4xl"></i>
+            </div>
+            <button @click.prevent="handleCompleteSignUp()"
+              class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="!verificationCode">Next</button>
+          </div>
+          <div class="px-16 flex flex-col gap-4">
+            <p class="text-2xl font-semibold p-4">We sent you a code </p>
+            <p class="text-dark mb-2">Enter it below to verify {{ email }}</p>
+            <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
+              <label for="verificationCode" class="text-dark">Verification code</label>
+              <input v-model="verificationCode" id="verificationCode" name="verificationCode"
+                class="w-full bg-lightblue text-lg" type="text">
+            </div>
+
+            <button @click.prevent="resendVerificationCode" class="text-blue p-2 hover:underline">Didn't
+              receive an email?</button>
+            <p v-if="resendConfirmMsg.length > 0" class="text-dark mb-2"> {{ resendConfirmMsg }}</p>
+          </div>
         </fieldset>
       </form>
     </section>

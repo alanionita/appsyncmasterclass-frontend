@@ -51,6 +51,83 @@ export const useAuthStore = defineStore('authentication', {
                 return err;
             }
         },
+        async completeSignUp(userData) {
+            try {
+                const { email, verificationCode, password } = userData;
+
+                if (!email || verificationCode || !password) {
+                    throw Error('Invalid user data')
+                }
+
+                let complete;
+                let step;
+
+                const { isSignUpComplete, nextStep } = await AmplifyAuth.confirmSignUp({
+                    username: email,
+                    confirmationCode: verificationCode
+                })
+
+                complete = isSignUpComplete;
+                step = nextStep
+
+                if (isSignUpComplete) {
+                    const signInResp = await AmplifyAuth.signIn({
+                        username: email,
+                        password,
+                    })
+                    if (signInResp.nextStep === 'DONE') {
+                        complete = true;
+                    }
+                    step = signInResp.nextStep;
+                }
+
+                return {
+                    isSignUpComplete: complete,
+                    nextStep: step
+                }
+            } catch (err) {
+                console.error('Err [auth.completeSignUp] :', err.message)
+                return err;
+            }
+        },
+
+        async signIn(userData) {
+            try {
+                const { email, password } = userData;
+
+                if (!email || password) {
+                    throw Error('Invalid user data')
+                }
+
+                const { nextStep } = await AmplifyAuth.signIn({
+                    username: email,
+                    password,
+                })
+
+                return {
+                    nextStep
+                }
+            } catch (err) {
+                console.error('Err [auth.signIn] :', err.message)
+                return err;
+            }
+        },
+        async resendVerificationCode(email) {
+            try {
+                if (!email) {
+                    throw Error('Invalid user data')
+                }
+
+                const { destination, deliveryMedium } = await AmplifyAuth.resendSignUpCode({
+                    username: email,
+                })
+                return { destination, deliveryMedium }
+
+            } catch (err) {
+                console.error('Err [auth.resendVerificationCode] :', err.message)
+                return err;
+            }
+        },
         startListener() {
             this.listener = startAuthListener();
         },
