@@ -216,4 +216,4 @@ Diff:
 - Amplify: new source locations for the apis and new api signatures in Amplify v2
 - Root.vue: UI contains logic to display resend code message, shows Sign up status at the end of step4, contains new local states to keep track of isSignUpComplete
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-08-Root_page_add_signup_step5
