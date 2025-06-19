@@ -225,4 +225,4 @@ Diffs:
 - handleSignUp: adds signIn features; for my API users are already confirmed, but logic should branch for APIs without auto-verify
 - UI: step5 will be skipped now for if users are auto verified
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-09-Root_page_signup_review
