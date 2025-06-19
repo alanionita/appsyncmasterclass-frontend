@@ -67,23 +67,26 @@ function togglePwdVisibility() {
 
 async function handleSignUp() {
   try {
-    const { isSignUpComplete, userId, nextStep } = await authStore.signUp({
+    const signUpResp = await authStore.signUp({
       email: email.value,
       name: name.value,
       password: password.value,
       phone: phone.value,
       birthdate: birthdate.value
     });
-    if (isSignUpComplete) {
-      localIsSignUpComplete.value = isSignUpComplete;
-      localNextStep.value = nextStep
-      showSignUpComplete()
+    if (signUpResp.isSignUpComplete) {
+      const { nextStep } = await authStore.signIn({
+        email: email.value, password: password.value
+      })
+      console.info(JSON.stringify(nextStep));
+    } else {
+      console.info(JSON.stringify(signUpResp.nextStep))
       goTo('step5');
     }
   } catch (err) {
     alert('Error with sign up!')
     console.error('Err [handleSignUp] : ' + err.message)
-    return err
+    await authStore.logout()
   }
 }
 
@@ -185,9 +188,9 @@ function showSignUpComplete() {
       class="fixed w-full h-full top-0 left-0 flex items-center justify-center">
       <div class="absolute w-full h-full bg-gray-900 opacity-50" @click.prevent="signUpStore.reset()">
       </div>
-      <form class="modal-main bg-white w-11/12 mx-auto rounded-lg z-3 overflow-y-auto max-h-full">
+      <form class="modal-main max-w-md bg-white w-11/12 mx-auto rounded-lg z-3 overflow-y-auto max-h-full">
         <fieldset v-if="signUpStore.getStep === 'step1'">
-          <div class="flex gap-4 justify-between p-8">
+          <div class="flex gap-4 justify-between p-4">
             <div class="flex-2 flex justify-center">
               <i class="fab fa-twitter text-blue text-4xl"></i>
             </div>
@@ -195,8 +198,8 @@ function showSignUpComplete() {
               class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="!name && !email && !birthdate && !phone">Next</button>
           </div>
-          <div class="px-16 flex flex-col gap-4">
-            <p class="text-2xl font-semibold p-4">Create your account</p>
+          <div class="flex flex-col gap-4 px-8">
+            <p class="text-2xl font-semibold">Create your account</p>
             <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
               <label for="name" class="text-dark">Name</label>
               <input v-model="name" id="name" name="name" class="w-full bg-lightblue text-lg" type="text">
@@ -220,7 +223,7 @@ function showSignUpComplete() {
           </div>
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step2'">
-          <div class="flex gap-4 justify-between p-8">
+          <div class="flex gap-4 justify-between p-4">
             <button @click.prevent="goTo('step1')"
               class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 border border-blue hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
               <i class="fas fa-arrow-left"></i>
@@ -232,8 +235,8 @@ function showSignUpComplete() {
               class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="consentNotifications === '' && consentVisibility === '' && consentAds === ''">Next</button>
           </div>
-          <div class="px-16 flex flex-col gap-4">
-            <p class="text-2xl font-semibold p-4">Customise your experience</p>
+          <div class="flex flex-col gap-4 px-8">
+            <p class="text-2xl font-semibold">Customise your experience</p>
             <div>
               <p class="text-xl font-semibold mb-2">Get more out of Twitter</p>
               <div class="flex justify-between items-top mb-2 py-4">
@@ -254,7 +257,8 @@ function showSignUpComplete() {
             <div>
               <p class="text-xl font-semibold mb-2">Personalised ads</p>
               <div class="flex justify-between items-top mb-2 py-4">
-                <label for="ads" class="text-dark flex-1">You will always see ads on Twitter based on your Twitter activity.
+                <label for="ads" class="text-dark flex-1">You will always see ads on Twitter based on your Twitter
+                  activity.
                   When this setting is enabled, Twitter may further personalize ads from Twitter advertisers, on and off
                   Twitter, by combining your Twitter activity with other online activity and information from
                   partners.</label>
@@ -265,7 +269,7 @@ function showSignUpComplete() {
           </div>
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step3'">
-          <div class="flex gap-4 justify-between p-8">
+          <div class="flex gap-4 justify-between p-4">
             <button @click.prevent="goTo('step2')"
               class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 border border-blue hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
               <i class="fas fa-arrow-left"></i>
@@ -277,8 +281,8 @@ function showSignUpComplete() {
               class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="!password">Next</button>
           </div>
-          <div class="px-16 flex flex-col gap-4">
-            <p class="text-2xl font-semibold p-4">You'll need a password</p>
+          <div class="flex flex-col gap-4 px-8">
+            <p class="text-2xl font-semibold">You'll need a password</p>
             <div class="flex flex-col gap-4">
               <p class="text-dark mb-2">Make sure it's 8 characters or more.</p>
               <div class="w-full h-fit relative bg-lightblue border-b-2 border-dark mb-2 p-2">
@@ -304,7 +308,7 @@ function showSignUpComplete() {
           </div>
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step4'">
-          <div class="flex gap-4 justify-between p-8">
+          <div class="flex gap-4 justify-between p-4">
             <button @click.prevent="goTo('step3')"
               class="rounded-full bg-lightblue font-semibold text-blue px-8 py-4 border border-blue hover:bg-blue hover:text-white disabled:opacity-50 cursor-not-allowed">
               <i class="fas fa-arrow-left"></i>
@@ -313,8 +317,8 @@ function showSignUpComplete() {
               <i class="fab fa-twitter text-blue text-4xl"></i>
             </div>
           </div>
-          <div class="px-16 flex flex-col gap-4">
-            <p class="text-2xl font-semibold p-4">Create your account</p>
+          <div class="flex flex-col gap-4 px-8">
+            <p class="text-2xl font-semibold">Create your account</p>
             <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
               <label for="name" class="text-dark">Name</label>
               <input v-model="name" id="name" name="name" class="w-full bg-lightblue text-lg" type="text">
@@ -344,7 +348,7 @@ function showSignUpComplete() {
           </div>
         </fieldset>
         <fieldset v-if="signUpStore.getStep === 'step5'">
-          <div class="flex gap-4 justify-between p-8">
+          <div class="flex gap-4 justify-between p-4">
             <div class="flex-2 flex justify-center">
               <i class="fab fa-twitter text-blue text-4xl"></i>
             </div>
@@ -352,8 +356,8 @@ function showSignUpComplete() {
               class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="!verificationCode">Next</button>
           </div>
-          <div class="px-16 flex flex-col gap-4">
-            <p class="text-2xl font-semibold p-4">We sent you a code </p>
+          <div class="flex flex-col gap-4 px-8">
+            <p class="text-2xl font-semibold">We sent you a code </p>
             <p class="text-dark mb-2">Enter it below to verify {{ email }}</p>
             <div class="w-full bg-lightblue border-b-2 border-dark mb-2 p-2">
               <label for="verificationCode" class="text-dark">Verification code</label>

@@ -62,6 +62,7 @@ export const useAuthStore = defineStore('authentication', {
                 let complete;
                 let step;
 
+                // TODO: this logic might be able to move into the Amplify Hub listener
                 const { isSignUpComplete, nextStep } = await AmplifyAuth.confirmSignUp({
                     username: email,
                     confirmationCode: verificationCode
@@ -94,8 +95,7 @@ export const useAuthStore = defineStore('authentication', {
         async signIn(userData) {
             try {
                 const { email, password } = userData;
-
-                if (!email || password) {
+                if (!email || !password) {
                     throw Error('Invalid user data')
                 }
 
