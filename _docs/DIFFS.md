@@ -217,3 +217,12 @@ Diff:
 - Root.vue: UI contains logic to display resend code message, shows Sign up status at the end of step4, contains new local states to keep track of isSignUpComplete
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-08-Root_page_add_signup_step5
+
+# 05-12-09-Root_page_signup_review 
+
+Diffs:
+- amplify/hub: enables the hub to handle signIn events and routing
+- handleSignUp: adds signIn features; for my API users are already confirmed, but logic should branch for APIs without auto-verify
+- UI: step5 will be skipped now for if users are auto verified
+
+Release: 
