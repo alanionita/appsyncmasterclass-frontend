@@ -241,6 +241,7 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 # 05-14-Configure_CI_CD_pipeline_with_Amplify
 
 Diffs:
-- Amplify setup: now requires auth with Github; install the Amplify App; narrow the repo access to `appsyncmasterclass-frontend`; return to Amplify deploy console; push a commit to repo if you can't see it in the list
+- Amplify setup: now requires auth with Github; install the Amplify App; narrow the repo access to `appsyncmasterclass-frontend`; return to Amplify deploy console; push a commit to repo if you can't see it in the list; select the repo from list and deploy the app;
+- Amplify variables: since this app uses .env vars we also need to add these to the Amplify deployment`
 
 Release: no release because it mostly involves console changes
