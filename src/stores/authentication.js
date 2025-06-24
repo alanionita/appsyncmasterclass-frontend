@@ -19,8 +19,7 @@ export const useAuthStore = defineStore('authentication', {
         async logout() {
             await AmplifyAuth.signOut({ global: true });
             this.loggedIn = false;
-            this.user = undefined
-            router.push('/')
+            this.user = undefined;
         },
 
         async signUp(userData) {
@@ -109,7 +108,7 @@ export const useAuthStore = defineStore('authentication', {
                 }
             } catch (err) {
                 console.error('Err [auth.signIn] :', err.message)
-                return err;
+                throw err;
             }
         },
         async resendVerificationCode(email) {
