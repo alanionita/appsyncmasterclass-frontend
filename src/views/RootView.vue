@@ -4,6 +4,9 @@ import { useSignupStore } from '@/stores/signup';
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router'
 
+import InputPassword from "@/components/InputPassword.vue";
+import InputText from "@/components/InputText.vue";
+
 const authStore = useAuthStore();
 const signUpStore = useSignupStore();
 
@@ -11,19 +14,21 @@ const showPassword = ref(false);
 const localIsSignUpComplete = ref('');
 const localNextStep = ref('')
 const resendConfirmMsg = ref('');
+const emailEl = ref(null);
 
 const name = defineModel('name', { required: true });
-const email = defineModel('email', { required: true });
+const email = ref();
 const phone = defineModel('phone', { required: true });
 const birthdate = defineModel('birthdate');
 const consentNotifications = defineModel('consentNotifications', { required: true, default: '' });
 const consentVisibility = defineModel('consentVisibility', { required: true, default: '' });
 const consentAds = defineModel('consentAds', { required: true, default: '' });
-const password = defineModel('password', { required: true });
+const password = ref();
 const confirmPassword = defineModel('confirmPassword', { required: true });
 const verificationCode = defineModel('verificationCode');
 
 onMounted(() => {
+  emailEl.value?.focus();
   if (!authStore.listener && !authStore.loggedIn) {
     authStore.startListener();
   }
@@ -112,6 +117,19 @@ async function handleCompleteSignUp() {
   }
 }
 
+async function handleLogin() {
+  try {
+    const { nextStep } = await authStore.signIn({
+      email: email.value, password: password.value
+    })
+    console.info('nextStep', JSON.stringify(nextStep));
+  } catch (err) {
+    alert('Error with log in!')
+    console.error('Err [handleLogin] : ' + err.message)
+    await authStore.logout()
+  }
+}
+
 function generateResendMsg({ destination, deliveryMedium }) {
   const msg = `A confirmation code has been sent to ${destination}. Please check your ${deliveryMedium} for the code.`
   this.resendConfirmMsg.value = msg;
@@ -165,8 +183,20 @@ function showSignUpComplete() {
 
       </div>
     </section>
-    <section class="flex items-center justify-center w-1/2 h-full">
-      <div class="flex flex-col w-1/2 font-semibold gap-5">
+    <section class="relative flex items-center justify-center w-1/2 h-full">
+      <div class="flex flex-col w-1/2 font-semibold gap-4 mt-8">
+        <form @submit.prevent="handleLogin" class="flex w-full gap-4 absolute top-8 left-0 px-8">
+          <fieldset class="flex-1 bg-lightblue border-b-2 border-dark p-2">
+            <InputText ref="emailEl" v-model="email" label="Phone, email, or username" name="email" />
+          </fieldset>
+          <fieldset class="flex-1 bg-lightblue border-b-2 border-dark p-2">
+            <InputPassword v-model="password" label="Enter password" />
+          </fieldset>
+          <button
+            class="self-center rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed">
+            Log in
+          </button>
+        </form>
         <i class="fab fa-twitter text-blue text-4xl"></i>
         <p class="text-3xl mb-12">See what's happening in the world, right now!</p>
         <p>Join Twitter today.</p>
