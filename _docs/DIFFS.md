@@ -226,3 +226,14 @@ Diffs:
 - UI: step5 will be skipped now for if users are auto verified
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-12-09-Root_page_signup_review
+
+# 05-13-Add_user_login_with_Amplify 
+
+Diffs: 
+- @components: adds components for InputText and InputPassword to improve reusability and page composability
+- LoginView.vue: styles: replace element specific spacing with container spacing: leveraging gap-* vs element m* or p*
+- LoginView.vue: semantics: used <form>, <fieldset>, <input> / <label>, instead of ambiguous tags (<div>)
+- LoginView.vue: implements focus by exposing the focus directive to parent component; implemented `nextTick` within InputText component `focus()` and implemented as using await directive instead of a callback
+- RootView.vue: implemented Login widget using components and reimplemented focus on email input from login
+
+Release: 
