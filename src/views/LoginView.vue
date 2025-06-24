@@ -1,55 +1,53 @@
 <script setup>
-import { onMounted } from "vue";
-import { Authenticator, useAuthenticator } from "@aws-amplify/ui-vue";
-import { formFields } from '@/services/amplify/config';
+import { onMounted, ref } from "vue";
 import { useAuthStore } from '@/stores/authentication';
 import "@aws-amplify/ui-vue/styles.css";
+import InputPassword from "@/components/InputPassword.vue";
+import InputText from "@/components/InputText.vue";
+
+const email = ref();
+const password = ref();
+const emailEl = ref(null);
 
 const authStore = useAuthStore();
-const { isPending, toSignUp, authStatus } = useAuthenticator();
 
 onMounted(() => {
+    emailEl.value?.focus();
+
     if (!authStore.listener && !authStore.loggedIn) {
         authStore.startListener();
     }
 })
 
-async function handleSignOut() {
-    await authStore.logout();
-    authStore.startListener();
+async function handleLogin() {
+    try {
+        const { nextStep } = await authStore.signIn({
+            email: email.value, password: password.value
+        })
+        console.info('nextStep',JSON.stringify(nextStep));
+    } catch (err) {
+        alert('Error with log in!')
+        console.error('Err [handleLogin] : ' + err.message)
+        await authStore.logout()
+    }
 }
 
 </script>
 
 <template>
-    <section>
-        <authenticator :form-fields="formFields">
-            <template v-if="authStatus === 'unauthenticated'" v-slot:sign-in-footer>
-                <div style="text-align: center">
-                    <button @click="toSignUp" class="amplify-button amplify-field-group__control" data-fullwidth="false"
-                        data-size="small" type="button" style="font-weight: normal">
-                        Sign Up
-                    </button>
-                </div>
-            </template>
-        </authenticator>
-        <template v-if="isPending">
-            <div style="text-align: center">
-                <p>Loading...</p>
-            </div>
-        </template>
-        <template v-if="authStatus === 'authenticated'">
-            <h1>Hello {{ authStore.user?.username }}!</h1>
-            <button @click="handleSignOut">Sign out</button>
-        </template>
-    </section>
+    <form @submit.prevent="handleLogin" class="w-full flex flex-col justify-center items-center p-8 gap-4">
+        <i class="fab fa-twitter text-blue text-4xl"></i>
+        <p class="font-semibold text-xl">Log into Twitter</p>
+        <fieldset class="w-1/3 bg-lightblue border-b-2 border-dark p-2">
+            <InputText ref="emailEl" v-model="email" label="Phone, email, or username" name="email" />
+        </fieldset>
+        <fieldset class="w-1/3 bg-lightblue border-b-2 border-dark p-2">
+            <InputPassword v-model="password" label="Enter password" />
+        </fieldset>
+        <button
+            class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed">
+            Log in
+        </button>
+    </form>
 </template>
-<style>
-@media (min-width: 1024px) {
-    .login {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-    }
-}
-</style>
+<style></style>
