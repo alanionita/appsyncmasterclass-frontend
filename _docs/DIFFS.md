@@ -237,3 +237,10 @@ Diffs:
 - RootView.vue: implemented Login widget using components and reimplemented focus on email input from login
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-13-Add_user_login_with_Amplify
+
+# 05-14-Configure_CI_CD_pipeline_with_Amplify
+
+Diffs:
+- Amplify setup: now requires auth with Github; install the Amplify App; narrow the repo access to `appsyncmasterclass-frontend`; return to Amplify deploy console; push a commit to repo if you can't see it in the list
+
+Release: no release because it mostly involves console changes
