@@ -1,5 +1,8 @@
-@import "tailwindcss";
-@import './fonts.css';
+@layer vendor;
+
+@import 'tailwindcss';
+
+@import "./fonts.css" layer(vendor);
 
 @theme {
   /* Colours */
@@ -34,10 +37,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }  
-}
-
-button:focus, input:focus {
-  outline: none;
+  button:focus, input:focus {
+    outline: none;
+  }
 }
 
 .modal-main {
