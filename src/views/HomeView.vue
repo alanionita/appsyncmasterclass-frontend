@@ -4,6 +4,7 @@ import { store } from '@/store'
 import * as gql from '@/services/graphql/controllers'
 import SideNav from '@/components/organisms/SideNav.vue'
 import TextButton from '@/components/atoms/TextButton.vue';
+import DefaultRightBar from '@/components/organisms/DefaultRightBar.vue';
 
 const tweet = defineModel('tweet', {
   default: {
@@ -49,12 +50,12 @@ onMounted(async () => {
         <p>{{ store.error }}</p>
         <button @click="fetchData">Try Again</button>
       </div>
-      <div class="flex h-full flex-col overflow-y-auto gap-4 pr-4" v-else-if="store.profile">
+      <div class="flex h-full flex-col overflow-y-auto gap-4" v-else-if="store.profile">
         <section class="border-b border-lighter flex items-center justify-between py-4">
           <h1 class="text-2xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
         </section>
-        <section class="border-b-4 border-lighter flex gap-4 py-4">
+        <section class="border-b border-lighter flex gap-4 py-4">
           <div class="flex-none">
             <img :src="'default_profile.png'" class="flex-none size-12 rounded-full" />
           </div>
@@ -102,8 +103,7 @@ onMounted(async () => {
       </div>
     </section>
     <section class="flex flex-col flex-3/12">
-      <p>right bar</p>
-      <p>test</p>
+      <DefaultRightBar/>
     </section>
 
   </main>
