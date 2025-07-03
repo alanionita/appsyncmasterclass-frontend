@@ -245,3 +245,16 @@ Diffs:
 - Amplify variables: since this app uses .env vars we also need to add these to the Amplify deployment`
 
 Release: no release because it mostly involves console changes
+
+# 05-15-Home_page_setup_and_styling_with_Tailwind 
+
+Diffs:
+- html5: implemented semantic elements and logical structures: lists
+- css: prefered to implement parent>child styling rules over margin and padding rules defined on child components
+- tailwind: resolved css override cause by font-awesome 'fa' class; not gone completely just worked around it; blocked by font-awesome paywall
+- tailwind: used v4 definition for defining vendor layers (relevant fix for css class with 'fa' class from font-awesome)
+- vue3: defined components and data structures with new apis; implemeted defineModel() logic
+- styles: implemented sizing with and 8pt grid; also implemented 12-col layout from bootstrap (used by Twitter)
+- styles: implemented atomic design system for components
+
+Release: 
