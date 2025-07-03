@@ -36,11 +36,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="flex container h-screen w-full m-auto gap-4 p-4">
-    <section class="flex flex-col flex-3/12">
+  <main class="flex container h-screen w-screen m-auto gap-4 p-4">
+    <section class="flex-1/12 lg:flex-3/12 flex flex-col">
       <SideNav></SideNav>
     </section>
-    <section class="flex flex-col flex-6/12">
+    <section class="flex-11/12 lg:flex-6/12 flex flex-col">
       <div v-if="store.pending">
         <p>Loading data...</p>
       </div>
@@ -55,13 +55,15 @@ onMounted(async () => {
           <h1 class="text-2xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
         </section>
-        <section class="border-b border-lighter flex gap-4 py-4">
-          <div class="flex-none">
-            <img :src="'default_profile.png'" class="flex-none size-12 rounded-full" />
-          </div>
+        <section class="border-b border-lighter flex gap-4 pb-4">
           <form class="flex flex-col w-full relative gap-4">
-            <textarea v-model="tweet.text" placeholder="What's happening?"
-              class="flex-1 w-full focus:outline-none py-2"></textarea>
+            <div class="flex justify-center gap-4">
+              <figure class="flex-none">
+                <img :src="'default_profile.png'" class="flex-none size-12 rounded-full" />
+              </figure>
+              <textarea v-model="tweet.text" placeholder="What's happening?"
+                class="flex-1 w-full focus:outline-none py-2"></textarea>
+            </div>
             <div class="flex h-fit justify-between items-center">
               <nav class="flex gap-4">
                 <i class="text-lg text-blue far fa-image"></i>
@@ -69,7 +71,7 @@ onMounted(async () => {
                 <i class="text-lg text-blue far fa-chart-bar"></i>
                 <i class="text-lg text-blue far fa-smile"></i>
               </nav>
-              <button type="button" class="h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
+              <button type="button" class="sm:self-end h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
                 :class="`${this.tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
             </div>
           </form>
@@ -102,7 +104,7 @@ onMounted(async () => {
         </section> -->
       </div>
     </section>
-    <section class="flex flex-col flex-3/12">
+    <section class="hidden md:flex md:flex-col md:flex-3/12">
       <DefaultRightBar/>
     </section>
 

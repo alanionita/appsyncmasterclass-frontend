@@ -17,7 +17,7 @@ const followSuggestions = defineModel("followSuggestions", {
             <li v-for="suggestion in followSuggestions" :key="suggestion.id">
                 <button class="w-full flex hover:bg-lighter p-4 gap-4 border-t border-lighter">
                     <img :src="suggestion.imageUrl" class="size-12 rounded-full" />
-                    <section class="hidden lg:flex lg:flex-col justify-center items-start">
+                    <section class="hidden md:flex md:flex-col justify-center items-start">
                         <p class="text-left text-m font-semibold leading-tight">{{ suggestion.name }}</p>
                         <p class="text-left text-sm leading-tight text-dark">{{ suggestion.screenName }}</p>
                     </section>
