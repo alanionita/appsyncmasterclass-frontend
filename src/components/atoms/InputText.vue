@@ -1,5 +1,5 @@
 <script setup>
-import { defineModel, defineProps, defineExpose, ref, nextTick } from 'vue';
+import { ref, nextTick } from 'vue';
 
 const model = defineModel();
 

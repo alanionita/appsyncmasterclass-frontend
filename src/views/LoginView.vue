@@ -2,8 +2,8 @@
 import { onMounted, ref } from "vue";
 import { useAuthStore } from '@/stores/authentication';
 import "@aws-amplify/ui-vue/styles.css";
-import InputPassword from "@/components/InputPassword.vue";
-import InputText from "@/components/InputText.vue";
+import InputPassword from "@/components/atoms/InputPassword.vue";
+import InputText from "@/components/atoms/InputText.vue";
 
 const email = ref();
 const password = ref();
@@ -24,7 +24,7 @@ async function handleLogin() {
         const { nextStep } = await authStore.signIn({
             email: email.value, password: password.value
         })
-        console.info('nextStep',JSON.stringify(nextStep));
+        console.info('nextStep', JSON.stringify(nextStep));
     } catch (err) {
         alert('Error with log in!')
         console.error('Err [handleLogin] : ' + err.message)

@@ -4,8 +4,8 @@ import { useSignupStore } from '@/stores/signup';
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router'
 
-import InputPassword from "@/components/InputPassword.vue";
-import InputText from "@/components/InputText.vue";
+import InputPassword from "@/components/atoms/InputPassword.vue";
+import InputText from "@/components/atoms/InputText.vue";
 
 const authStore = useAuthStore();
 const signUpStore = useSignupStore();

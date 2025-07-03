@@ -1,5 +1,5 @@
 <script setup>
-import { defineModel, defineProps, ref } from 'vue';
+import { ref } from 'vue';
 
 const model = defineModel();
 const show = ref(false)
