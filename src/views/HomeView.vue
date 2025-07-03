@@ -26,34 +26,44 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main>
-    <div v-if="store.pending">
-      <p>Loading data...</p>
-    </div>
+  <main class="flex container h-screen w-full m-auto gap-4 p-4">
+    <section class="flex flex-col flex-3/12">
+      <p>Left bar</p>
+      <p>test</p>
+    </section>
+    <section class="flex flex-col flex-6/12">
+      <div v-if="store.pending">
+        <p>Loading data...</p>
+      </div>
 
-    <div v-else-if="store.error">
-      <h2>Error Loading Data</h2>
-      <p>{{ store.error }}</p>
-      <button @click="fetchData">Try Again</button>
-    </div>
-
-    <div v-else-if="store.profile">
-      <h2>Hello {{ store.profile.name }}</h2>
-      <section>
-        <p>Likes: {{ store.profile.likesCount }}</p>
-        <p>Following: {{ store.profile.followingCount }}</p>
-        <p>Followers: {{ store.profile.followersCount }}</p>
-      </section>
-      <section>
-        <h3>Tweets ({{ store.profile.tweetsCount }})</h3>
-        <div v-if="store.profile && store.profile.tweetsCount > 0">
-          <div v-for="tweet in store.profile.tweets" :key="tweet.id">
-            <h3>{{ tweet.author }}</h3>
-            <p>{{ tweet.text }}</p>
-            <small>Created: {{ tweet.createdAt }}</small>
+      <div v-else-if="store.error">
+        <h2>Error Loading Data</h2>
+        <p>{{ store.error }}</p>
+        <button @click="fetchData">Try Again</button>
+      </div>
+      <div v-else-if="store.profile">
+        <h2>Hello {{ store.profile.name }}</h2>
+        <section>
+          <p>Likes: {{ store.profile.likesCount }}</p>
+          <p>Following: {{ store.profile.followingCount }}</p>
+          <p>Followers: {{ store.profile.followersCount }}</p>
+        </section>
+        <section>
+          <h3>Tweets ({{ store.profile.tweetsCount }})</h3>
+          <div v-if="store.profile && store.profile.tweetsCount > 0">
+            <div v-for="tweet in store.profile.tweets" :key="tweet.id">
+              <h3>{{ tweet.author }}</h3>
+              <p>{{ tweet.text }}</p>
+              <small>Created: {{ tweet.createdAt }}</small>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </section>
+    <section class="flex flex-col flex-3/12">
+      <p>right bar</p>
+      <p>test</p>
+    </section>
+
   </main>
 </template>
