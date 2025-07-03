@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import './base.css';
 @import './fonts.css';
 
 @theme {
@@ -22,8 +21,19 @@
   padding-inline: 2rem;
 }
 
-* {
-  font-family: var(--font-roboto);
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: var(--font-roboto);
+  }
+  body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }  
 }
 
 button:focus, input:focus {
