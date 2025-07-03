@@ -257,4 +257,4 @@ Diffs:
 - styles: implemented sizing with and 8pt grid; also implemented 12-col layout from bootstrap (used by Twitter)
 - styles: implemented atomic design system for components
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-15-Home_page_setup_and_styling_with_Tailwind
