@@ -49,7 +49,7 @@ onMounted(async () => {
         <button @click="fetchData">Try Again</button>
       </div>
       <div class="flex h-full flex-col overflow-y-auto gap-4 p-4" v-else-if="store.profile">
-        <section class="border-b border-lighter flex items-center justify-between">
+        <section class="border-b border-lighter flex items-center justify-between py-4">
           <h1 class="text-xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
         </section>
