@@ -53,22 +53,23 @@ onMounted(async () => {
           <h1 class="text-xl font-bold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
         </section>
-        <section class="border-b-8 border-lighter flex">
-          <div class="flex-none mr-4">
-            <img :src="'default_profile.png'" class="flex-none w-12 h-12 rounded-full" />
+        <section class="border-b-4 border-lighter flex gap-4 py-4">
+          <div class="flex-none">
+            <img :src="'default_profile.png'" class="flex-none size-12 rounded-full" />
           </div>
-          <form class="w-full relative">
+          <form class="flex flex-col w-full relative gap-4">
             <textarea v-model="tweet.text" placeholder="What's happening?"
-              class="w-full focus:outline-none mt-3 pb-3"></textarea>
-            <div>
-              <i class="text-lg text-blue mr-4 far fa-image"></i>
-              <i class="text-lg text-blue mr-4 fas fa-film"></i>
-              <i class="text-lg text-blue mr-4 far fa-chart-bar"></i>
-              <i class="text-lg text-blue mr-4 far fa-smile"></i>
+              class="flex-1 w-full focus:outline-none py-2"></textarea>
+            <div class="flex h-fit justify-between items-center">
+              <nav class="flex gap-4">
+                <i class="text-lg text-blue far fa-image"></i>
+                <i class="text-lg text-blue fas fa-film"></i>
+                <i class="text-lg text-blue far fa-chart-bar"></i>
+                <i class="text-lg text-blue far fa-smile"></i>
+              </nav>
+              <button type="button" class="h-10 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
+                :class="`${this.tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
             </div>
-            <button type="button"
-              class="h-10 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full absolute bottom-0 right-0 "
-              :class="`${this.tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
           </form>
         </section>
 
