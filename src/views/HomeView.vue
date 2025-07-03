@@ -49,9 +49,9 @@ onMounted(async () => {
         <p>{{ store.error }}</p>
         <button @click="fetchData">Try Again</button>
       </div>
-      <div class="flex h-full flex-col overflow-y-auto gap-4 p-4" v-else-if="store.profile">
+      <div class="flex h-full flex-col overflow-y-auto gap-4 pr-4" v-else-if="store.profile">
         <section class="border-b border-lighter flex items-center justify-between py-4">
-          <h1 class="text-xl font-semibold">Home</h1>
+          <h1 class="text-2xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
         </section>
         <section class="border-b-4 border-lighter flex gap-4 py-4">

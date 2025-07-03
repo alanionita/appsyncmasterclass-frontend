@@ -16,19 +16,17 @@ const tabs = defineModel('tabs', {
 </script>
 
 <template>
-    <div class="lg:w-1/5 border-r border-lighter px-2 lg:px-6 py-2 flex flex-col justify-between min-w-max">
-        <div>
-            <button class="h-12 w-12 hover:bg-lightblue text-3xl text-blue rounded-full">
-                <i class="fab fa-twitter"></i>
+    <section class="border-r border-lighter lg:pr-8 flex flex-col justify-between min-w-max gap-4">
+        <button class="size-16 hover:bg-lightblue text-3xl text-blue rounded-full">
+            <i class="fab fa-twitter"></i>
+        </button>
+        <nav class="flex flex-col gap-4">
+            <button v-for="tab in tabs" :key="tab.id"
+                class="focus:outline-none hover:text-blue flex items-center justify-between gap-4 px-4 py-2 hover:bg-lightblue rounded-full">
+                <i class="text-2xl" :class="tab.icon"></i>
+                <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
             </button>
-            <div>
-                <button v-for="tab in tabs" :key="tab.id"
-                    class="focus:outline-none hover:text-blue flex items-center px-4 py-2 hover:bg-lightblue rounded-full mr-auto mb-3">
-                    <i class="text-2xl mr-4" :class="tab.icon"></i>
-                    <p class="text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
-                </button>
-            </div>
-            <TextButton text="Tweet" action="() => {}" />
-        </div>
-    </div>
+        </nav>
+        <TextButton text="Tweet" action="() => {}" />
+    </section>
 </template>
