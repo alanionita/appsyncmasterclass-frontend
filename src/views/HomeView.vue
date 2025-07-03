@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import { store } from '@/store'
 import * as gql from '@/services/graphql/controllers'
+import SideNav from '@/components/organisms/SideNav.vue'
 
 const tweet = defineModel('tweet', {
   default: {
@@ -35,8 +36,7 @@ onMounted(async () => {
 <template>
   <main class="flex container h-screen w-full m-auto gap-4 p-4">
     <section class="flex flex-col flex-3/12">
-      <p>Left bar</p>
-      <p>test</p>
+      <SideNav></SideNav>
     </section>
     <section class="flex flex-col flex-6/12">
       <div v-if="store.pending">
