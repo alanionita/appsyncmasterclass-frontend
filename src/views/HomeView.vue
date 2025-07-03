@@ -50,7 +50,7 @@ onMounted(async () => {
       </div>
       <div class="flex h-full flex-col overflow-y-auto gap-4 p-4" v-else-if="store.profile">
         <section class="border-b border-lighter flex items-center justify-between">
-          <h1 class="text-xl font-bold">Home</h1>
+          <h1 class="text-xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
         </section>
         <section class="border-b-4 border-lighter flex gap-4 py-4">
@@ -67,20 +67,19 @@ onMounted(async () => {
                 <i class="text-lg text-blue far fa-chart-bar"></i>
                 <i class="text-lg text-blue far fa-smile"></i>
               </nav>
-              <button type="button" class="h-10 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
+              <button type="button" class="h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
                 :class="`${this.tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
             </div>
           </form>
         </section>
 
         <!-- timeline -->
-        <section v-if="tweets.length === 0" class="flex flex-col items-center justify-center w-full pt-12">
-          <p class="font-bold text-lg">Welcome to Twitter!</p>
+        <section v-if="tweets.length === 0" class="flex flex-col items-center justify-center w-full gap-4 px-4">
+          <p class="font-semibold text-lg">Welcome to Twitter!</p>
           <p class="text-sm text-dark text-center">This is the best place to see what’s happening in your world. Find
             some people and topics to follow now.</p>
-          <button class="text-white bg-blue rounded-full font-semibold mt-4 px-4 py-2 hover:bg-darkblue">
+          <button class="h-12 text-white bg-blue rounded-full font-semibold hover:bg-darkblue px-4">
             <p class="hidden lg:block">Let's go!</p>
-            <i class="fas fa-plus lg:hidden"></i>
           </button>
         </section>
 
