@@ -1,4 +1,6 @@
 <script setup>
+import TextButton from '../atoms/TextButton.vue';
+
 const tabs = defineModel('tabs', {
     default: [
         { icon: 'fas fa-home', title: 'Home', id: 'home', target: 'Home' },
@@ -26,11 +28,7 @@ const tabs = defineModel('tabs', {
                     <p class="text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
                 </button>
             </div>
-            <button
-                class="text-white bg-blue rounded-full font-semibold h-12 lg:h-auto w-20 lg:w-full p-3 hover:bg-darkblue">
-                <p class="hidden lg:block">Tweet</p>
-                <i class="fas fa-plus block lg:hidden"></i>
-            </button>
+            <TextButton text="Tweet" action="() => {}" />
         </div>
     </div>
 </template>

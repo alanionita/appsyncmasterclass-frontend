@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { store } from '@/store'
 import * as gql from '@/services/graphql/controllers'
 import SideNav from '@/components/organisms/SideNav.vue'
+import TextButton from '@/components/atoms/TextButton.vue';
 
 const tweet = defineModel('tweet', {
   default: {
@@ -78,9 +79,7 @@ onMounted(async () => {
           <p class="font-semibold text-lg">Welcome to Twitter!</p>
           <p class="text-sm text-dark text-center">This is the best place to see what’s happening in your world. Find
             some people and topics to follow now.</p>
-          <button class="h-12 text-white bg-blue rounded-full font-semibold hover:bg-darkblue px-4">
-            <p class="hidden lg:block">Let's go!</p>
-          </button>
+          <TextButton text="Let's go!" action="() => {}"/>
         </section>
 
         <!-- TODO: remove, left to show use of store for profile -->
