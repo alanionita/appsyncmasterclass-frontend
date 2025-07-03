@@ -48,12 +48,12 @@ onMounted(async () => {
         <p>{{ store.error }}</p>
         <button @click="fetchData">Try Again</button>
       </div>
-      <div class="overflow-y-scroll" v-else-if="store.profile">
-        <div class="px-5 py-3 border-b border-lighter flex items-center justify-between">
+      <div class="flex h-full flex-col overflow-y-auto gap-4 p-4" v-else-if="store.profile">
+        <section class="border-b border-lighter flex items-center justify-between">
           <h1 class="text-xl font-bold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
-        </div>
-        <div class="px-5 py-3 border-b-8 border-lighter flex">
+        </section>
+        <section class="border-b-8 border-lighter flex">
           <div class="flex-none mr-4">
             <img :src="'default_profile.png'" class="flex-none w-12 h-12 rounded-full" />
           </div>
@@ -70,10 +70,10 @@ onMounted(async () => {
               class="h-10 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full absolute bottom-0 right-0 "
               :class="`${this.tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
           </form>
-        </div>
+        </section>
 
         <!-- timeline -->
-        <div v-if="tweets.length === 0" class="flex flex-col items-center justify-center w-full pt-10 px-6">
+        <section v-if="tweets.length === 0" class="flex flex-col items-center justify-center w-full pt-12">
           <p class="font-bold text-lg">Welcome to Twitter!</p>
           <p class="text-sm text-dark text-center">This is the best place to see what’s happening in your world. Find
             some people and topics to follow now.</p>
@@ -81,7 +81,7 @@ onMounted(async () => {
             <p class="hidden lg:block">Let's go!</p>
             <i class="fas fa-plus lg:hidden"></i>
           </button>
-        </div>
+        </section>
 
         <!-- TODO: remove, left to show use of store for profile -->
         <!-- <h2>Hello {{ store.profile.name }}</h2>
