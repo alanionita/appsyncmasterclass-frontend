@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import TextButton from '../atoms/TextButton.vue';
 import { useAuthStore } from '@/stores/authentication';
+import { useTwitterStore } from '@/stores/twitter';
 
 const authStore = useAuthStore();
 
@@ -18,13 +19,7 @@ const tabs = defineModel('tabs', {
     ]
 })
 
-const profile = defineModel('profile', {
-    default: {
-        imageUrl: "",
-        name: 'test',
-        screenName: "Test Test"
-    }
-})
+const twitterStore = useTwitterStore()
 
 const dropdown = ref(false)
 
@@ -56,20 +51,20 @@ async function handleLogOut() {
         </div>
         <div class="w-full relative pb-4">
             <button @click="dropdown = !dropdown" class="flex items-center w-full hover:bg-lightblue rounded-full p-2">
-                <img :src="`${profile.imageUrl || 'default_profile.png'}`" class="w-10 h-10 rounded-full" />
+                <img :src="`${twitterStore.profileImg}`" class="w-10 h-10 rounded-full" />
                 <div class="hidden lg:block ml-4 truncate">
-                    <div class="text-left text-sm font-bold leading-tight truncate">{{ profile.name }}</div>
-                    <div class="text-left text-sm leading-tight text-dark truncate">{{ profile.screenName }}</div>
+                    <div class="text-left text-sm font-bold leading-tight truncate">{{ twitterStore.profile.name }}</div>
+                    <div class="text-left text-sm leading-tight text-dark truncate">{{ twitterStore.profile.screenName }}</div>
                 </div>
                 <i class="hidden lg:block fas fa-angle-down ml-auto text-lg"></i>
             </button>
             <section v-if="dropdown === true"
                 class="absolute bottom-0 left-0 w-64 rounded-lg shadow-md border-lightest bg-white mb-16">
                 <button @click="dropdown = false" class="p-3 flex items-center w-full hover:bg-lightest">
-                    <img :src="`${profile.imageUrl || 'default_profile.png'}`" class="w-10 h-10 rounded-full" />
+                    <img :src="`${twitterStore.profileImg}`" class="w-10 h-10 rounded-full" />
                     <div class="ml-4">
-                        <p class="text-left text-sm font-bold leading-tight">{{ profile.name }}</p>
-                        <p class="text-left text-sm leading-tight text-dark">{{ profile.screenName }}</p>
+                        <p class="text-left text-sm font-bold leading-tight">{{ twitterStore.profile.name }}</p>
+                        <p class="text-left text-sm leading-tight text-dark">{{ twitterStore.profile.screenName }}</p>
                     </div>
                     <i class="fas fa-check ml-auto text-blue"></i>
                 </button>
@@ -77,7 +72,7 @@ async function handleLogOut() {
                     Add an existing account
                 </button>
                 <button @click="handleLogOut" class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
-                    Log out {{ profile.screenName }}
+                    Log out {{ twitterStore.profile.screenName }}
                 </button>
             </section>
         </div>

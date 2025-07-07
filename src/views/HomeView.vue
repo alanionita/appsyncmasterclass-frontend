@@ -1,10 +1,9 @@
 <script setup>
-import { onMounted } from 'vue'
 import { store } from '@/store'
-import * as gql from '@/services/graphql/controllers'
 import SideNav from '@/components/organisms/SideNav.vue'
 import TextButton from '@/components/atoms/TextButton.vue';
 import DefaultRightBar from '@/components/organisms/DefaultRightBar.vue';
+import { useTwitterStore } from '@/stores/twitter';
 
 const tweet = defineModel('tweet', {
   default: {
@@ -13,25 +12,9 @@ const tweet = defineModel('tweet', {
 });
 const tweets = defineModel('tweets', { default: [] })
 
-const fetchData = async () => {
-  try {
-    store.togglePending()
-    store.clearError();
+const twitterStore = useTwitterStore();
 
-    const result = await gql.getMyProfile()
-    store.setProfile(result)
-  } catch (err) {
-    const newErr = err.message || 'Failed to fetch data'
-    store.setError(newErr)
-    console.error('Error (fetchData): ', err)
-  } finally {
-    store.togglePending()
-  }
-}
-
-onMounted(async () => {
-  await fetchData()
-})
+// TODO: implement UI store with values for: error, pending
 
 </script>
 
@@ -50,7 +33,7 @@ onMounted(async () => {
         <p>{{ store.error }}</p>
         <button @click="fetchData">Try Again</button>
       </div>
-      <div class="flex h-full flex-col overflow-y-auto gap-4" v-else-if="store.profile">
+      <div class="flex h-full flex-col overflow-y-auto gap-4" v-else-if="twitterStore.profile">
         <section class="border-b border-lighter flex items-center justify-between py-4">
           <h1 class="text-2xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
@@ -59,7 +42,7 @@ onMounted(async () => {
           <form class="flex flex-col w-full relative gap-4">
             <div class="flex justify-center gap-4">
               <figure class="flex-none">
-                <img :src="'default_profile.png'" class="flex-none size-12 rounded-full" />
+                <img :src="`${twitterStore.profileImg}`" class="flex-none size-12 rounded-full" />
               </figure>
               <textarea v-model="tweet.text" placeholder="What's happening?"
                 class="flex-1 w-full focus:outline-none py-2"></textarea>
@@ -72,7 +55,7 @@ onMounted(async () => {
                 <i class="text-lg text-blue far fa-smile"></i>
               </nav>
               <button type="button" class="sm:self-end h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
-                :class="`${this.tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
+                :class="`${tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
             </div>
           </form>
         </section>
@@ -84,24 +67,6 @@ onMounted(async () => {
             some people and topics to follow now.</p>
           <TextButton text="Let's go!" action="() => {}"/>
         </section>
-
-        <!-- TODO: remove, left to show use of store for profile -->
-        <!-- <h2>Hello {{ store.profile.name }}</h2>
-        <section>
-          <p>Likes: {{ store.profile.likesCount }}</p>
-          <p>Following: {{ store.profile.followingCount }}</p>
-          <p>Followers: {{ store.profile.followersCount }}</p>
-        </section>
-        <section>
-          <h3>Tweets ({{ store.profile.tweetsCount }})</h3>
-          <div v-if="store.profile && store.profile.tweetsCount > 0">
-            <div v-for="tweet in store.profile.tweets" :key="tweet.id">
-              <h3>{{ tweet.author }}</h3>
-              <p>{{ tweet.text }}</p>
-              <small>Created: {{ tweet.createdAt }}</small>
-            </div>
-          </div>
-        </section> -->
       </div>
     </section>
     <section class="hidden md:flex md:flex-col md:flex-3/12">
