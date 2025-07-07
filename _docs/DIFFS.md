@@ -259,7 +259,7 @@ Diffs:
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-15-Home_page_setup_and_styling_with_Tailwind
 
-#  05-16-Home_page_loading_profile_data
+# 05-16-Home_page_loading_profile_data
 
 Diffs:
 -SideNav: add account dropdown with dummy local model; implemented dropdown state using ref(); added placeholder for signOut(); all previous dynamic values come from the local profile model; also improved html semantics
@@ -270,4 +270,4 @@ Diffs:
 - Various refactors of names and labels and usability in an effort to keep things DRY
 - styles: made sure styles are sticking to an 8pt grid / divisible by 8
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-16-Home_page_loading_profile_data
