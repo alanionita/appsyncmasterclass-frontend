@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import TextButton from '../atoms/TextButton.vue';
 
 const tabs = defineModel('tabs', {
@@ -13,20 +14,63 @@ const tabs = defineModel('tabs', {
         { icon: 'fas fa-ellipsis-h', title: 'More', id: 'more' }
     ]
 })
+
+const profile = defineModel('profile', {
+    default: {
+        imageUrl: "",
+        name: 'test',
+        screenName: "Test Test"
+    }
+})
+
+const dropdown = ref(false)
+
+function signOut() {
+    console.log('sign out')
+}
 </script>
 
 <template>
-    <section class="border-r border-lighter lg:pr-8 flex flex-col items-center md:items-start min-w-max gap-4">
-        <button class="size-16 hover:bg-lightblue text-3xl text-blue rounded-full">
-            <i class="fab fa-twitter"></i>
-        </button>
-        <nav class="flex flex-col gap-4 justify-center items-center md:items-start">
-            <button v-for="tab in tabs" :key="tab.id"
-                class="focus:outline-none hover:text-blue flex items-center justify-between gap-4 px-4 py-2 hover:bg-lightblue rounded-full">
-                <i class="text-2xl" :class="tab.icon"></i>
-                <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
+    <section class="h-screen border-r border-lighter lg:pr-4 flex flex-col items-center md:items-start min-w-max gap-4 justify-between">
+        <div class="w-full flex flex-col gap-4">
+            <button class="size-16 hover:bg-lightblue text-3xl text-blue rounded-full">
+                <i class="fab fa-twitter"></i>
             </button>
-        </nav>
-        <TextButton text="Tweet" action="() => {}" />
+            <nav class="flex flex-col gap-4 justify-center items-center md:items-start">
+                <button v-for="tab in tabs" :key="tab.id"
+                    class="focus:outline-none hover:text-blue flex items-center w-full justify-between gap-4 px-4 py-2 hover:bg-lightblue rounded-full">
+                    <i class="text-2xl" :class="tab.icon"></i>
+                    <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
+                </button>
+            </nav>
+            <TextButton text="Tweet" action="() => {}" />
+        </div>
+        <div class="w-full relative pb-4">
+            <button @click="dropdown = !dropdown" class="flex items-center w-full hover:bg-lightblue rounded-full p-2">
+                <img :src="`${profile.imageUrl || 'default_profile.png'}`" class="w-10 h-10 rounded-full" />
+                <div class="hidden lg:block ml-4 truncate">
+                    <div class="text-left text-sm font-bold leading-tight truncate">{{ profile.name }}</div>
+                    <div class="text-left text-sm leading-tight text-dark truncate">{{ profile.screenName }}</div>
+                </div>
+                <i class="hidden lg:block fas fa-angle-down ml-auto text-lg"></i>
+            </button>
+            <section v-if="dropdown === true"
+                class="absolute bottom-0 left-0 w-64 rounded-lg shadow-md border-lightest bg-white mb-16">
+                <button @click="dropdown = false" class="p-3 flex items-center w-full hover:bg-lightest">
+                    <img :src="`${profile.imageUrl || 'default_profile.png'}`" class="w-10 h-10 rounded-full" />
+                    <div class="ml-4">
+                        <p class="text-left text-sm font-bold leading-tight">{{ profile.name }}</p>
+                        <p class="text-left text-sm leading-tight text-dark">{{ profile.screenName }}</p>
+                    </div>
+                    <i class="fas fa-check ml-auto text-blue"></i>
+                </button>
+                <button class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
+                    Add an existing account
+                </button>
+                <button @click="signOut" class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
+                    Log out {{ profile.screenName }}
+                </button>
+            </section>
+        </div>
     </section>
 </template>
