@@ -4,6 +4,8 @@ import SideNav from '@/components/organisms/SideNav.vue'
 import TextButton from '@/components/atoms/TextButton.vue';
 import DefaultRightBar from '@/components/organisms/DefaultRightBar.vue';
 import { useTwitterStore } from '@/stores/twitter';
+import { onMounted, ref } from 'vue';
+import { useAuthStore } from '@/stores/authentication';
 
 const tweet = defineModel('tweet', {
   default: {
@@ -11,10 +13,18 @@ const tweet = defineModel('tweet', {
   }
 });
 const tweets = defineModel('tweets', { default: [] })
+const path = ref(window.location.pathname)
 
 const twitterStore = useTwitterStore();
 
 // TODO: implement UI store with values for: error, pending
+
+async function loginUserIfAlreadyAuthenticated() {
+  const authStore = useAuthStore();
+  await authStore.verifyAuth(path);
+}
+
+onMounted(() => loginUserIfAlreadyAuthenticated())
 
 </script>
 
