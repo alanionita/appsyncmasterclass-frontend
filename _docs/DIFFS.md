@@ -258,3 +258,16 @@ Diffs:
 - styles: implemented atomic design system for components
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-15-Home_page_setup_and_styling_with_Tailwind
+
+#  05-16-Home_page_loading_profile_data
+
+Diffs:
+-SideNav: add account dropdown with dummy local model; implemented dropdown state using ref(); added placeholder for signOut(); all previous dynamic values come from the local profile model; also improved html semantics
+- SideNav: implements store actions with new API for handleLogout(), uses authStore
+- stores/twitter: defined new store using Pinia api; integrated it within the authentication store at signIn()
+- stores/auth: added verifyAuth() method to replicate the check to Amplify and the store setting; new implementation using Pinia api not vuex; similar to the hub listener logic for 'signedIn' event
+- loginUserIfAlreadyAuthenticated(): implemented as a component function inside HomeView; calls authStore.verifyAuth() with the path (reactive); path is used to decided whether to route or not
+- Various refactors of names and labels and usability in an effort to keep things DRY
+- styles: made sure styles are sticking to an 8pt grid / divisible by 8
+
+Release: 
