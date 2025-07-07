@@ -11,16 +11,36 @@ export const useAuthStore = defineStore('authentication', {
         listener: null,
     }),
     actions: {
-        login(user) {
+        setState(user) {
             this.loggedIn = true
             if (user) {
                 this.user = user
             }
         },
-        async logout() {
-            await AmplifyAuth.signOut({ global: true });
+        resetState() {
             this.loggedIn = false;
             this.user = undefined;
+        },
+        async verifyAuth(path = null) {
+            const twitterStore = useTwitterStore();
+            try {
+                const user = await AmplifyAuth.getCurrentUser();
+                if (user) {
+                    this.setState(user);
+                    await twitterStore.setProfile();
+                    !path && router.push('/home');
+                    this.listener && this.stopListener();
+                } else {
+                    this.resetState();
+                }
+            } catch (err) {
+                console.error('Err [store/auth.verifyAuth()] :', err.message);
+                throw err;
+            }
+        },
+        async logout() {
+            await AmplifyAuth.signOut({ global: true });
+            this.resetState();
             router.push('/');
         },
 
@@ -94,8 +114,8 @@ export const useAuthStore = defineStore('authentication', {
         },
 
         async signIn(userData) {
+            const twitterStore = useTwitterStore();
             try {
-                const twitterStore = useTwitterStore();
                 const { email, password } = userData;
                 if (!email || !password) {
                     throw Error('Invalid user data')
