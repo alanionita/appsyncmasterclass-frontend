@@ -7,7 +7,7 @@ const defaultCreatedAt = '1970-01-01';
 export const useTwitterStore = defineStore('twitter', {
     state: () => ({
         profile: {
-            createAt: defaultCreatedAt,
+            createdAt: defaultCreatedAt,
             id: '',
             imgUrl: defaultImgUrl,
             name: "",
