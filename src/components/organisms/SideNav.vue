@@ -50,7 +50,7 @@ async function handleLogOut() {
             <TextButton text="Tweet" action="() => {}" />
         </div>
         <div class="w-full relative pb-4">
-            <button @click="dropdown = !dropdown" class="flex items-center w-full hover:bg-lightblue rounded-full p-2">
+            <button @click="dropdown = !dropdown" class="flex items-center w-full hover:bg-lightblue rounded-full p-4">
                 <img :src="`${twitterStore.profileImg}`" class="w-10 h-10 rounded-full" />
                 <div class="hidden lg:block ml-4 truncate">
                     <div class="text-left text-sm font-bold leading-tight truncate">{{ twitterStore.profile.name }}</div>
@@ -60,7 +60,7 @@ async function handleLogOut() {
             </button>
             <section v-if="dropdown === true"
                 class="absolute bottom-0 left-0 w-64 rounded-lg shadow-md border-lightest bg-white mb-16">
-                <button @click="dropdown = false" class="p-3 flex items-center w-full hover:bg-lightest">
+                <button @click="dropdown = false" class="p-4 flex items-center w-full hover:bg-lightest">
                     <img :src="`${twitterStore.profileImg}`" class="w-10 h-10 rounded-full" />
                     <div class="ml-4">
                         <p class="text-left text-sm font-bold leading-tight">{{ twitterStore.profile.name }}</p>
@@ -68,10 +68,10 @@ async function handleLogOut() {
                     </div>
                     <i class="fas fa-check ml-auto text-blue"></i>
                 </button>
-                <button class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
+                <button class="w-full text-left hover:bg-lightest border-t border-lighter p-4 text-sm">
                     Add an existing account
                 </button>
-                <button @click="handleLogOut" class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
+                <button @click="handleLogOut" class="w-full text-left hover:bg-lightest border-t border-lighter p-4 text-sm">
                     Log out {{ twitterStore.profile.screenName }}
                 </button>
             </section>
