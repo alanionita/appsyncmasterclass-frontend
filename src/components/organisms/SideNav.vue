@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import TextButton from '../atoms/TextButton.vue';
+import { useAuthStore } from '@/stores/authentication';
+
+const authStore = useAuthStore();
 
 const tabs = defineModel('tabs', {
     default: [
@@ -25,8 +28,14 @@ const profile = defineModel('profile', {
 
 const dropdown = ref(false)
 
-function signOut() {
-    console.log('sign out')
+async function handleLogOut() {
+    try {
+        console.info('signing out...')
+        await authStore.logout();
+    } catch (err) {
+        alert('Error signing out, please check console for error detail')
+        console.error('error signing out: ', err)
+    }
 }
 </script>
 
@@ -67,7 +76,7 @@ function signOut() {
                 <button class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
                     Add an existing account
                 </button>
-                <button @click="signOut" class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
+                <button @click="handleLogOut" class="w-full text-left hover:bg-lightest border-t border-lighter p-3 text-sm">
                     Log out {{ profile.screenName }}
                 </button>
             </section>

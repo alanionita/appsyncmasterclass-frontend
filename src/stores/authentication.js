@@ -20,6 +20,7 @@ export const useAuthStore = defineStore('authentication', {
             await AmplifyAuth.signOut({ global: true });
             this.loggedIn = false;
             this.user = undefined;
+            router.push('/');
         },
 
         async signUp(userData) {
