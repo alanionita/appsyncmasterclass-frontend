@@ -1,33 +1,28 @@
 import { Hub } from 'aws-amplify/utils';
-import { getCurrentUser } from 'aws-amplify/auth';
-import router from '@/router';
 import { useAuthStore } from '@/stores/authentication';
 
 async function authListener({ payload }) {
-    const prefix = "Hub (auth): ";
+    const prefix = "Listener (auth): ";
     const authStore = useAuthStore()
     switch (payload.event) {
         case 'signedIn':
-            console.info(prefix + 'user have been signedIn successfully.');
-            const user = await getCurrentUser();
-            authStore.login(user);
-            router.push('/home');
-            authStore.stopListener();
+            console.info(prefix + 'signIn success.');
+            await authStore.verifyAuth()
             break;
         case 'signedOut':
-            console.info(prefix + 'user have been signedOut successfully.');
+            console.info(prefix + 'signedOut success.');
             break;
         case 'tokenRefresh':
-            console.info(prefix + 'auth tokens have been refreshed.');
+            console.info(prefix + 'tokenRefresh success.');
             break;
         case 'tokenRefresh_failure':
-            console.info(prefix + 'failure while refreshing auth tokens.');
+            console.info(prefix + 'tokenRefresh fail.');
             break;
         case 'signInWithRedirect':
-            console.info(prefix + 'signInWithRedirect API has successfully been resolved.');
+            console.info(prefix + 'signInWithRedirect success.');
             break;
         case 'signInWithRedirect_failure':
-            console.info(prefix + 'failure while trying to resolve signInWithRedirect API.');
+            console.info(prefix + 'signInWithRedirect fail.');
             break;
         case 'customOAuthState':
             logger.info('custom state returned from CognitoHosted UI');
