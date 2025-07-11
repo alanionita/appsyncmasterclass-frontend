@@ -3,7 +3,7 @@ import { store } from '@/store'
 import SideNav from '@/components/organisms/SideNav.vue'
 import TextButton from '@/components/atoms/TextButton.vue';
 import DefaultRightBar from '@/components/organisms/DefaultRightBar.vue';
-import { useTwitterStore } from '@/stores/twitter';
+import { useTwitterProfile } from '@/stores/twitterProfile';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authentication';
 
@@ -12,10 +12,11 @@ const tweet = defineModel('tweet', {
     text: ''
   }
 });
+
 const tweets = defineModel('tweets', { default: [] })
 const path = ref(window.location.pathname)
 
-const twitterStore = useTwitterStore();
+const profile = useTwitterProfile();
 
 // TODO: implement UI store with values for: error, pending
 
@@ -43,7 +44,7 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
         <p>{{ store.error }}</p>
         <button @click="fetchData">Try Again</button>
       </div>
-      <div class="flex h-full flex-col overflow-y-auto gap-4" v-else-if="twitterStore.profile">
+      <div class="flex h-full flex-col overflow-y-auto gap-4" v-else-if="profile">
         <section class="border-b border-lighter flex items-center justify-between py-4">
           <h1 class="text-2xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
@@ -52,7 +53,7 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
           <form class="flex flex-col w-full relative gap-4">
             <div class="flex justify-center gap-4">
               <figure class="flex-none">
-                <img :src="`${twitterStore.profileImg}`" class="flex-none size-12 rounded-full" />
+                <img :src="`${profile.imgUrl}`" class="flex-none size-12 rounded-full" />
               </figure>
               <textarea v-model="tweet.text" placeholder="What's happening?"
                 class="flex-1 w-full focus:outline-none py-2"></textarea>
@@ -64,7 +65,8 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
                 <i class="text-lg text-blue far fa-chart-bar"></i>
                 <i class="text-lg text-blue far fa-smile"></i>
               </nav>
-              <button type="button" class="sm:self-end h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
+              <button type="button"
+                class="sm:self-end h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full"
                 :class="`${tweet.text ? '' : ' opacity-50 cursor-not-allowed'}`">Tweet</button>
             </div>
           </form>
@@ -75,12 +77,12 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
           <p class="font-semibold text-lg">Welcome to Twitter!</p>
           <p class="text-sm text-dark text-center">This is the best place to see what’s happening in your world. Find
             some people and topics to follow now.</p>
-          <TextButton text="Let's go!" action="() => {}"/>
+          <TextButton text="Let's go!" action="() => {}" />
         </section>
       </div>
     </section>
     <section class="hidden md:flex md:flex-col md:flex-3/12">
-      <DefaultRightBar/>
+      <DefaultRightBar />
     </section>
 
   </main>
