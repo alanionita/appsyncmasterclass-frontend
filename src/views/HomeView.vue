@@ -8,11 +8,7 @@ import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authentication';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 
-const tweet = defineModel('tweet', {
-  default: {
-    text: ''
-  }
-});
+const tweet = defineModel('tweet');
 
 const path = ref(window.location.pathname)
 
@@ -28,9 +24,9 @@ async function loginUserIfAlreadyAuthenticated() {
 }
 
 async function addNewTweet() {
-  if (!tweet.value.text.length === 0) return;
-  await timeline.createTweet(tweet.value.text);
-  tweet.text = ''
+  if (!tweet.value.length === 0) return;
+  await timeline.createTweet(tweet.value);
+  tweet.value = ''
 }
 
 onMounted(() => loginUserIfAlreadyAuthenticated())
@@ -63,7 +59,7 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
               <figure class="flex-none">
                 <img :src="`${profile.imgUrl}`" class="flex-none size-12 rounded-full" />
               </figure>
-              <textarea v-model="tweet.text" placeholder="What's happening?"
+              <textarea v-model="tweet" placeholder="What's happening?"
                 class="flex-1 w-full focus:outline-none py-2"></textarea>
             </div>
             <div class="flex h-fit justify-between items-center">
@@ -74,7 +70,8 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
                 <i class="text-lg text-blue far fa-smile"></i>
               </nav>
               <button type="submit"
-                class="sm:self-end h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full">Tweet</button>
+                :disabled="!tweet"
+                class="sm:self-end h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full disabled:cursor-not-allowed disabled:bg-lighter">Tweet</button>
             </div>
           </form>
         </section>
