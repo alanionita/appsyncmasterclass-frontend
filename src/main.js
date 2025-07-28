@@ -8,6 +8,7 @@ import { config } from './services/amplify/config'
 import { sessionStorage } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import './assets/main.css'
+import filters from './filters';
 
 // Config
 
@@ -18,6 +19,13 @@ cognitoUserPoolsTokenProvider.setKeyValueStorage(sessionStorage)
 // Create
 
 const app = createApp(App)
+
+// Global filter
+app.config.globalProperties.$filters = {
+  ...filters
+}
+
+// Store
 const pinia = createPinia()
 
 // Use

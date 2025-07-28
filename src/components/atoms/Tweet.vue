@@ -12,7 +12,7 @@ const { tweet } = defineProps(["tweet"])
             <div class="flex items-center w-full">
                 <p class="font-semibold">{{ tweet.profile.name }}</p>
                 <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
-                <p class="text-sm text-dark ml-2">{{ tweet.createdAt }}</p>
+                <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
                 <i class="fas fa-angle-down text-sm ml-auto"></i>
             </div>
             <p v-if="tweet.inReplyToUser" class="text-dark">

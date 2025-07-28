@@ -8,8 +8,6 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
     }),
     actions: {
         async createTweet(text) {
-            console.log('createTweet')
-            
             const newTweet = await gql.postTweet(text);
             this.tweets = this.tweets.toSpliced(0, 0, newTweet);
         },
@@ -17,7 +15,6 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
             try {
                 const timeline = await gql.getMyTimeline(limit, nextToken);
 
-                console.log({timeline})
                 this.tweets = timeline.tweets
 
                 if (timeline.nextToken) {
