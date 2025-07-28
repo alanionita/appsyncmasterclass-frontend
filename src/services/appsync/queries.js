@@ -35,7 +35,11 @@ export const getMyTimeline = /* GraphQL */ `
       tweets {
         id
         createdAt
-
+        profile {
+          name
+          imgUrl
+        }
+    
         ... on Tweet {
           text
           replies
@@ -43,6 +47,10 @@ export const getMyTimeline = /* GraphQL */ `
           retweets
           liked
           retweeted
+          profile {
+            name
+            imgUrl
+          }
         }
         ... on Reply {
           text
@@ -51,6 +59,10 @@ export const getMyTimeline = /* GraphQL */ `
           retweets
           liked
           retweeted
+          profile {
+            name
+            imgUrl
+          }
         }
       }
       nextToken
