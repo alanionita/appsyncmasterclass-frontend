@@ -271,3 +271,14 @@ Diffs:
 - styles: made sure styles are sticking to an 8pt grid / divisible by 8
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-16-Home_page_loading_profile_data
+
+#  05-17-Home_page_posting_a_new_tweet
+
+Diffs:
+- stores: created a new timelineStore instead of using a big store with nested properties; paradigm avoid any update lifecycle issues where some keys are behind / unhydrated
+- store.getMytimeline: data fetching method goes on the new store for TwitterTimelines; 
+- graphql: updated service api to include a new controler for getMyTimeline, updated the query to fetch tweeit.profile values, updates .query() util to handle query variables
+- HomeView: implemented the new timeline store and renders HTML elements using the 
+- HomeView: implemented the tweet logic for disabling submit based on newer model patterns
+
+Release: 
