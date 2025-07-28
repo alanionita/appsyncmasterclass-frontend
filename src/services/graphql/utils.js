@@ -14,17 +14,24 @@ const checkAuth = async () => {
   }
 }
 
-export async function query(queryStr) {
+export async function query({ queryStr, variables = null }) {
   try {
     const isAuthenticated = await checkAuth()
     if (!isAuthenticated) {
       throw "Not authenticated"
     }
-    const res = await client.graphql({
+
+    const params = {
       query: queryStr
-    });
-    return res;    
+    };
+
+    if (variables) {
+      params['variables'] = variables
+    }
+
+    const res = await client.graphql(params);
+    return res;
   } catch (err) {
-    console.info('Error [callQuery] :', err.message)
+    console.error('Error [callQuery] :', err.message)
   }
 }
