@@ -22,12 +22,12 @@ export const useAuthStore = defineStore('authentication', {
             this.user = undefined;
         },
         async verifyAuth(path = null) {
-            const twitterProfile = useTwitterProfile();
+            const store = useTwitterProfile();
             try {
                 const user = await AmplifyAuth.getCurrentUser();
                 if (user) {
                     this.setState(user);
-                    await twitterProfile.setProfile();
+                    await store.setProfile();
                     !path && router.push('/home');
                     this.listener && this.stopListener();
                 } else {
@@ -114,7 +114,7 @@ export const useAuthStore = defineStore('authentication', {
         },
 
         async signIn(userData) {
-            const twitterStore = useTwitterStore();
+            const store = useTwitterProfile();
             try {
                 const { email, password } = userData;
                 if (!email || !password) {
@@ -126,7 +126,7 @@ export const useAuthStore = defineStore('authentication', {
                     password,
                 })
 
-                await twitterStore.setProfile();
+                await store.setProfile();
 
                 return {
                     nextStep
