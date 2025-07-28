@@ -37,6 +37,7 @@ export const getMyTimeline = /* GraphQL */ `
         createdAt
         profile {
           name
+          screenName
           imgUrl
         }
     
@@ -49,6 +50,7 @@ export const getMyTimeline = /* GraphQL */ `
           retweeted
           profile {
             name
+            screenName
             imgUrl
           }
         }
@@ -61,6 +63,7 @@ export const getMyTimeline = /* GraphQL */ `
           retweeted
           profile {
             name
+            screenName
             imgUrl
           }
         }
