@@ -1,12 +1,12 @@
 <script setup>
 import { store } from '@/store'
 import SideNav from '@/components/organisms/SideNav.vue'
-import TextButton from '@/components/atoms/TextButton.vue';
 import DefaultRightBar from '@/components/organisms/DefaultRightBar.vue';
 import { useTwitterProfile } from '@/stores/twitterProfile';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authentication';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
+import Timeline from '@/components/molecules/Timeline.vue';
 
 const tweet = defineModel('tweet');
 
@@ -77,58 +77,7 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
         </section>
 
         <!-- timeline -->
-        <section v-if="timeline.tweets.length === 0"
-          class="flex flex-col items-center justify-center w-full gap-4 px-4">
-          <p class="font-semibold text-lg">Welcome to Twitter!</p>
-          <p class="text-sm text-dark text-center">This is the best place to see what’s happening in your world. Find
-            some people and topics to follow now.</p>
-          <TextButton text="Let's go!" action="() => {}" />
-        </section>
-        <section v-if="timeline.tweets.length > 0" v-for="tweet in timeline.tweets" :key="tweet.id">
-          <div class="w-full p-4 border-b hover:bg-lightest flex">
-            <div class="flex-none mr-4">
-              <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
-                class="h-12 w-12 rounded-full flex-none" />
-            </div>
-            <div class="w-full">
-              <div class="flex items-center w-full">
-                <p class="font-semibold">{{ tweet.profile.name }}</p>
-                <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
-                <p class="text-sm text-dark ml-2">{{ tweet.time }}</p>
-                <i class="fas fa-angle-down text-sm ml-auto"></i>
-              </div>
-              <p v-if="tweet.inReplyToUser" class="text-dark">
-                Replying to @{{ tweet.inReplyToUser.screenName }}
-              </p>
-              <p class="pb-2">
-                {{ tweet.text }}
-              </p>
-              <div class="flex w-full">
-                <div class="flex items-center text-sm text-dark w-1/4">
-                  <button class="mr-2 rounded-full hover:bg-lighter">
-                    <i class="far fa-comment"></i>
-                  </button>
-                  <p v-if="tweet.replies > 0"> {{ tweet.replies }} </p>
-                </div>
-                <div class="flex items-center text-sm text-dark w-1/4">
-                  <button class="mr-2 rounded-full hover:bg-lighter">
-                    <i :class="`fas fa-retweet ${tweet.retweeted ? 'text-green-500' : ''}`"></i>
-                  </button>
-                  <p v-if="tweet.retweets > 0"> {{ tweet.retweets }} </p>
-                </div>
-                <div class="flex items-center text-sm text-dark w-1/4">
-                  <button class="mr-2 rounded-full hover:bg-lighter">
-                    <i :class="`fas fa-heart ${tweet.liked ? 'text-red-600' : ''}`"></i>
-                  </button>
-                  <p v-if="tweet.likes > 0"> {{ tweet.likes }} </p>
-                </div>
-                <div class="flex items-center text-sm text-dark w-1/4">
-                  <i class="fas fa-share-square mr-3"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Timeline :tweets="timeline.tweets"/>
       </div>
     </section>
     <section class="hidden md:flex md:flex-col md:flex-3/12">
