@@ -66,6 +66,15 @@ export const getMyTimeline = /* GraphQL */ `
             screenName
             imgUrl
           }
+          inReplyToTweet {
+            createdAt
+            id
+          }
+          inReplyToUsers {
+            name
+            screenName
+            id
+          }
         }
       }
       nextToken
