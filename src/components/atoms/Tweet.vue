@@ -1,5 +1,5 @@
 <script setup>
-import { likeTweet, unlikeTweet } from '@/services/graphql/controllers'
+import { likeTweet, retweetTweet, unlikeTweet, unretweetTweet } from '@/services/graphql/controllers'
 
 const { tweet } = defineProps(["tweet"])
 
@@ -22,6 +22,29 @@ async function handleLikeBtn() {
                 console.error(`failed to unlike tweet [${tweet.id}]`, err)
                 tweet.liked = true
                 tweet.likes++
+            })
+    }
+}
+
+async function handleRetweetBtn() {
+    // TODO: add a debounce
+    if (!tweet.retweeted) {
+        tweet.retweeted = true
+        tweet.retweets++
+        await retweetTweet(tweet.id)
+            .catch(err => {
+                console.error(`failed to retweet [${tweet.id}]`, err)
+                tweet.retweeted = false
+                tweet.retweets--
+            })
+    } else {
+        tweet.retweeted = false
+        tweet.retweets--
+        await unretweetTweet(tweet.id)
+            .catch(err => {
+                console.error(`failed to unretweet [${tweet.id}]`, err)
+                tweet.retweeted = true
+                tweet.retweets++
             })
     }
 }
@@ -54,7 +77,7 @@ async function handleLikeBtn() {
                     <p v-if="tweet.replies > 0"> {{ tweet.replies }} </p>
                 </div>
                 <div class="flex items-center text-sm text-dark w-1/4">
-                    <button class="mr-2 rounded-full hover:bg-lighter">
+                    <button @click="handleRetweetBtn()" class="mr-2 rounded-full hover:bg-lighter cursor-pointer">
                         <i :class="`fas fa-retweet ${tweet.retweeted ? 'text-green-500' : ''}`"></i>
                     </button>
                     <p v-if="tweet.retweets > 0"> {{ tweet.retweets }} </p>

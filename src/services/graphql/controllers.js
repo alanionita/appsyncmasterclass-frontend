@@ -95,3 +95,41 @@ export const unlikeTweet = async (tweetId) => {
     console.info('Error [gql/controllers/unlikeTweet] :', err.message)
   }
 }
+
+export const retweetTweet = async (tweetId) => {
+  try {
+    if (!tweetId) throw Error('Missing required param tweetId')
+
+    const queryParam = {
+      queryStr: Mutations.retweet,
+      variables: {
+        tweetId
+      }
+    }
+
+    const res = await gql.query(queryParam)
+    return res.data.retweet
+
+  } catch (err) {
+    console.info('Error [gql/controllers/retweetTweet] :', err.message)
+  }
+}
+
+export const unretweetTweet = async (tweetId) => {
+  try {
+    if (!tweetId) throw Error('Missing required param tweetId')
+
+    const queryParam = {
+      queryStr: Mutations.unretweet,
+      variables: {
+        tweetId
+      }
+    }
+
+    const res = await gql.query(queryParam)
+    return res
+
+  } catch (err) {
+    console.info('Error [gql/controllers/unretweetTweet] :', err.message)
+  }
+}
