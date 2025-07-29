@@ -1,22 +1,5 @@
-import { formatDistanceToNow, format } from "date-fns";
-
-// TODO: implement relative time with date-fns
-// moment.updateLocale('en', {
-//     monthsShort: [
-//         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-//         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-//     ],
-//     relativeTime: {
-//         past: '%ss',
-//         s: 'Now',
-//         ss: '%ss',
-//         m: '%dm',
-//         mm: '%dm',
-//         h: '%dh',
-//         hh: '%dh',
-//     }
-// });
-
+import { formatDistanceToNow, format, formatRelative } from "date-fns";
+import { enGB } from 'date-fns/locale';
 
 function dateDiffInDays(incoming) {
     // Timezone aware date distance calculation, will return 0 for 'today' and negative num days for past dates
@@ -29,11 +12,31 @@ function dateDiffInDays(incoming) {
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+function formatHHMMSS(unit, count) {
+    switch (true) {
+        case unit === 'xSeconds':
+            return `${count}s`;
+        case unit === 'lessThanXMinutes':
+            return 'Now'
+        case unit === 'xMinutes':
+            return `${count}m`;
+        case unit === 'xHours':
+            return `${count}h`;
+        default:
+            return;
+    }
+}
+
+const customLocale = {
+    ...enGB,
+    formatDistance: formatHHMMSS,
+};
+
 export default function timeago(date) {
     const distance = dateDiffInDays(date);
     if (distance === 0) {
-        return formatDistanceToNow(date, { addSuffix: true });    // Now, 15s, 5m, 3h
+        return formatDistanceToNow(date, { addSuffix: true, locale: customLocale });    // Now, 15s, 5m, 3h
     } else {
-        return format(new Date(date), "MMM d");  // Jan 31
+        return format(new Date(date), "MMM d", { locale: enGB });  // Jan 31
     }
 }
