@@ -1,7 +1,10 @@
 <script setup>
 import { likeTweet, retweetTweet, unlikeTweet, unretweetTweet } from '@/services/graphql/controllers'
+import { ref } from 'vue'
+import ReplyOverlay from '../organisms/ReplyOverlay.vue';
 
 const { tweet } = defineProps(["tweet"])
+const replyUI = ref(false);
 
 async function handleLikeBtn() {
     // TODO: add a debounce
@@ -49,6 +52,10 @@ async function handleRetweetBtn() {
     }
 }
 
+async function handleReplyBtn() {
+    replyUI.value = !replyUI.value
+}
+
 </script>
 
 <template>
@@ -63,15 +70,16 @@ async function handleRetweetBtn() {
                 <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
                 <i class="fas fa-angle-down text-sm ml-auto"></i>
             </div>
-            <p v-if="tweet.inReplyToUser" class="text-dark">
-                Replying to @{{ tweet.inReplyToUser.screenName }}
+            <p v-if="tweet.inReplyToUsers && tweet.inReplyToUsers.length > 0" class="text-dark">
+                Replying to {{tweet.inReplyToUsers.map(x => `@${x.screenName}`).join(",")}}
             </p>
+
             <p class="pb-2">
                 {{ tweet.text }}
             </p>
             <div class="flex w-full">
                 <div class="flex items-center text-sm text-dark w-1/4">
-                    <button class="mr-2 rounded-full hover:bg-lighter">
+                    <button @click="handleReplyBtn()" class="mr-2 rounded-full hover:bg-lighter cursor-pointer">
                         <i class="far fa-comment"></i>
                     </button>
                     <p v-if="tweet.replies > 0"> {{ tweet.replies }} </p>
@@ -93,5 +101,7 @@ async function handleRetweetBtn() {
                 </div>
             </div>
         </div>
+
+        <ReplyOverlay :tweet="tweet" @hide="handleReplyBtn" :showUI="replyUI" />
     </div>
 </template>

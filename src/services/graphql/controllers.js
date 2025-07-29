@@ -133,3 +133,25 @@ export const unretweetTweet = async (tweetId) => {
     console.info('Error [gql/controllers/unretweetTweet] :', err.message)
   }
 }
+
+export const postReply = async ({tweetId, text}) => {
+  try {
+    if (!tweetId) throw Error('Missing required param tweetId')
+    if (!text) throw Error('Missing required param text')
+
+    const queryParam = {
+      queryStr: Mutations.reply,
+      variables: {
+        tweetId,
+        text
+      }
+    }
+
+    const res = await gql.query(queryParam)
+
+    return res.data.reply
+
+  } catch (err) {
+    console.info('Error [gql/controllers/postReply] :', err.message)
+  }
+}
