@@ -4,8 +4,8 @@ import * as gql from "./utils";
 
 export const getMyProfile = async () => {
   try {
-    const res = await gql.query({queryStr: Queries.getMyProfile})
-    
+    const res = await gql.query({ queryStr: Queries.getMyProfile })
+
     const profile = res.data.getMyProfile;
 
     profile.imgUrl = profile.imgUrl || 'default_profile.png'
@@ -19,7 +19,7 @@ export const getMyProfile = async () => {
 export const getMyTimeline = async (limit = 10, nextToken = null) => {
   try {
     const queryParam = {
-      queryStr: Queries.getMyTimeline, 
+      queryStr: Queries.getMyTimeline,
       variables: {
         limit
       }
@@ -30,7 +30,7 @@ export const getMyTimeline = async (limit = 10, nextToken = null) => {
     }
 
     const res = await gql.query(queryParam)
-    
+
     const timeline = res.data.getMyTimeline;
 
     return timeline
@@ -42,9 +42,9 @@ export const getMyTimeline = async (limit = 10, nextToken = null) => {
 export const postTweet = async (text) => {
   try {
     if (!text) throw Error('Missing required param text')
-    
-      const queryParam = {
-      queryStr: Mutations.tweet, 
+
+    const queryParam = {
+      queryStr: Mutations.tweet,
       variables: {
         text
       }
@@ -52,8 +52,46 @@ export const postTweet = async (text) => {
 
     const res = await gql.query(queryParam)
     return res.data.tweet
-  
+
   } catch (err) {
     console.info('Error [gql/controllers/postTweet] :', err.message)
+  }
+}
+
+export const likeTweet = async (tweetId) => {
+  try {
+    if (!tweetId) throw Error('Missing required param tweetId')
+
+    const queryParam = {
+      queryStr: Mutations.like,
+      variables: {
+        tweetId
+      }
+    }
+
+    const res = await gql.query(queryParam)
+    return res.data
+
+  } catch (err) {
+    console.info('Error [gql/controllers/likeTweet] :', err.message)
+  }
+}
+
+export const unlikeTweet = async (tweetId) => {
+  try {
+    if (!tweetId) throw Error('Missing required param tweetId')
+
+    const queryParam = {
+      queryStr: Mutations.unlike,
+      variables: {
+        tweetId
+      }
+    }
+
+    const res = await gql.query(queryParam)
+    return res.data
+
+  } catch (err) {
+    console.info('Error [gql/controllers/unlikeTweet] :', err.message)
   }
 }

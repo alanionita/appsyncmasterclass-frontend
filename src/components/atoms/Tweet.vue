@@ -1,5 +1,30 @@
 <script setup>
+import { likeTweet, unlikeTweet } from '@/services/graphql/controllers'
+
 const { tweet } = defineProps(["tweet"])
+
+async function handleLikeBtn() {
+    // TODO: add a debounce
+    if (!tweet.liked) {
+        tweet.liked = true
+        tweet.likes++
+        await likeTweet(tweet.id)
+            .catch(err => {
+                console.error(`failed to like tweet [${tweet.id}]`, err)
+                tweet.liked = false
+                tweet.likes--
+            })
+    } else {
+        tweet.liked = false
+        tweet.likes--
+        await unlikeTweet(tweet.id)
+            .catch(err => {
+                console.error(`failed to unlike tweet [${tweet.id}]`, err)
+                tweet.liked = true
+                tweet.likes++
+            })
+    }
+}
 
 </script>
 
@@ -35,7 +60,7 @@ const { tweet } = defineProps(["tweet"])
                     <p v-if="tweet.retweets > 0"> {{ tweet.retweets }} </p>
                 </div>
                 <div class="flex items-center text-sm text-dark w-1/4">
-                    <button class="mr-2 rounded-full hover:bg-lighter">
+                    <button @click="handleLikeBtn()" class="mr-2 rounded-full hover:bg-lighter cursor-pointer">
                         <i :class="`fas fa-heart ${tweet.liked ? 'text-red-600' : ''}`"></i>
                     </button>
                     <p v-if="tweet.likes > 0"> {{ tweet.likes }} </p>
