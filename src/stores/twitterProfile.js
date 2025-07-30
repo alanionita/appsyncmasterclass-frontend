@@ -1,8 +1,19 @@
 import { defineStore } from 'pinia';
 import * as gql from '@/services/graphql/controllers'
+import { format } from 'date-fns';
 
 const defaultImgUrl = 'default_profile.png';
 const defaultCreatedAt = '1970-01-01';
+
+function formatProfileCreatedAt({ createdAt }) {
+    try {
+        const date = new Date(createdAt);
+        return format(date, 'MMMM yyyy')
+
+    } catch (err) {
+        console.error('Err [twitterProfile/formatProfileCreatedAt] :', err.message)
+    }
+}   
 
 export const useTwitterProfile = defineStore('twitterProfile', {
     state: () => ({
@@ -29,5 +40,7 @@ export const useTwitterProfile = defineStore('twitterProfile', {
         }
     },
     getters: {
+        joinedDate: state => formatProfileCreatedAt(state),
+        isSelf: state => screenName => state.screenName == screenName,
     },
 });
