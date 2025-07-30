@@ -18,7 +18,6 @@ const route = useRoute()
 async function loginUserIfAlreadyAuthenticated(screenName) {
   const authStore = useAuthStore();
   await authStore.verifyAuth(path);
-  console.log({ screenName })
   if (!myProfile.isSelf(screenName)) {
     isMine.value = false;
     await theirProfile.setProfile(screenName)
@@ -36,7 +35,7 @@ onBeforeRouteUpdate((to, from) => {
 </script>
 
 <template>
-  <ThreeColTemplate :key="componentKey">
+  <ThreeColTemplate>
     <template #middle>
       <ProfileMy v-if="isMine" />
       <ProfileTheir v-if="!isMine" />
