@@ -281,4 +281,29 @@ Diffs:
 - HomeView: implemented the new timeline store and renders HTML elements using the 
 - HomeView: implemented the tweet logic for disabling submit based on newer model patterns
 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-17-Home_page_posting_a_new_tweet
+
+# 05-18-Home_page_rendering_the_timeline
+
+Diffs:
+- components: creates within the Atomic Design structure
+- components: reactive props declares with newer VueJS v3 syntax 
+- HomeView: imports of the components done using VueJS v3 patterns
+- filters: filters API has been deprecated from VueJS.v3; implemented via `app.config.globalProperties.$filters` in main.js; identical in function
+- filters/timeago: used `date-fns` instead of `moment` (deprecated); implemented distanceFrom(), formatting(), and custom locale logic for producing like for like date results eg. Now, 15s, 1m, 3h 
+
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-18-Home_page_rendering_the_timeline
+
+# 05-19-Home_page_adding_reply_retweet_like_and_unlike
+
+Diffs:
+- like/unlike: adds like functionality using Tweet component handleTweetBtn(), and graphql.controllers ; debouncing will need to added here also 
+- retweet/unretweet: used the same pattern
+- reply: controller used the same pattern; required getMyTimeline() query update to include inReply* values for Reply type
+- reply: Tweet component used custom v-on event for hiding instead of :showReply.sync(); in addition to a 2nd prop binding for replyUI
+- reply: ReplyOverlay makes use of 2 API styles for emit, because $emit is not available within <script setup>; also makes use of custom v-on event for 'hide'; uses new Pinia state patterns for profile and timeline state; where the timeline state is used to update the HomeView timeline once the replyUI is closed;
+- state: actions were not included instead, rather opted for component-local handlers calling GraphQL controllers and state functions which call GraphQL controllers (timeline updates)
+- retweet component: instead of using the Auth package from amplify directly, it checks the user value from the authStore
+- retweet component: since the retweeting now creates a new component, a timeline refresh is required on the retweet handler on Tweet comp
+
 Release: 
