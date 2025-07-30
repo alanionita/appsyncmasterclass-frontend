@@ -3,18 +3,22 @@ import { ref } from 'vue';
 import TextButton from '../atoms/TextButton.vue';
 import { useAuthStore } from '@/stores/authentication';
 import { useTwitterProfile } from '@/stores/twitterProfile';
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
 
 const authStore = useAuthStore();
 
 const tabs = defineModel('tabs', {
     default: [
-        { icon: 'fas fa-home', title: 'Home', id: 'home', target: 'Home' },
+        { icon: 'fas fa-home', title: 'Home', id: 'home', target: 'home' },
         { icon: 'fas fa-hashtag', title: 'Explore', id: 'explore' },
         { icon: 'far fa-bell', title: 'Notifications', id: 'notifications' },
         { icon: 'far fa-envelope', title: 'Messages', id: 'messages' },
         { icon: 'far fa-bookmark', title: 'Bookmarks', id: 'bookmarks' },
         { icon: 'fas fa-clipboard-list', title: 'Lists', id: 'lists' },
-        { icon: 'far fa-user', title: 'Profile', id: 'profile', target: 'Profile' },
+        { icon: 'far fa-user', title: 'Profile', id: 'profile', target: 'profile' },
         { icon: 'fas fa-ellipsis-h', title: 'More', id: 'more' }
     ]
 })
@@ -32,6 +36,25 @@ async function handleLogOut() {
         console.error('error signing out: ', err)
     }
 }
+
+async function handleTabClick(target) {
+    const current = route.name;
+    if (target != current || (route.params.screenName != profile.screenName)) {
+        let pushParam = {
+            name: target
+        }
+
+        if (target === 'profile') {
+            pushParam = Object.assign({}, pushParam, {
+                params: {
+                    screenName: profile.screenName
+                }
+            })
+        }
+
+        router.push(pushParam)
+    }
+}
 </script>
 
 <template>
@@ -42,7 +65,7 @@ async function handleLogOut() {
                 <i class="fab fa-twitter"></i>
             </button>
             <nav class="flex flex-col gap-4 justify-center items-center md:items-start">
-                <button v-for="tab in tabs" :key="tab.id"
+                <button v-for="tab in tabs" :key="tab.id" @click="handleTabClick(tab.target)"
                     class="focus:outline-none hover:text-blue flex items-center w-full justify-between gap-4 px-4 py-2 hover:bg-lightblue rounded-full">
                     <i class="text-2xl" :class="tab.icon"></i>
                     <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
@@ -57,7 +80,7 @@ async function handleLogOut() {
                     <div class="text-left text-sm font-bold leading-tight truncate">{{ profile.name }}
                     </div>
                     <div class="text-left text-sm leading-tight text-dark truncate">{{ profile.screenName
-                        }}</div>
+                    }}</div>
                 </div>
                 <i class="hidden lg:block fas fa-angle-down ml-auto text-lg"></i>
             </button>
