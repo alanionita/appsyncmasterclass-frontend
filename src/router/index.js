@@ -22,6 +22,13 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
       meta: { protected: true}
     },
+
+    {
+      path: '/:screenName',
+      name: 'profile',
+      component: () => import('../views/ProfileView.vue'),
+      meta: { protected: true}
+    },
   ],
 })
 
