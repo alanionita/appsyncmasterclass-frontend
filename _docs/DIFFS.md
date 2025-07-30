@@ -316,4 +316,16 @@ Diffs:
 - router: implemented router and route logic via the use* hooks
 - routing: corrected logic where route to Home was using an undeclared param; VueJS antipattern as seen here - https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-20-Profile_page_setup_and_styling_with_Tailwind
+
+# 05-21-Profile_page_rendering_profile_details 
+
+Diffs:
+- store: already had a separate store for twitterProfile; add the getters to that; also uses 'date-fns' instead of 'moment' for date conversion
+- UI: removed specific margin and padding, in favour of responsive containers and gaps
+- ProfileView: instead of specific dynamic elements, split up the ProfileView to render to sub components for each type of profile
+- stores: instead of updating the same "profile" store, decided to have 2 Pinia stores (similar signature) for their and my profile
+- ProfileView: checks route.params.screenName to decide which view to render
+- ProfileView: implements 'onBeforeRouteUpdate' because for each route with /:screenName we render the same component; this causes reactivity issues, mainly a stale UI; logic rechecks the 'to' navigation and decides which route should be used
+
 Release:
