@@ -76,7 +76,26 @@ export const getMyTimeline = /* GraphQL */ `
             id
           }
         }
-      }
+        ... on Retweet {
+          retweetOf {
+            ... on Tweet {
+              id
+              createdAt
+              text
+              replies
+              likes
+              retweets
+              liked
+              retweeted
+              profile {
+                name
+                screenName
+                imgUrl
+              }
+            }
+          }
+        }
+      } 
       nextToken
       __typename
     }

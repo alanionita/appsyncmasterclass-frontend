@@ -2,8 +2,10 @@
 import { likeTweet, retweetTweet, unlikeTweet, unretweetTweet } from '@/services/graphql/controllers'
 import { ref } from 'vue'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
+import { useTwitterTimeline } from '@/stores/twitterTimeline';
 
 const { tweet } = defineProps(["tweet"])
+const timeline = useTwitterTimeline();
 const replyUI = ref(false);
 
 async function handleLikeBtn() {
@@ -40,6 +42,7 @@ async function handleRetweetBtn() {
                 tweet.retweeted = false
                 tweet.retweets--
             })
+        timeline.getMyTimeline();
     } else {
         tweet.retweeted = false
         tweet.retweets--
@@ -49,6 +52,7 @@ async function handleRetweetBtn() {
                 tweet.retweeted = true
                 tweet.retweets++
             })
+        timeline.getMyTimeline();
     }
 }
 

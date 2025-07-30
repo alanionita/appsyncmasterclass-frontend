@@ -1,6 +1,7 @@
 <script setup>
 import TextButton from '@/components/atoms/TextButton.vue';
 import Tweet from '@/components/atoms/Tweet.vue';
+import Retweet from '@/components/atoms/Retweet.vue';
 
 const { tweets } = defineProps(['tweets']);
 
@@ -14,7 +15,9 @@ const { tweets } = defineProps(['tweets']);
             <TextButton text="Let's go!" action="() => {}" />
         </section>
         <section v-if="tweets.length > 0" v-for="tweet in tweets" :key="tweet.id">
-            <Tweet :tweet="tweet"/>
+            <Tweet v-if="!tweet.retweetOf" :tweet="tweet"/>
+
+            <Retweet v-if="tweet.retweetOf" :tweet="tweet"/>
         </section>
     </div>
 </template>
