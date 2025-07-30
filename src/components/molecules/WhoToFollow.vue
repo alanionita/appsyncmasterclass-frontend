@@ -15,17 +15,17 @@ const followSuggestions = defineModel("followSuggestions", {
         </header>
         <ul>
             <li v-for="suggestion in followSuggestions" :key="suggestion.id">
-                <button class="w-full flex hover:bg-lighter p-4 gap-4 border-t border-lighter">
+                <section class="w-full flex hover:bg-lighter p-4 gap-4 border-t border-lighter">
                     <img :src="suggestion.imageUrl" class="size-12 rounded-full" />
-                    <section class="hidden md:flex md:flex-col justify-center items-start">
+                    <div class="hidden md:flex md:flex-col justify-center items-start">
                         <p class="text-left text-m font-semibold leading-tight">{{ suggestion.name }}</p>
                         <p class="text-left text-sm leading-tight text-dark">{{ suggestion.screenName }}</p>
-                    </section>
+                    </div>
                     <button
                         class="ml-auto text-sm text-blue font-semibold px-4 rounded-full border border-blue">
                         Follow
                     </button>
-                </button>
+                </section>
             </li>
             <li>
                 <button class="p-4 w-full hover:bg-lighter hover:cursor-pointer text-left text-blue border-t border-lighter">
