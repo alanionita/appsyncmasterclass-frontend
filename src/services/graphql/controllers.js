@@ -155,3 +155,24 @@ export const postReply = async ({tweetId, text}) => {
     console.info('Error [gql/controllers/postReply] :', err.message)
   }
 }
+
+export const getProfile = async ({screenName}) => {
+  try {
+    const queryParam = {
+      queryStr: Queries.getProfile,
+      variables: {
+        screenName
+      }
+    }
+
+    const res = await gql.query(queryParam)
+
+    const profile = res.data.getProfile;
+
+    profile.imgUrl = profile.imgUrl || 'default_profile.png'
+
+    return profile
+  } catch (err) {
+    console.error('Error [getProfile] :', err.message)
+  }
+}
