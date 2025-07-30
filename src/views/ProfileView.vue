@@ -18,7 +18,12 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
 <template>
   <ThreeColTemplate>
     <template #middle>
-      <h1>Profile</h1>
+      <div class="flex h-full flex-col overflow-y-auto gap-4">
+        <section class="border-b border-lighter flex items-center justify-between py-4">
+          <h1 class="text-2xl font-semibold">Profile</h1>
+          <i class="far fa-star text-xl text-blue"></i>
+        </section>
+      </div>
     </template>
   </ThreeColTemplate>
 </template>
