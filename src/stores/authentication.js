@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import * as AmplifyAuth from 'aws-amplify/auth';
 import router from '@/router';
 import { startAuthListener } from '@/services/amplify/hub';
-import { useTwitterProfile } from './twitterProfile';
+import { useTwitterMyProfile } from './twitterMyProfile';
 
 export const useAuthStore = defineStore('authentication', {
     state: () => ({
@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('authentication', {
             this.user = undefined;
         },
         async verifyAuth(path = null) {
-            const store = useTwitterProfile();
+            const store = useTwitterMyProfile();
             try {
                 const user = await AmplifyAuth.getCurrentUser();
                 if (user) {
@@ -114,7 +114,7 @@ export const useAuthStore = defineStore('authentication', {
         },
 
         async signIn(userData) {
-            const store = useTwitterProfile();
+            const store = useTwitterMyProfile();
             try {
                 const { email, password } = userData;
                 if (!email || !password) {

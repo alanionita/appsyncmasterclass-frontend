@@ -11,11 +11,11 @@ function formatProfileCreatedAt({ createdAt }) {
         return format(date, 'MMMM yyyy')
 
     } catch (err) {
-        console.error('Err [twitterProfile/formatProfileCreatedAt] :', err.message)
+        console.error('Err [twitterMyProfile/formatProfileCreatedAt] :', err.message)
     }
-}   
+}
 
-export const useTwitterProfile = defineStore('twitterProfile', {
+export const useTwitterMyProfile = defineStore('twitterMyProfile', {
     state: () => ({
         createdAt: defaultCreatedAt,
         id: '',
@@ -34,7 +34,7 @@ export const useTwitterProfile = defineStore('twitterProfile', {
                     }
                 }
             } catch (err) {
-                console.error('Err [twitter.setProfile()', err.message)
+                console.error('Err [twitterMyProfile.setProfile()', err.message)
                 throw err
             }
         }

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import TextButton from '../atoms/TextButton.vue';
 import { useAuthStore } from '@/stores/authentication';
-import { useTwitterProfile } from '@/stores/twitterProfile';
+import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -23,7 +23,7 @@ const tabs = defineModel('tabs', {
     ]
 })
 
-const profile = useTwitterProfile()
+const profile = useTwitterMyProfile()
 
 const dropdown = ref(false)
 

@@ -1,13 +1,13 @@
 <script setup>
 import { postReply } from '@/services/graphql/controllers';
-import { useTwitterProfile } from '@/stores/twitterProfile';
+import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 
 const { showUI, tweet } = defineProps(["showUI", "tweet"]);
 const emit = defineEmits(['hide'])
 
 
-const profile = useTwitterProfile();
+const profile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
 
 const replyText = defineModel('replyText');

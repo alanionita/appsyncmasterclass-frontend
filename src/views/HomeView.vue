@@ -1,5 +1,5 @@
 <script setup>
-import { useTwitterProfile } from '@/stores/twitterProfile';
+import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authentication';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
@@ -10,7 +10,7 @@ const tweet = defineModel('tweet');
 
 const path = ref(window.location.pathname)
 
-const profile = useTwitterProfile();
+const profile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
 
 // TODO: implement UI store with values for: error, pending
