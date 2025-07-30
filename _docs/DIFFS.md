@@ -306,4 +306,14 @@ Diffs:
 - retweet component: instead of using the Auth package from amplify directly, it checks the user value from the authStore
 - retweet component: since the retweeting now creates a new component, a timeline refresh is required on the retweet handler on Tweet comp
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-19-Home_page_adding_reply_retweet_like_and_unlike
+
+# 05-20-Profile_page_setup_and_styling_with_Tailwind 
+
+Diffs:
+- layout: since Profile and Home views share a layout, a new component/template was created; uses names slots to fill in content in the main column; implemented in HomeView and ProfileView
+- ProfileView: implemented using the above mentioned layout
+- router: implemented router and route logic via the use* hooks
+- routing: corrected logic where route to Home was using an undeclared param; VueJS antipattern as seen here - https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
+
+Release:
