@@ -328,4 +328,14 @@ Diffs:
 - ProfileView: checks route.params.screenName to decide which view to render
 - ProfileView: implements 'onBeforeRouteUpdate' because for each route with /:screenName we render the same component; this causes reactivity issues, mainly a stale UI; logic rechecks the 'to' navigation and decides which route should be used
 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-21-Profile_page_rendering_profile_details
+
+# 05-22-Profile_page_rendering_profile_timeline 
+
+Diffs:
+- HomeView: already using prop.tweets with <Timeline> component
+- HomeView: created a fetchPageData() to house all bff-type calls for data required by the UI
+- ProfileView: further refactored to break up into components and improve legibility; also refactored in order to make additions easier
+- ProfileView: implements the timeline fetching based on whether current accessed profile is mine or theirs; switching login is in the component not within the store
+
 Release:
