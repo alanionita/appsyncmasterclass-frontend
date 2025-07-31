@@ -63,7 +63,7 @@ async function handleReplyBtn() {
 </script>
 
 <template>
-    <div v-if="tweet" class="w-full p-4 border-b hover:bg-lightest flex">
+    <div v-if="tweet" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
         <div class="flex-none mr-4">
             <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`" class="h-12 w-12 rounded-full flex-none" />
         </div>
