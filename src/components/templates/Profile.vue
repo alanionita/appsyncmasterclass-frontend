@@ -2,8 +2,9 @@
 import ProfileHeader from '../molecules/ProfileHeader.vue';
 import ProfileDetails from '../molecules/ProfileDetails.vue';
 import ProfileHeaderActions from '../molecules/ProfileHeaderActions.vue';
+import Timeline from '../molecules/Timeline.vue';
 
-const { myProfile, profile } = defineProps(['myProfile', 'profile'])
+const { myProfile, profile, tweets } = defineProps(['myProfile', 'profile', 'tweets']);
 
 </script>
 
@@ -14,5 +15,6 @@ const { myProfile, profile } = defineProps(['myProfile', 'profile'])
     <ProfileDetails :name="profile.name" :screen-name="profile.screenName" :bio="profile.bio"
       :location="profile.location" :website="profile.website" :joined-date="profile.joinedDate"
       :followers-count="profile.followersCount" :following-count="profile.followingCount" />
+    <Timeline :tweets="tweets"/>
   </section>
 </template>

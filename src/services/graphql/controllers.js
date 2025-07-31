@@ -173,6 +173,31 @@ export const getProfile = async ({screenName}) => {
 
     return profile
   } catch (err) {
-    console.error('Error [getProfile] :', err.message)
+    console.error('Error [gql/controllers/getProfile] :', err.message)
+  }
+}
+
+export const getTweets = async ({userId, limit = 10, nextToken = null}) => {
+  try {
+    const queryParam = {
+      queryStr: Queries.getTweets,
+      variables: {
+        userId,
+        limit
+      }
+    }
+
+    if (nextToken) {
+      queryParam.variables["nextToken"] = nextToken
+    }
+
+    const res = await gql.query(queryParam)
+
+    const timeline = res.data.getTweets;
+
+    return timeline
+
+  } catch (err) {
+    console.error('Error [gql/controllers/getTweets] :', err.message)
   }
 }

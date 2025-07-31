@@ -134,7 +134,12 @@ export const getTweets = /* GraphQL */ `
       tweets {
         id
         createdAt
-
+        profile {
+          name
+          screenName
+          imgUrl
+        }
+    
         ... on Tweet {
           text
           replies
@@ -142,6 +147,11 @@ export const getTweets = /* GraphQL */ `
           retweets
           liked
           retweeted
+          profile {
+            name
+            screenName
+            imgUrl
+          }
         }
         ... on Reply {
           text
@@ -150,8 +160,41 @@ export const getTweets = /* GraphQL */ `
           retweets
           liked
           retweeted
+          profile {
+            name
+            screenName
+            imgUrl
+          }
+          inReplyToTweet {
+            createdAt
+            id
+          }
+          inReplyToUsers {
+            name
+            screenName
+            id
+          }
         }
-      }
+        ... on Retweet {
+          retweetOf {
+            ... on Tweet {
+              id
+              createdAt
+              text
+              replies
+              likes
+              retweets
+              liked
+              retweeted
+              profile {
+                name
+                screenName
+                imgUrl
+              }
+            }
+          }
+        }
+      } 
       nextToken
       __typename
     }
