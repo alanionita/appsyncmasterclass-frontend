@@ -18,16 +18,22 @@ const timeline = useTwitterTimeline();
 async function loginUserIfAlreadyAuthenticated() {
   const authStore = useAuthStore();
   await authStore.verifyAuth(path);
-  timeline.getMyTimeline();
 }
 
-async function addNewTweet() {
+function fetchPageData() {
+  timeline.getMyTimeline()
+}
+
+async function postNewTweet() {
   if (!tweet.value.length === 0) return;
   await timeline.createTweet(tweet.value);
   tweet.value = ''
 }
 
-onMounted(() => loginUserIfAlreadyAuthenticated())
+onMounted(() => {
+  loginUserIfAlreadyAuthenticated()
+  fetchPageData()
+})
 
 </script>
 
@@ -40,7 +46,7 @@ onMounted(() => loginUserIfAlreadyAuthenticated())
           <i class="far fa-star text-xl text-blue"></i>
         </section>
         <section class="border-b border-lighter flex gap-4 pb-4">
-          <form class="flex flex-col w-full relative gap-4" @submit.prevent="addNewTweet">
+          <form class="flex flex-col w-full relative gap-4" @submit.prevent="postNewTweet">
             <div class="flex justify-center gap-4">
               <figure class="flex-none">
                 <img :src="`${profile.imgUrl}`" class="flex-none size-12 rounded-full" />
