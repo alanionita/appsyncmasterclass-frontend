@@ -5,8 +5,7 @@ import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useTwitterTheirProfile } from '@/stores/twitterTheirProfile';
-import ProfileMy from '@/components/templates/ProfileMy.vue';
-import ProfileTheir from '@/components/templates/ProfileTheir.vue';
+import Profile from '@/components/templates/Profile.vue';
 
 const path = ref(window.location.pathname)
 const isMine = ref(false);
@@ -37,8 +36,7 @@ onBeforeRouteUpdate((to, from) => {
 <template>
   <ThreeColTemplate>
     <template #middle>
-      <ProfileMy v-if="isMine" />
-      <ProfileTheir v-if="!isMine" />
+      <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile"/>
     </template>
   </ThreeColTemplate>
 </template>
