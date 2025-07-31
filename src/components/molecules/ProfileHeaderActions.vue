@@ -2,8 +2,6 @@
 
 const { imgUrl, myProfile, following } = defineProps(['imgUrl', 'myProfile', 'following'])
 
-console.log(myProfile)
-
 </script>
 
 <template>
