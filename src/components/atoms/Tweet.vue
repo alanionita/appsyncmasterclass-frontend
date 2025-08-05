@@ -106,6 +106,6 @@ async function handleReplyBtn() {
             </div>
         </div>
 
-        <ReplyOverlay :tweet="tweet" @hide="handleReplyBtn" :showUI="replyUI" />
+        <ReplyOverlay v-if="replyUI" :tweet="tweet" @hide="handleReplyBtn" />
     </div>
 </template>

@@ -2,10 +2,12 @@
 import { postReply } from '@/services/graphql/controllers';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
+import { onMounted, ref } from 'vue';
 
-const { showUI, tweet } = defineProps(["showUI", "tweet"]);
+const { tweet } = defineProps(["tweet"]);
 const emit = defineEmits(['hide'])
 
+const replyInput = ref(null);
 
 const profile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
@@ -23,21 +25,41 @@ async function sendReply() {
     }
 }
 
+function handleESCkey() {
+    try {
+        emit('hide');
+    } catch (err) {
+        console.error('Err [ReplyOverlay/handleESCkey] :', err.message)
+    }
+}
+
+function focusOnInput() {
+    if (replyInput.value) {
+        replyInput.value.focus();
+    }
+};
+
+
+onMounted(() => {
+    focusOnInput()
+})
+
 </script>
 
 <template>
-    <div v-if="showUI" class="fixed w-full h-full z-10 top-0 left-0 flex items-center justify-center">
-        <div class="absolute w-full h-full bg-gray-900 opacity-50"></div>
+    <div @keydown.esc="handleESCkey()"
+        class="fixed w-full h-full z-10 top-0 left-0 flex items-center justify-center">
+        <div @click.prevent="$emit('hide')" class="absolute w-full h-full bg-gray-900 opacity-50"></div>
 
         <div class="modal-main bg-white mx-auto rounded-lg z-0 overflow-y-auto" style="width:40%">
             <div class="pl-1 pr-4 py-1 h-16 border-b-2 border-lightblue">
                 <div class="flex flex-row mt-1 ml-4">
-                    <i @click="$emit('hide');"
+                    <i @click.prevent="$emit('hide')"
                         class="fas fa-times text-blue text-2xl mb-8 mr-6 rounded-full bg-white p-2 px-3 hover:bg-lightblue"></i>
                 </div>
             </div>
 
-            <div v-if="tweet.profile" class="border-l-2 border-r-2 border-white flex flex-col">
+            <div class="border-l-2 border-r-2 border-white flex flex-col">
                 <!-- original Tweet -->
                 <div class="p-3 flex flex-row">
                     <div class="flex-none mr-4">
@@ -69,7 +91,7 @@ async function sendReply() {
 
                     <div class="w-full mb-2">
                         <form @submit.prevent="sendReply" class="w-full relative">
-                            <textarea v-model="replyText" placeholder="Tweet your reply"
+                            <textarea ref="replyInput" v-model="replyText" placeholder="Tweet your reply"
                                 class="w-full focus:outline-none mt-3 pb-3"></textarea>
                             <div>
                                 <i class="text-lg text-blue mr-4 far fa-image"></i>
