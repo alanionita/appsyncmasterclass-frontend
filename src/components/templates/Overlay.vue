@@ -1,0 +1,42 @@
+<script setup>
+import { onUpdated, ref } from 'vue';
+
+const { mainFocus } = defineProps(["mainFocus"])
+const emit = defineEmits(['hide'])
+const modal = ref(null)
+
+function handleESCkey() {
+    try {
+        emit('hide');
+    } catch (err) {
+        console.error('Err [Overlay/handleESCkey] :', err.message)
+    }
+}
+
+onUpdated(() => {
+    if (mainFocus) {
+        mainFocus.focus()
+    }
+})
+
+</script>
+
+<template>
+    <div ref="modal" @keydown.esc="handleESCkey()"
+        class="fixed w-full h-full z-10 top-0 left-0 flex items-center justify-center">
+        <div @click.prevent="$emit('hide')" class="absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+        <div class="modal-main bg-white mx-auto rounded-lg z-0 overflow-y-auto" style="width:40%">
+            <div class="border-b-2 border-lightblue">
+                <div class="flex flex-row align-middle p-3 size-16">
+                    <i @click.prevent="$emit('hide')"
+                        class="fas fa-times text-blue text-2xl rounded-full bg-white p-2 3 hover:bg-lightblue"></i>
+                </div>
+            </div>
+
+            <div class="border-l-2 border-r-2 border-white flex flex-col p-4">
+                <slot name="content"></slot>
+            </div>
+        </div>
+    </div>
+</template>

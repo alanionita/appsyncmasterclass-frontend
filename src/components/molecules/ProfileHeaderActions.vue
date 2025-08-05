@@ -1,6 +1,6 @@
 <script setup>
 
-const { imgUrl, myProfile, following } = defineProps(['imgUrl', 'myProfile', 'following'])
+const { imgUrl, myProfile, following, toggleEditProfile, toggleSetupProfile } = defineProps(['imgUrl', 'myProfile', 'following', 'toggleSetupProfile', 'toggleEditProfile'])
 
 </script>
 
@@ -10,11 +10,11 @@ const { imgUrl, myProfile, following } = defineProps(['imgUrl', 'myProfile', 'fo
 
         <!-- My Profile Actions -->
         <section v-if="myProfile" class="flex gap-4 py-4">
-            <button v-if="imgUrl === null || imgUrl === 'default_profile.png'"
+            <button v-if="imgUrl === null || imgUrl === 'default_profile.png'" @click.prevent="toggleSetupProfile"
                 class="ml-auto text-blue font-bold px-4 py-2 rounded-full border border-blue hover:bg-lightblue">
                 Set up profile
             </button>
-            <button v-if="imgUrl !== null && imgUrl !== 'default_profile.png'"
+            <button v-if="imgUrl !== null && imgUrl !== 'default_profile.png'" @click.prevent="toggleEditProfile"
                 class="ml-auto text-blue font-bold px-4 py-2 rounded-full border border-blue hover:bg-lightblue">
                 Edit profile
             </button>
@@ -32,8 +32,7 @@ const { imgUrl, myProfile, following } = defineProps(['imgUrl', 'myProfile', 'fo
                 class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue">
                 Follow
             </button>
-            <button v-if="following" @mouseover="followingLabel = 'Unfollow'"
-                @mouseleave="followingLabel = 'Following'"
+            <button v-if="following" @mouseover="followingLabel = 'Unfollow'" @mouseleave="followingLabel = 'Following'"
                 class="text-white bg-blue font-bold px-4 py-3 rounded-full border hover:bg-red-700">
                 {{ followingLabel }}
             </button>
