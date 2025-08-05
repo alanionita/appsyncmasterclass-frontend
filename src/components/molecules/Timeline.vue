@@ -8,8 +8,6 @@ const { tweets } = defineProps(['tweets']);
 
 const route = useRoute();
 
-console.log({ route })
-
 </script>
 <template>
     <div>
