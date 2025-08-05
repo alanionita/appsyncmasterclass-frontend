@@ -14,10 +14,6 @@ export const editMyProfile = /* GraphQL */ `
       website
       birthdate
       createdAt
-      tweets {
-        nextToken
-        __typename
-      }
       followersCount
       followingCount
       tweetsCount

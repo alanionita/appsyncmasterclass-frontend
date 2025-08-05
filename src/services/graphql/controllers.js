@@ -134,7 +134,7 @@ export const unretweetTweet = async (tweetId) => {
   }
 }
 
-export const postReply = async ({tweetId, text}) => {
+export const postReply = async ({ tweetId, text }) => {
   try {
     if (!tweetId) throw Error('Missing required param tweetId')
     if (!text) throw Error('Missing required param text')
@@ -156,7 +156,7 @@ export const postReply = async ({tweetId, text}) => {
   }
 }
 
-export const getProfile = async ({screenName}) => {
+export const getProfile = async ({ screenName }) => {
   try {
     const queryParam = {
       queryStr: Queries.getProfile,
@@ -177,7 +177,7 @@ export const getProfile = async ({screenName}) => {
   }
 }
 
-export const getTweets = async ({userId, limit = 10, nextToken = null}) => {
+export const getTweets = async ({ userId, limit = 10, nextToken = null }) => {
   try {
     const queryParam = {
       queryStr: Queries.getTweets,
@@ -201,3 +201,50 @@ export const getTweets = async ({userId, limit = 10, nextToken = null}) => {
     console.error('Error [gql/controllers/getTweets] :', err.message)
   }
 }
+
+export const getImgUploadUrl = async ({ extension, contentType }) => {
+  try {
+    if (!extension || !contentType) throw Error("Missing required parameters.")
+
+    const queryParam = {
+      queryStr: Queries.getImageUploadUrl,
+      variables: {
+        extension,
+        contentType
+      }
+    }
+
+    const res = await gql.query(queryParam)
+
+    const url = res.data.getImageUploadUrl;
+
+    return url
+
+  } catch (err) {
+    console.error('Error [gql/controllers/getImgUploadUrl] :', err.message)
+  }
+}
+
+export const updateMyProfile = async (profile) => {
+  try {
+    if (!profile) throw Error("Missing required parameter.")
+    const params = {
+      queryStr: Mutations.editMyProfile,
+      variables: {
+        newProfile: {
+          ...profile
+        }
+      }
+    }
+
+    const res = await gql.query(params)
+
+    const newProfile = res.data.editMyProfile;
+
+    return newProfile
+
+  } catch (err) {
+    console.error('Error [gql/controllers/editMyProfile] :', err.message)
+  }
+}
+
