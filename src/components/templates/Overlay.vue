@@ -1,19 +1,13 @@
 <script setup>
-import { onUpdated, ref } from 'vue';
+import { ref } from 'vue';
 
 const { mainFocus, menu } = defineProps(["mainFocus", "menu"])
 const emit = defineEmits(['hide'])
-const modal = ref(null)
+const modal = ref(null);
 
 function hide() {
     emit('hide');
 }
-
-onUpdated(() => {
-    if (mainFocus) {
-        mainFocus.focus()
-    }
-})
 
 </script>
 
