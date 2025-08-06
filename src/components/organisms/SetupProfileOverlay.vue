@@ -68,7 +68,6 @@ async function finishSetup({ image, name }) {
 <template>
     <Overlay :mainFocus="mainFocus" @hide="triggerHide">
         <template #content>
-            <!-- TODO: fix the styling to stop using granular positioning rules -->
             <div class="p-4 h-fit">
                 <button v-if="newImage === null || newImage === 'default_profile.png'" @click="$emit('hide')"
                     class="rounded-full bg-white font-bold text-blue relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-lightblue">
