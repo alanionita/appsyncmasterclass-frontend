@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import fetch from 'axios';
 import Overlay from '../templates/Overlay.vue';
 import { getImgUploadUrl } from '@/services/graphql/controllers';
@@ -63,12 +63,16 @@ async function finishSetup({ image, name }) {
     }
 }
 
+onMounted(() => {
+    mainFocus.value.focus()
+})
 </script>
 
+
 <template>
-    <Overlay :mainFocus="mainFocus" @hide="triggerHide">
+    <Overlay @hide="triggerHide">
         <template #content>
-            <div class="p-4 h-fit">
+            <header class="p-4 h-fit">
                 <button v-if="newImage === null || newImage === 'default_profile.png'" @click="$emit('hide')"
                     class="rounded-full bg-white font-bold text-blue relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-lightblue">
                     Skip for now
@@ -79,16 +83,16 @@ async function finishSetup({ image, name }) {
                     Next
                 </button>
                 <i class="relative py-2 fab fa-twitter text-blue text-2xl" style="margin-left: 50%"></i>
-            </div>
+            </header>
 
-            <div class="px-8 flex flex-col gap-4">
+            <section class="px-8 flex flex-col gap-4">
                 <div class="flex justify-between items-center">
                     <p class="text-2xl font-bold">Pick a profile picture</p>
                 </div>
                 <p class="text-dark">Have a favorite selfie? Upload it now.</p>
 
                 <div class="w-full flex items-center justify-center">
-                    <div class="h-32 grid grid-cols-1 grid-rows-1">
+                    <section class="h-32 grid grid-cols-1 grid-rows-1">
                         <div class="col-1 row-1 w-full h-full rounded-full bg-gray-600 opacity-50 z-1"></div>
                         <img class="col-1 row-1 w-full h-full rounded-full z-2" :src="newImage" />
                         <button ref="mainFocus" @click="openFileInput"
@@ -101,9 +105,9 @@ async function finishSetup({ image, name }) {
                                 type="file" 
                                 class="hidden">
                         </button>
-                    </div>
+                    </section>
                 </div>
-            </div>
+            </section>
         </template>
     </Overlay>
 </template>
