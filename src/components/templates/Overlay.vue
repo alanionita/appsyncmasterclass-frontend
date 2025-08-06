@@ -30,7 +30,7 @@ onUpdated(() => {
                 </div>
             </div>
 
-            <div class="border-l-2 border-r-2 border-white flex flex-col p-4">
+            <div class="border-l-2 border-r-2 border-white flex flex-col p-4 gap-4">
                 <slot name="content"></slot>
             </div>
         </div>

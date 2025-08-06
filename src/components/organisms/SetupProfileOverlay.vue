@@ -68,34 +68,40 @@ async function finishSetup({ image, name }) {
 <template>
     <Overlay :mainFocus="mainFocus" @hide="triggerHide">
         <template #content>
-            <div class="pl-1 pr-4 py-1 h-12">
+            <!-- TODO: fix the styling to stop using granular positioning rules -->
+            <div class="p-4 h-fit">
                 <button v-if="newImage === null || newImage === 'default_profile.png'" @click="$emit('hide')"
-                    class="rounded-full bg-white font-bold text-blue mt-2 p-1 px-3 relative right-0 float-right focus:outline-none hover:bg-lightblue">
+                    class="rounded-full bg-white font-bold text-blue relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-lightblue">
                     Skip for now
                 </button>
                 <button v-if="newImage !== null && newImage !== 'default_profile.png'"
                     @click="finishSetup({ image: newImage, name: myProfile.screenName })"
-                    class="rounded-full bg-blue font-bold text-white mt-2 p-1 px-4 relative right-0 float-right focus:outline-none hover:bg-darkblue">
+                    class="rounded-full bg-blue font-bold text-white relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-darkblue">
                     Next
                 </button>
-                <i class="relative fab fa-twitter text-blue text-2xl mt-2 mb-8" style="margin-left: 50%"></i>
+                <i class="relative py-2 fab fa-twitter text-blue text-2xl" style="margin-left: 50%"></i>
             </div>
 
-            <div class="pt-5 px-8">
-                <div class="flex justify-between items-center mb-5">
+            <div class="px-8 flex flex-col gap-4">
+                <div class="flex justify-between items-center">
                     <p class="text-2xl font-bold">Pick a profile picture</p>
                 </div>
                 <p class="text-dark">Have a favorite selfie? Upload it now.</p>
 
-                <div class="mt-16 w-full flex items-center justify-center">
-                    <div class="fixed">
-                        <div class="absolute w-32 h-32 rounded-full bg-gray-600 opacity-50"></div>
+                <div class="w-full flex items-center justify-center">
+                    <div class="h-32 grid grid-cols-1 grid-rows-1">
+                        <div class="col-1 row-1 w-full h-full rounded-full bg-gray-600 opacity-50 z-1"></div>
+                        <img class="col-1 row-1 w-full h-full rounded-full z-2" :src="newImage" />
                         <button ref="mainFocus" @click="openFileInput"
-                            class="fixed hover:bg-gray-800 p-3 rounded-full ml-10 mt-10">
+                            class="col-1 row-1 hover:bg-gray-400 hover:cursor-pointer p-3 rounded-full z-3">
                             <i class="text-2xl fas fa-camera text-white"></i>
-                            <input @change="fileChange" ref="fileInput" accept="image/jpeg" type="file" class="hidden">
+                            <input 
+                                @change="fileChange" 
+                                ref="fileInput" 
+                                accept="image/jpeg" 
+                                type="file" 
+                                class="hidden">
                         </button>
-                        <img class="w-32 h-32 rounded-full" :src="newImage" />
                     </div>
                 </div>
             </div>
