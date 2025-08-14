@@ -1,12 +1,24 @@
 <script setup>
 
-const { imgUrl, myProfile, following, toggleEditProfile, toggleSetupProfile } = defineProps(['imgUrl', 'myProfile', 'following', 'toggleSetupProfile', 'toggleEditProfile'])
+const { imgUrl, myProfile, following, toggleEditProfile, toggleSetupProfile, profile } = defineProps(['imgUrl', 'myProfile', 'following', 'toggleSetupProfile', 'toggleEditProfile', 'profile'])
+
+async function loadImageUrl(url) {
+    const [path, ..._] = url.split('?')
+    const [__, filePath] = path.split('.amazonaws.com/')
+    const [___, fileKey] = filePath.split('/')
+    await profile.fetchSignedUrl(fileKey);
+}
+
+async function handleImageError() {
+    await loadImageUrl(imgUrl);
+}
 
 </script>
 
 <template>
     <section class="flex flex-row justify-between">
-        <img :src="imgUrl" class="size-32 rounded-full border-white border-4" style="margin-top:-80px" />
+        <img :src="imgUrl" @error="handleImageError" class="size-32 rounded-full border-white border-4"
+            style="margin-top:-80px" />
 
         <!-- My Profile Actions -->
         <section v-if="myProfile" class="flex gap-4 py-4">
