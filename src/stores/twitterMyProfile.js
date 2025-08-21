@@ -65,14 +65,19 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
 
                 if (!validKeys.includes(stateKey)) throw new Error('Invalid state key');
 
-                const { url } = await getUrl({
+                const getUrlParams = {
                     path: `${userSub}/${assetPath}`,
                     options: {
                         expiresIn: 300,
                         accessLevel: 'private'
                     }
-                });
-                this.imgUrl = url.toString();
+                }
+
+                const resp = await getUrl(getUrlParams);
+                const url = resp.url.toString();
+                this[stateKey] = url
+                return url
+
             } catch (err) {
                 console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
                 console.info(JSON.stringify(err))
