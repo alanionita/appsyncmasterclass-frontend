@@ -216,9 +216,9 @@ export const getImgUploadUrl = async ({ extension, contentType }) => {
 
     const res = await gql.query(queryParam)
 
-    const url = res.data.getImageUploadUrl;
-
-    return url
+    const data = res.data.getImageUploadUrl;
+    
+    return data
 
   } catch (err) {
     console.error('Error [gql/controllers/getImgUploadUrl] :', err.message)

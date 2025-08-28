@@ -1,7 +1,10 @@
 /* eslint-disable */
 export const getImageUploadUrl = /* GraphQL */ `
   query GetImageUploadUrl($extension: String, $contentType: String) {
-    getImageUploadUrl(extension: $extension, contentType: $contentType)
+    getImageUploadUrl(extension: $extension, contentType: $contentType) {
+      url
+      fileKey
+    }
   }
 `;
 export const getMyProfile = /* GraphQL */ `

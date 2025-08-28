@@ -56,23 +56,24 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
                 throw err
             }
         },
-        async fetchSignedUrl(assetPath, stateKey = 'imgUrl') {
+        async fetchSignedUrl(fileKey, stateKey = 'imgUrl') {
             try {
                 const { userSub } = await fetchAuthSession();
                 if (!userSub) throw new Error('Not authenticated');
+                if (!fileKey.includes(userSub)) throw new Error('Asset not owned by current user')
 
                 const validKeys = ['imgUrl'];
 
                 if (!validKeys.includes(stateKey)) throw new Error('Invalid state key');
 
                 const getUrlParams = {
-                    path: `${userSub}/${assetPath}`,
+                    path: fileKey,
                     options: {
                         expiresIn: 300,
                         accessLevel: 'private'
                     }
                 }
-
+                
                 const resp = await getUrl(getUrlParams);
                 const url = resp.url.toString();
                 this[stateKey] = url

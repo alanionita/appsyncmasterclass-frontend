@@ -28,7 +28,7 @@ async function fileChange() {
         const file = fileInput.value.files[0];
         const extension = file.name.split('.').pop();
         const contentType = extension === 'png' ? 'image/png' : 'image/jpeg';
-        const url = await getImgUploadUrl({ extension, contentType });
+        const {url, fileKey} = await getImgUploadUrl({ extension, contentType });
         const formData = new FormData();
         formData.append("image", file);
         const headers = { ['Content-Type']: contentType };
@@ -39,8 +39,6 @@ async function fileChange() {
             data: file,
             headers
         }
-        const parsedUrl = url.split('?').shift()
-        const [fileKey, ..._] = parsedUrl.split('/').reverse()
         await fetch(reqParams);
         const signedGetUrl = await myProfile.fetchSignedUrl(fileKey);
         newImage.value = signedGetUrl;
