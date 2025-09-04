@@ -6,19 +6,18 @@ export const editMyProfile = /* GraphQL */ `
     editMyProfile(newProfile: $newProfile) {
       id
       name
-      screenName
-      imgUrl
       bgImgUrl
       bio
-      location
-      website
       birthdate
       createdAt
       followersCount
       followingCount
-      tweetsCount
+      imgUrl
       likesCount
-      __typename
+      location
+      screenName
+      tweetsCount
+      website
     }
   }
 `;
