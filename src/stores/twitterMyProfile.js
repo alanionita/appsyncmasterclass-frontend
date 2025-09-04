@@ -22,6 +22,7 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
         createdAt: defaultCreatedAt,
         id: '',
         imgUrl: defaultImgUrl,
+        bgImgUrl: '',
         name: "",
         screenName: ""
     }),
@@ -59,8 +60,7 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
         async fetchSignedUrl(fileKey, stateKey = 'imgUrl') {
             try {
                 const { userSub } = await fetchAuthSession();
-                if (!userSub) throw new Error('Not authenticated');
-                if (!fileKey.includes(userSub)) throw new Error('Asset not owned by current user')
+                if (!userSub) throw new Error('Not authenticated');                if (!fileKey.includes(userSub)) throw new Error('Asset not owned by current user')
 
                 const validKeys = ['imgUrl'];
 
@@ -70,7 +70,8 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
                     path: fileKey,
                     options: {
                         expiresIn: 300,
-                        accessLevel: 'private'
+                        accessLevel: 'private',
+                        validateObjectExistence: true,
                     }
                 }
                 
@@ -82,6 +83,7 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
             } catch (err) {
                 console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
                 console.info(JSON.stringify(err))
+                return this[stateKey]
             }
         }
     },
