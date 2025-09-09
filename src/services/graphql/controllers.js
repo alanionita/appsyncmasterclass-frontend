@@ -202,6 +202,14 @@ export const getTweets = async ({ userId, limit = 10, nextToken = null }) => {
   }
 }
 
+
+/**
+ * Generates a presigned upload url on the backend
+ * @param extension file extension
+ * @param contentType .jpeg or .png
+ * @returns Obj { url, fileKey } : presigned url to file, path to file
+*/
+
 export const getImgUploadUrl = async ({ extension, contentType }) => {
   try {
     if (!extension || !contentType) throw Error("Missing required parameters.")
