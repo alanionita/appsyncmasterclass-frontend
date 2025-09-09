@@ -338,4 +338,21 @@ Diffs:
 - ProfileView: further refactored to break up into components and improve legibility; also refactored in order to make additions easier
 - ProfileView: implements the timeline fetching based on whether current accessed profile is mine or theirs; switching login is in the component not within the store
 
-Release:
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-22-Profile_page_rendering_profile_timeline
+
+# 05-23-Profile_page_edit_profile_details
+
+Diffs:
+- Security and best practice: implements the fetching and uploading using signed urls and private bucket files; connects to changes in the backend for ; configures the app to use Cognito Identity Pools and private S3 bucket
+- Overlay: created a generic wrapper component that handles the show/hide, close, and keydown for ESC; implemented this wrapper within Setup*/EditProfileOverlay; uses new patterns for emitting events from child components, heavy use of props and refs to show/hide; implements some of the modal UI for better consistency and less code duplication across Edit* and Setup* variations ; uses newer style `@keydown.esc` instead of the actual event and key definition
+- SetupProfileOverlay: does less state updates, because of myProfile store implementation of changeProfile, which updates myProfile; actions implemented with new vue.v3 api and Pinia; 
+- EditProfileOverlay: to avoid any race conditions, fileChange() leveraged the uploadData() api from Amplify.storage; offerrs the ability to show progress in the future
+- ProfileHeaderActions: required fallback for <img> errors whenever a signed GET url is expired; refreshes the GET url
+- Dates: uses `date-fns` package since `moment` is no longer maintained, to convert and parse dates; shows correct dd-mm-yyyy format on the UI, but saves in AWSDate format yyyy-mm-dd;
+- UI: Image elements show a flashing skeleton placeholder whilst <img> requests load
+- ReplyOverlay: implemented key events using vue.v3 v-for (@) shorthand directive, instead of direct to DOM event listeners; implemented focus using refs api
+- CSS styling: simplified to use x/y rules and responsive containers and rules
+- CSS styling: implements grid layouts for layer stacks of elements, over absolute positioning
+- Docs: adds JSDocs where possible to explain inputs, outputs, and behaviors
+
+Release: 
