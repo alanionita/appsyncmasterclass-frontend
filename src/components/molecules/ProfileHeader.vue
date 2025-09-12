@@ -1,6 +1,10 @@
 <script setup>
 
-const { name, tweetsCount, bgImgUrl } = defineProps(['name', 'tweetsCount', 'bgImgUrl']);
+const { name, tweetsCount, bgImgUrl, profile } = defineProps(['name', 'tweetsCount', 'bgImgUrl', 'profile']);
+
+async function handleImageError() {
+    await profile.bgImgUrlSigned;
+}
 
 </script>
 
@@ -19,7 +23,7 @@ const { name, tweetsCount, bgImgUrl } = defineProps(['name', 'tweetsCount', 'bgI
         <!-- background image -->
         <section class="border-b-1 border-lighter fl  ex" style="height:240px; display:block">
             <figure v-if="bgImgUrl" class="h-full max-h-full">
-                <img :src="bgImgUrl" class="h-full w-full object-cover" />
+                <img :src="bgImgUrl" @error="handleImageError" class="h-full w-full object-cover" />
             </figure>
             <figure v-if="!bgImgUrl" class="bg-gray-400 h-full max-h-full">
             </figure>

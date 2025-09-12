@@ -27,7 +27,7 @@ function toggleSetupProfile() {
 </script>
 
 <template>
-  <ProfileHeader :name="profile.name" :tweetsCount="profile.tweetsCount" :bgImgUrl="profile.bgImgUrl" />
+  <ProfileHeader :profile="profile" :tweetsCount="profile.tweetsCount" :bgImgUrl="profile.bgImgUrl" />
   <section class="px-4 flex flex-col">
     <ProfileHeaderActions :profile="profile" :img-url="profile.imgUrl" :my-profile="myProfile" :following="profile.following" :toggleSetupProfile="toggleSetupProfile" :toggleEditProfile="toggleEditProfile" />
     <ProfileDetails :name="profile.name" :screen-name="profile.screenName" :bio="profile.bio"
