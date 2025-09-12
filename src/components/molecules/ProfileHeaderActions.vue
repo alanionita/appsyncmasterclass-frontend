@@ -2,15 +2,8 @@
 
 const { imgUrl, myProfile, following, toggleEditProfile, toggleSetupProfile, profile } = defineProps(['imgUrl', 'myProfile', 'following', 'toggleSetupProfile', 'toggleEditProfile', 'profile'])
 
-async function loadImageUrl(url) {
-    const [path, ..._] = url.split('?')
-    const [__, filePath] = path.split('.amazonaws.com/')
-    const [___, fileKey] = filePath.split('/')
-    await profile.fetchSignedUrl(fileKey);
-}
-
 async function handleImageError() {
-    await loadImageUrl(imgUrl);
+    await profile.imgUrlSigned;
 }
 
 </script>

@@ -1,19 +1,31 @@
 import { defineStore } from 'pinia';
 import * as gql from '@/services/graphql/controllers'
-import { format } from 'date-fns';
-import { getUrl } from 'aws-amplify/storage';
 import { fetchAuthSession } from 'aws-amplify/auth';
+import * as S3Utils from '@/utils/s3';
+import * as DateUtils from '@/utils/date';
 
 const defaultImgUrl = 'default_profile.png';
 const defaultCreatedAt = '1970-01-01';
 
-function formatProfileCreatedAt({ createdAt }) {
+async function fetchS3SignedUrl(state, stateKey) {
     try {
-        const date = new Date(createdAt);
-        return format(date, 'MMMM yyyy')
+        if (!stateKey) throw new Error('Missing state key');
 
+        const { userSub } = await fetchAuthSession();
+
+        if (!userSub) throw new Error('Not authenticated');
+
+        const validKeys = ['imgUrl', 'bgImgUrl'];
+
+        if (!validKeys.includes(stateKey)) throw new Error('Invalid state key');
+
+        const { filePath } = await S3Utils.parseUrl(state[stateKey])
+
+        state[stateKey] = await S3Utils.getSignedUrl(filePath)
     } catch (err) {
-        console.error('Err [twitterMyProfile/formatProfileCreatedAt] :', err.message)
+        console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
+        console.info(JSON.stringify(err))
+        return state[stateKey]
     }
 }
 
@@ -56,39 +68,12 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
                 console.error('Err [twitterMyProfile.changeProfile()', err.message)
                 throw err
             }
-        },
-        async fetchSignedUrl(fileKey, stateKey = 'imgUrl') {
-            try {
-                const { userSub } = await fetchAuthSession();
-                if (!userSub) throw new Error('Not authenticated');                if (!fileKey.includes(userSub)) throw new Error('Asset not owned by current user')
-
-                const validKeys = ['imgUrl'];
-
-                if (!validKeys.includes(stateKey)) throw new Error('Invalid state key');
-
-                const getUrlParams = {
-                    path: fileKey,
-                    options: {
-                        expiresIn: 300,
-                        accessLevel: 'private',
-                        validateObjectExistence: true,
-                    }
-                }
-                
-                const resp = await getUrl(getUrlParams);
-                const url = resp.url.toString();
-                this[stateKey] = url
-                return url
-
-            } catch (err) {
-                console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
-                console.info(JSON.stringify(err))
-                return this[stateKey]
-            }
         }
     },
     getters: {
-        joinedDate: state => formatProfileCreatedAt(state),
+        joinedDate: state => DateUtils.formatProfileCreatedAt(state),
         isSelf: state => screenName => state.screenName == screenName,
+        bgImgUrlSigned: state => fetchS3SignedUrl(state, 'bgImgUrl'),
+        imgUrlSigned: state => fetchS3SignedUrl(state, 'imgUrl')
     },
 });
