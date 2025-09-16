@@ -20,14 +20,28 @@ const router = createRouter({
       path: '/home',
       name: 'home',
       component: () => import('../views/HomeView.vue'),
-      meta: { protected: true}
+      meta: { protected: true }
     },
 
     {
       path: '/:screenName',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
-      meta: { protected: true}
+      meta: { protected: true }
+    },
+    {
+      path: '/:screenName/followers',
+      name: 'Followers',
+      component: () => import('../views/FollowersView.vue'),
+      props: true,
+      meta: { protected: true }
+    },
+    {
+      path: '/:screenName/following',
+      name: 'Following',
+      component: () => import('../views/FollowingView.vue'),
+      props: true,
+      meta: { protected: true }
     },
   ],
 })

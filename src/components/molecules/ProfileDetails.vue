@@ -1,6 +1,26 @@
 <script setup>
 
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
 const { name, screenName, bio, location, website, joinedDate, followingCount, followersCount } = defineProps(['name', 'screenName', 'bio', 'location', 'website', 'joinedDate', 'followingCount', 'followersCount']);
+
+function goToFollowing() {
+    router.push({
+        name: 'Following',
+        params: {
+            screenName
+        }
+    })
+}
+function goToFollowers() {
+    router.push({
+        name: 'Followers',
+        params: {
+            screenName
+        }
+    })
+}
 
 </script>
 
@@ -27,11 +47,11 @@ const { name, screenName, bio, location, website, joinedDate, followingCount, fo
             </div>
         </section>
         <section class="flex flex-row gap-8">
-            <button class="flex flex-row hover:underline">
+            <button @click="goToFollowing()" class="flex flex-row hover:underline">
                 <span class="font-bold">{{ followingCount }}</span>
                 <span class="text-dark whitespace-pre"> Following</span>
             </button>
-            <button class="flex flex-row hover:underline">
+            <button @click="goToFollowers()" class="flex flex-row hover:underline">
                 <span class="font-bold">{{ followersCount }}</span>
                 <span class="text-dark whitespace-pre"> Followers</span>
             </button>
