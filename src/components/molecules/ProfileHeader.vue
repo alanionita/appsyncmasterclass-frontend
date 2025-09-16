@@ -11,9 +11,9 @@ async function handleImageError() {
 <template>
     <header>
         <section class="flex gap-4 py-4 border-b border-lighter items-center">
-            <button class="rounded-full p-3 px-4 focus:outline-none hover:bg-lightblue">
+            <a :href="`/home`" class="rounded-full p-3 px-4 focus:outline-none hover:bg-lightblue">
                 <i class="fas fa-arrow-left text-blue"></i>
-            </button>
+            </a>
             <div class="lg:block">
                 <h1 class="text-xl font-bold">{{ name }}</h1>
                 <p class="text-left text-sm leading-tight text-dark">{{ tweetsCount }} Tweets</p>
