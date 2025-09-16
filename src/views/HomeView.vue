@@ -38,7 +38,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ThreeColTemplate>
+  <ThreeColTemplate :trending="true" :follow-who="true">
     <template #middle>
       <div v-if="profile" class="flex h-full flex-col overflow-y-auto gap-4">
         <section class="border-b border-lighter flex items-center justify-between py-4">

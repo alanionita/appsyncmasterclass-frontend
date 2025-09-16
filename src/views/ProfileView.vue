@@ -44,7 +44,7 @@ onBeforeRouteUpdate(async (to, from) => {
 </script>
 
 <template>
-  <ThreeColTemplate>
+  <ThreeColTemplate :trending="true" :follow-who="true">
     <template #middle>
       <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="timeline.tweets"/>
     </template>
