@@ -65,15 +65,21 @@ async function handleReplyBtn() {
 <template>
     <div v-if="tweet" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
         <div class="flex-none mr-4">
-            <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`" class="h-12 w-12 rounded-full flex-none" />
+            <a :href="`/${tweet.profile.screenName}`">
+                <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
+                    class="h-12 w-12 rounded-full flex-none" />
+            </a>
         </div>
         <div class="w-full">
-            <div class="flex items-center w-full">
-                <p class="font-semibold">{{ tweet.profile.name }}</p>
-                <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
-                <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
-                <i class="fas fa-angle-down text-sm ml-auto"></i>
-            </div>
+            <a :href="`/${tweet.profile.screenName}`">
+                <div class="flex items-center w-full">
+                    <p class="font-semibold">{{ tweet.profile.name }}</p>
+                    <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
+                    <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
+                    <i class="fas fa-angle-down text-sm ml-auto"></i>
+                </div>
+
+            </a>
             <p v-if="tweet.inReplyToUsers && tweet.inReplyToUsers.length > 0" class="text-dark">
                 Replying to {{tweet.inReplyToUsers.map(x => `@${x.screenName}`).join(",")}}
             </p>
