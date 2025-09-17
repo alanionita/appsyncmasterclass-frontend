@@ -68,6 +68,9 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
                 console.error('Err [twitterMyProfile.changeProfile()', err.message)
                 throw err
             }
+        },
+        async refreshBgImgUrl() {
+            await fetchS3SignedUrl(this, 'bgImgUrl')
         }
     },
     getters: {

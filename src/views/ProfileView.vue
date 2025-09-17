@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
 import { useAuthStore } from '@/stores/authentication';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
@@ -22,13 +22,21 @@ async function loginUserIfAlreadyAuthenticated() {
 }
 
 async function updatePageData(screenName = null) {
-  if (!myProfile.isSelf(screenName)) {
-    isMine.value = false;
-    await theirProfile.setProfile(screenName)
-    await timeline.getTweets(theirProfile.id)
-  } else {
-    isMine.value = true;
-    await timeline.getMyTimeline()
+  try {
+    if (!myProfile.isSelf(screenName)) {
+      isMine.value = false;
+      await theirProfile.setProfile(screenName)
+      await timeline.getTweets(theirProfile.id)
+      await theirProfile.refreshBgImgUrl()
+    } else {
+      isMine.value = true;
+      await timeline.getMyTimeline()
+      await myProfile.refreshBgImgUrl()
+    }
+  } catch (err) {
+    console.error('Err [ProfileView/updatePageData] ::', err.message)
+    console.info(JSON.stringify(err))
+    return 
   }
 }
 
@@ -46,7 +54,7 @@ onBeforeRouteUpdate(async (to, from) => {
 <template>
   <ThreeColTemplate :trending="true" :follow-who="true">
     <template #middle>
-      <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="timeline.tweets"/>
+      <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="timeline.tweets" />
     </template>
   </ThreeColTemplate>
 </template>

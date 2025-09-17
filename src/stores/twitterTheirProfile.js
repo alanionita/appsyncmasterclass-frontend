@@ -20,7 +20,6 @@ async function fetchS3SignedUrl(state, stateKey) {
         if (!validKeys.includes(stateKey)) throw new Error('Invalid state key');
 
         const { filePath } = await S3Utils.parseUrl(state[stateKey])
-
         state[stateKey] = await S3Utils.getSignedUrl(filePath)
     } catch (err) {
         console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
@@ -53,6 +52,9 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
                 throw err
             }
         },
+        async refreshBgImgUrl() {
+            await fetchS3SignedUrl(this, 'bgImgUrl')
+        }
     },
     getters: {
         joinedDate: state => DateUtils.formatProfileCreatedAt(state),
