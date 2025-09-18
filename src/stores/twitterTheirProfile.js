@@ -54,6 +54,9 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         },
         async refreshBgImgUrl() {
             await fetchS3SignedUrl(this, 'bgImgUrl')
+        },
+        async refreshImgUrl() {
+            await fetchS3SignedUrl(this, 'imgUrl')
         }
     },
     getters: {
