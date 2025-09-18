@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import * as gql from '@/services/graphql/controllers'
-import { fetchAuthSession } from 'aws-amplify/auth';
-import * as S3Utils from '@/utils/s3';
+import * as S3Urls from '@/services/s3/urls';
 import * as DateUtils from '@/utils/date';
 
 const defaultImgUrl = 'default_profile.png';
@@ -11,16 +10,11 @@ async function fetchS3SignedUrl(state, stateKey) {
     try {
         if (!stateKey) throw new Error('Missing state key');
 
-        const { userSub } = await fetchAuthSession();
-
-        if (!userSub) throw new Error('Not authenticated');
-
         const validKeys = ['imgUrl', 'bgImgUrl'];
 
         if (!validKeys.includes(stateKey)) throw new Error('Invalid state key');
 
-        const { filePath } = await S3Utils.parseUrl(state[stateKey])
-        state[stateKey] = await S3Utils.getSignedUrl(filePath)
+        state[stateKey] = await S3Urls.refreshSignedUrl(state[stateKey])
     } catch (err) {
         console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
         console.info(JSON.stringify(err))
