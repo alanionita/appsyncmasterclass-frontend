@@ -256,3 +256,27 @@ export const updateMyProfile = async (profile) => {
   }
 }
 
+export const getFollowing = async ({ userId, limit = 10, nextToken = null }) => {
+  try {
+    const queryParam = {
+      queryStr: Queries.getFollowing,
+      variables: {
+        userId,
+        limit
+      }
+    }
+
+    if (nextToken) {
+      queryParam.variables["nextToken"] = nextToken
+    }
+
+    const res = await gql.query(queryParam)
+
+    const following = res.data.getFollowing;
+
+    return following
+
+  } catch (err) {
+    console.error('Error [gql/controllers/getFollowing] :', err.message)
+  }
+}
