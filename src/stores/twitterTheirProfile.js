@@ -29,7 +29,9 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         imgUrl: defaultImgUrl,
         bgImgUrl: '',
         name: "",
-        screenName: ""
+        screenName: "",
+        following: [],
+        followingNextToken: null
     }),
     actions: {
         async setProfile(screenName) {
@@ -51,6 +53,22 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         },
         async refreshImgUrl() {
             await fetchS3SignedUrl(this, 'imgUrl')
+        },
+        async getFollowing(limit = 10, nextToken = null) {
+            try {
+                if (nextToken) {
+                    const followingData = await gql.getFollowing({ userId: this.id, limit, nextToken });
+                    this.following = followingData.profiles;
+                    this.followingNextToken = followingData.nextToken
+                } else {
+                    const followingData = await gql.getFollowing({ userId: this.id, limit });
+                    this.following = followingData.profiles;
+                    this.followingNextToken = null
+                }
+            } catch (err) {
+                console.error('Err [twitterMyProfile.changeProfile()', err.message)
+                throw err
+            }
         }
     },
     getters: {

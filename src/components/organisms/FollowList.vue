@@ -6,12 +6,9 @@ import UsersList from '../molecules/UsersList.vue';
 
 const router = useRouter();
 const route = useRoute();
-const { profile } = defineProps(['profile'])
+const { profileName, profileScreenName, list } = defineProps(['profile', 'profile-name', 'profile-screen-name', 'list'])
 const screenName = route.params.screenName
-const [followPath, ..._] =  route.path.split('/').reverse();
 
-const listCount = profile[`${followPath}Count`];
-const list = listCount && listCount > 0 && profile[`${followPath}`];
 const tabs = ref(['Following', 'Followers'])
 
 /** Navigates to the neighbouring list 
@@ -37,20 +34,16 @@ function goTo(route) {
             <i class="fas fa-arrow-left text-blue"></i>
         </button>
         <div class="lg:block ml-4">
-            <h1 class="text-xl font-bold">{{ profile.name }}</h1>
-            <p class="text-left text-sm leading-tight text-dark">@{{ profile.screenName }}</p>
+            <h1 class="text-xl font-bold">{{ profileName }}</h1>
+            <p class="text-left text-sm leading-tight text-dark">@{{ profileScreenName }}</p>
         </div>
     </div>
 
     <ul class="flex flex-row justify-evenly mt-2 list-none" role="tablist">
-        <li v-for="(tab) in tabs" 
-            class="w-1/2 font-bold " 
-            role="presentation">
-            <button 
-                @click="goTo(tab)"
-                role="tab"
-                :aria-selected="route.name === tab && true"
-                class="w-full px-8 py-4 text-dark aria-selected:text-blue aria-selected:bg-lightblue font-bold border-b-2 hover:bg-lightblue">{{ tab }}</button>
+        <li v-for="(tab) in tabs" class="w-1/2 font-bold " role="presentation">
+            <button @click="goTo(tab)" role="tab" :aria-selected="route.name === tab && true"
+                class="w-full px-8 py-4 text-dark aria-selected:text-blue aria-selected:bg-lightblue aria-selected:border-blue font-bold border-b-2 border-lighter hover:bg-lightblue">{{
+                    tab }}</button>
         </li>
     </ul>
 
