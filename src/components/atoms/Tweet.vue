@@ -3,6 +3,7 @@ import { likeTweet, retweetTweet, unlikeTweet, unretweetTweet } from '@/services
 import { ref } from 'vue'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
+import * as S3Urls from '@/services/s3/urls';
 
 const { tweet } = defineProps(["tweet"])
 const timeline = useTwitterTimeline();
@@ -60,6 +61,16 @@ async function handleReplyBtn() {
     replyUI.value = !replyUI.value
 }
 
+async function handleImageError(url) {
+    try {
+        tweet.profile.imgUrl = await S3Urls.refreshSignedUrl(url)
+    } catch (err) {
+        console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
+        console.info(JSON.stringify(err))
+        return
+    }
+}
+
 </script>
 
 <template>
@@ -67,6 +78,7 @@ async function handleReplyBtn() {
         <div class="flex-none mr-4">
             <a :href="`/${tweet.profile.screenName}`">
                 <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
+                    @error="handleImageError(tweet.profile.imgUrl)"
                     class="h-12 w-12 rounded-full flex-none" />
             </a>
         </div>
