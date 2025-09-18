@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import * as Routes from '../../router/routeNames';
 
 const router = useRouter();
-const { name, screenName, bio, location, website, joinedDate, followingCount, followersCount } = defineProps(['name', 'screenName', 'bio', 'location', 'website', 'joinedDate', 'followingCount', 'followersCount']);
+const { name, screenName, bio, location, website, joinedDate, followingCount, followersCount } = defineProps(['name', 'screen-name', 'bio', 'location', 'website', 'joinedDate', 'followingCount', 'followersCount']);
 
 function goToFollowing() {
     router.push({
@@ -16,7 +16,7 @@ function goToFollowing() {
 }
 function goToFollowers() {
     router.push({
-        name: Routes.Following,
+        name: Routes.Followers,
         params: {
             screenName
         }
