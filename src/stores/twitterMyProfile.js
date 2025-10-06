@@ -31,7 +31,11 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
         name: "",
         screenName: "",
         following: [],
-        followingNextToken: null
+        followers: [],
+        followingNextToken: null,
+        followersNextToken: null,
+        followersCount: 0,
+        followingCount: 0,
     }),
     actions: {
         async setProfile() {
@@ -73,16 +77,36 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
         async getFollowing(limit = 10, nextToken = null) {
             try {
                 if (nextToken) {
-                    const followingData = await gql.getFollowing({ userId: this.id, limit, nextToken });
-                    this.following = followingData.profiles;
-                    this.followingNextToken = followingData.nextToken
+                    const data = await gql.getFollowing({ userId: this.id, limit, nextToken });
+                    this.following = data.profiles;
+                    this.followingNextToken = data.nextToken
+                    this.followingCount = data.profiles.length;
                 } else {
-                    const followingData = await gql.getFollowing({ userId: this.id, limit });
-                    this.following = followingData.profiles;
+                    const data = await gql.getFollowing({ userId: this.id, limit });
+                    this.following = data.profiles;
                     this.followingNextToken = null
+                    this.followingCount = data.profiles.length;
                 }
             } catch (err) {
-                console.error('Err [twitterMyProfile.changeProfile()', err.message)
+                console.error('Err [twitterMyProfile.getFollowing()', err.message)
+                throw err
+            }
+        },
+        async getFollowers(limit = 10, nextToken = null) {
+            try {
+                if (nextToken) {
+                    const data = await gql.getFollowers({ userId: this.id, limit, nextToken });
+                    this.followers = data.profiles;
+                    this.followersNextToken = data.nextToken
+                    this.followersCount = data.profiles.length;
+                } else {
+                    const data = await gql.getFollowers({ userId: this.id, limit });
+                    this.followers = data.profiles;
+                    this.followersNextToken = null
+                    this.followersCount = data.profiles.length;
+                }
+            } catch (err) {
+                console.error('Err [twitterMyProfile.getFollowers()', err.message)
                 throw err
             }
         }

@@ -29,11 +29,15 @@ async function updatePageData(screenName = null) {
       await timeline.getTweets(theirProfile.id)
       await theirProfile.refreshBgImgUrl()
       await theirProfile.refreshImgUrl()
+      await theirProfile.getFollowers()
+      await theirProfile.getFollowing()
     } else {
       isMine.value = true;
       await timeline.getMyTimeline()
       await myProfile.refreshBgImgUrl()
       await myProfile.refreshImgUrl()
+      await myProfile.getFollowers()
+      await myProfile.getFollowing()
     }
   } catch (err) {
     console.error('Err [ProfileView/updatePageData] ::', err.message)

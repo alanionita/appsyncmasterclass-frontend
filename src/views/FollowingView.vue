@@ -27,9 +27,12 @@ async function updatePageData(screenName = null) {
         isMine.value = false;
         await theirProfile.setProfile(screenName)
         await timeline.getTweets(theirProfile.id)
+        await theirProfile.getFollowers()
+        await theirProfile.getFollowing()
     } else {
         isMine.value = true;
         await timeline.getMyTimeline()
+        await myProfile.getFollowers()
         await myProfile.getFollowing()
     }
 }
@@ -40,7 +43,6 @@ onMounted(async () => {
 })
 
 onBeforeRouteUpdate(async (to, from) => {
-    console.log({to})
     await updatePageData(to.params.screenName)
 })
 
@@ -49,9 +51,9 @@ onBeforeRouteUpdate(async (to, from) => {
     <ThreeColTemplate>
         <template #middle>
             <FollowList 
-                :profile="isMine ? myProfile : theirProfile"
+                :profile="isMine ? myProfile : theirProfile" 
                 :profile-name="isMine ? myProfile.name : theirProfile.name"
-                :profile-screen-name="isMine ? myProfile.screenName : theirProfile.screenName" 
+                :profile-screen-name="isMine ? myProfile.screenName : theirProfile.screenName"
                 :list="isMine ? myProfile.following : theirProfile.following"/>
         </template>
     </ThreeColTemplate>

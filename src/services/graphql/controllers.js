@@ -280,3 +280,28 @@ export const getFollowing = async ({ userId, limit = 10, nextToken = null }) => 
     console.error('Error [gql/controllers/getFollowing] :', err.message)
   }
 }
+
+export const getFollowers = async ({ userId, limit = 10, nextToken = null }) => {
+  try {
+    const queryParam = {
+      queryStr: Queries.getFollowers,
+      variables: {
+        userId,
+        limit
+      }
+    }
+
+    if (nextToken) {
+      queryParam.variables["nextToken"] = nextToken
+    }
+
+    const res = await gql.query(queryParam)
+
+    const followers = res.data.getFollowers;
+
+    return followers
+
+  } catch (err) {
+    console.error('Error [gql/controllers/getFollowers] :', err.message)
+  }
+}
