@@ -26,6 +26,7 @@ async function loginUserIfAlreadyAuthenticated() {
 }
 
 async function fetchPageData() {
+  timeline.$reset();
   uiStore.loadingOn()
   await timeline.getMyTimeline()
   debounce(uiStore.loadingOff())
