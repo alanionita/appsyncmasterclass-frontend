@@ -3,9 +3,14 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import * as Routes from '../../router/routeNames'
 import UsersList from '../molecules/UsersList.vue';
+import Loader from '../atoms/Loader.vue';
+import { storeToRefs } from 'pinia';
+import { useUi } from '@/stores/ui';
 
 const router = useRouter();
 const route = useRoute();
+const uiStore = useUi();
+const { loading } = storeToRefs(uiStore)
 const { profileName, profileScreenName, list } = defineProps(['profile', 'profile-name', 'profile-screen-name', 'list'])
 const screenName = route.params.screenName
 
@@ -47,5 +52,6 @@ function goTo(route) {
         </li>
     </ul>
 
-    <UsersList :users="list" />
+    <Loader v-if="loading"/>
+    <UsersList v-if="!loading" :users="list" />
 </template>
