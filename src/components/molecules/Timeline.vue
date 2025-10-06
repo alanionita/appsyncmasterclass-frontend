@@ -6,29 +6,56 @@ import { useRoute } from 'vue-router';
 import Loader from '../atoms/Loader.vue';
 import { useUi } from '@/stores/ui';
 import { storeToRefs } from 'pinia';
+import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
+import { useTwitterTheirProfile } from '@/stores/twitterTheirProfile';
+import { onMounted, onUpdated, ref } from 'vue';
 
 const { tweets } = defineProps(['tweets']);
 const uiStore = useUi()
-const { loading } = storeToRefs(uiStore)
+const isSelf = ref(false);
+const myProfile = useTwitterMyProfile();
+const theirProfile = useTwitterTheirProfile();
+const { loading } = storeToRefs(uiStore);
 
 const route = useRoute();
+
+function checkProfile() {
+    if (route.path.includes(myProfile.screenName)) {
+        isSelf.value = true
+    } else {
+        isSelf.value = false
+    }
+}
+
+onMounted(() => {
+    checkProfile()
+})
+
+onUpdated(() => {
+    checkProfile()
+})
 
 </script>
 <template>
     <div>
-        <Loader v-if="loading"/>
+        <Loader v-if="loading" />
         <section v-else-if="tweets.length === 0">
-            <div v-if="route.name === 'home'" class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-24 py-8">
+            <div v-if="route.name === 'home'"
+                class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-24 py-8">
                 <p class="font-semibold text-lg">Welcome to Twitter!</p>
-                <p class="text-sm text-dark text-center">This is the best place to see what’s happening in your world.
+                <p class="text-sm text-dark text-center">This is the best place to see what is happening in your world.
                     Find
                     some people and topics to follow now.</p>
                 <TextButton text="Let's go!" action="() => {}" />
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
-                <p class="font-bold text-lg">You haven’t Tweeted yet</p>
-                <p class="text-sm text-dark">When you post a Tweet, it’ll show up here.</p>
-                <TextButton text="Tweet now" action="() => {}" />
+            <div v-if="isSelf" class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
+                <p class="font-bold text-lg">You haven’t tweeted yet</p>
+                <p class="text-sm text-dark">When you post a tweet, it will show up here.</p>
+                <TextButton text="t now" action="() => {}" />
+            </div>
+            <div v-else class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
+                <p class="font-bold text-lg">{{ theirProfile.name }} hasn’t tweeted yet</p>
+                <p class="text-sm text-dark">When they post a tweet, it will show up here.</p>
             </div>
         </section>
         <section v-else-if="tweets.length > 0" v-for="tweet in tweets" :key="tweet.id">
