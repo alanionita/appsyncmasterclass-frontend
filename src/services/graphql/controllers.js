@@ -324,3 +324,22 @@ export const follow = async ({ userId }) => {
     return err
   }
 }
+
+export const unfollow = async ({ userId }) => {
+  try {
+    const queryParam = {
+      queryStr: Mutations.unfollow,
+      variables: {
+        userId
+      }
+    }
+
+    const res = await gql.query(queryParam)
+
+    return res
+
+  } catch (err) {
+    console.error('Error [gql/controllers/unfollow] :', err.message)
+    return err
+  }
+}

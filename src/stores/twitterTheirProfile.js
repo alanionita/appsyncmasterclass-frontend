@@ -132,9 +132,21 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
                 const res = await gql.follow({ userId: this.id })
                 if (res) {
                     this.followersCount += 1;
+                    this.followed = true
                 }
             } catch (err) {
                 console.error('Err [twitterMyProfile.follow()', err.message)
+            }
+        },
+        async unfollow() {
+            try {
+                const res = await gql.unfollow({ userId: this.id })
+                if (res) {
+                    this.followersCount -= 1;
+                    this.followed = false
+                }
+            } catch (err) {
+                console.error('Err [twitterMyProfile.unfollow()', err.message)
             }
         }
     },

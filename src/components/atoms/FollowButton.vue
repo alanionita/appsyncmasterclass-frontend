@@ -13,6 +13,10 @@ async function followUser() {
     await theirProfileStore.follow()
 }
 
+async function unfollowUser() {
+    await theirProfileStore.unfollow()
+}
+
 </script>
 
 <template>
@@ -27,7 +31,7 @@ async function followUser() {
         <button 
             @mouseover="followingLabel = 'Unfollow'" 
             @mouseleave="followingLabel = 'Following'"
-            @click="followUser()" 
+            @click="unfollowUser()" 
             class="text-white bg-blue font-bold px-4 py-3 rounded-full border hover:bg-red-700">
             {{ followingLabel }}
         </button>
