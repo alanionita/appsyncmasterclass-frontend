@@ -1,4 +1,5 @@
 <script setup>
+import FollowButton from '../atoms/FollowButton.vue';
 
 const { imgUrl, myProfile, following, toggleEditProfile, toggleSetupProfile, profile } = defineProps(['imgUrl', 'myProfile', 'following', 'toggleSetupProfile', 'toggleEditProfile', 'profile'])
 
@@ -33,14 +34,7 @@ async function handleImageError() {
             <button class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue">
                 <i class="fas fa-envelope"></i>
             </button>
-            <button v-if="!following"
-                class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue">
-                Follow
-            </button>
-            <button v-if="following" @mouseover="followingLabel = 'Unfollow'" @mouseleave="followingLabel = 'Following'"
-                class="text-white bg-blue font-bold px-4 py-3 rounded-full border hover:bg-red-700">
-                {{ followingLabel }}
-            </button>
+            <FollowButton :my-profile="myProfile"/>
         </section>
     </section>
 </template>

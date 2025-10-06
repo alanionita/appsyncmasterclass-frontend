@@ -305,3 +305,22 @@ export const getFollowers = async ({ userId, limit = 10, nextToken = null }) => 
     console.error('Error [gql/controllers/getFollowers] :', err.message)
   }
 }
+
+export const follow = async ({ userId }) => {
+  try {
+    const queryParam = {
+      queryStr: Mutations.follow,
+      variables: {
+        userId
+      }
+    }
+
+    const res = await gql.query(queryParam)
+
+    return res
+
+  } catch (err) {
+    console.error('Error [gql/controllers/follow] :', err.message)
+    return err
+  }
+}
