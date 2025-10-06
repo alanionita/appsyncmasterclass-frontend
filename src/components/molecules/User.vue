@@ -23,14 +23,15 @@ async function handleImageError(url) {
 <template>
     <li class="grid grid-cols-12 grid-rows-1 w-full p-4 gap-2 border-b border-lighter hover:bg-lightest">
         <a :href="`/${user.screenName}`" class="col-start-1 col-span-1 self-center">
-            <img :src="`${user.imgUrl || 'default_profile.png'}`" 
-                @error="handleImageError(user.imgUrl)"
+            <img :src="`${user.imgUrl || 'default_profile.png'}`" @error="handleImageError(user.imgUrl)"
                 class="h-12 w-12 rounded-full" />
         </a>
         <section class="col-start-2 col-span-8">
-            <p class="font-bold">{{ user.name }}</p>
-            <p class="text-dark text-sm">@{{ user.screenName }}</p>
-            <p class="w-auto">{{ user.bio }}</p>
+            <a :href="`/${user.screenName}`" class="">
+                <p class="font-bold">{{ user.name }}</p>
+                <p class="text-dark text-sm">@{{ user.screenName }}</p>
+                <p class="w-auto">{{ user.bio }}</p>
+            </a>
         </section>
         <div class="col-start-11 col-span-3 self-center" v-if="profile.id !== user.id">
             <button v-if="!user.following" @click="followUser()"
