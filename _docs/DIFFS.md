@@ -355,4 +355,17 @@ Diffs:
 - CSS styling: implements grid layouts for layer stacks of elements, over absolute positioning
 - Docs: adds JSDocs where possible to explain inputs, outputs, and behaviors
 
-Release: 
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-23-Profile_page_edit_profile_details
+
+# 05-24-Profile_page_following_and_unfollowing 
+
+- store/twitterTheirProfile: adds logic to handle presigned url; refactored older logic and more abstractions into utils/*
+- UI: Tweet, adds link to /profile/* to the Tweet.screenName UI element
+- UI: Profile back button navigation logic added within ProfileHeader because of a different abstraction to source material, implemented via links instead of <button> onClick for valid semantics 
+- ProfileDetails: Followers and Following navigation implemented within ProfileDetails components, since this is the local abstraction; routes don't need to define webpackChunkName (default); views and routing implemented in a Composition API fashion
+- State: calls to update followers and following implemented within `updatePageData()` method on each view vs `created()` implementation; state methods for getFollowing and getFollowers also update the respective counts
+- GraphQL: controllers make the requests to getFollowing, getFollowers, follow, unfollow
+- components/FollowButton: component is an abstracted version of the profile follow button; includes logic for showing if someone is following you and whether you should follow them back - feature implemented via nested Pinia states
+- components/User: implements direct call to gql.follow and unfollow controllers, bypassing the state methods altogether. Why? There's no theirProfile here, just a list of multiple profiles with objects for each. TheirProfile is a singular state thus incompatible
+
+Release
