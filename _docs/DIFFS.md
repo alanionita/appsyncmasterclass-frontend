@@ -371,8 +371,18 @@ Diffs
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-24-Profile_page_following_and_unfollowing
 
-#  05-25-UI_add_infinite_scrolling 
+# 05-25-UI_add_infinite_scrolling
 
 Diffs:
 - vScrollend: renamed the directive, defined it in a setup style pattern; opted to keep the directive locally scoped, thus not requiring global registration
 - Implements the tweet loading via `loadMoreTweets()` helper defined at *View level
+
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-25-UI_add_infinite_scrolling
+
+# 05-26-UI_add_loading_indicator 
+
+Diffs:
+- loader state: implemented via a new Pinia store for UI elements, including the loading values; the Loader component now show/hides based on it; data calls now trigger the loading value from the UI state; adds a debounce to make the loader stay alive for a natural amount of time
+- Home: fixes issue with multiple tweet posting on double-click
+
+Release:
