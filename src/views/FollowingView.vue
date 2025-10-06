@@ -7,6 +7,8 @@ import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useTwitterTheirProfile } from '@/stores/twitterTheirProfile';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
+import { useUi } from '@/stores/ui';
+import { debounce } from '@/utils/timing';
 
 const path = ref(window.location.pathname)
 const route = useRoute()
@@ -14,6 +16,7 @@ const route = useRoute()
 const myProfile = useTwitterMyProfile()
 const theirProfile = useTwitterTheirProfile()
 const timeline = useTwitterTimeline()
+const { loadingOn, loadingOff } = useUi()
 const isMine = ref(false);
 
 async function loginUserIfAlreadyAuthenticated() {
@@ -23,6 +26,7 @@ async function loginUserIfAlreadyAuthenticated() {
 }
 
 async function updatePageData(screenName = null) {
+    loadingOn()
     if (!myProfile.isSelf(screenName)) {
         isMine.value = false;
         await theirProfile.setProfile(screenName)
@@ -35,6 +39,7 @@ async function updatePageData(screenName = null) {
         await myProfile.getFollowers()
         await myProfile.getFollowing()
     }
+    debounce(loadingOff())
 }
 
 onMounted(async () => {

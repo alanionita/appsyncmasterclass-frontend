@@ -6,23 +6,29 @@ import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import Timeline from '@/components/molecules/Timeline.vue';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { vScrollend } from '@/directives/index';
+import { useUi } from '@/stores/ui';
+import { debounce } from '@/utils/timing';
 
-const tweet = defineModel('tweet');
+const tweet = defineModel('tweet', {
+  default: ''
+});
+const buttonDisable = ref(false)
 
 const path = ref(window.location.pathname)
 
 const profile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
-
-// TODO: implement UI store with values for: error, pending
+const uiStore = useUi()
 
 async function loginUserIfAlreadyAuthenticated() {
   const authStore = useAuthStore();
   await authStore.verifyAuth(path);
 }
 
-function fetchPageData() {
-  timeline.getMyTimeline()
+async function fetchPageData() {
+  uiStore.loadingOn()
+  await timeline.getMyTimeline()
+  debounce(uiStore.loadingOff())
 }
 
 async function loadMoreTweets() {
@@ -37,14 +43,16 @@ async function loadMoreTweets() {
 }
 
 async function postNewTweet() {
+  buttonDisable.value = true
   if (!tweet.value.length === 0) return;
   await timeline.createTweet(tweet.value);
   tweet.value = ''
+  buttonDisable.value = false
 }
 
-onMounted(() => {
+onMounted(async () => {
   loginUserIfAlreadyAuthenticated()
-  fetchPageData()
+  await fetchPageData()
 })
 
 </script>
@@ -73,7 +81,7 @@ onMounted(() => {
                 <i class="text-lg text-blue far fa-chart-bar"></i>
                 <i class="text-lg text-blue far fa-smile"></i>
               </nav>
-              <button type="submit" :disabled="!tweet"
+              <button type="submit" :disabled="buttonDisable || !tweet.length"
                 class="sm:self-end h-12 px-4 text-white font-semibold bg-blue hover:bg-darkblue rounded-full disabled:cursor-not-allowed disabled:bg-lighter">Tweet</button>
             </div>
           </form>

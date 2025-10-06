@@ -8,6 +8,8 @@ import { useTwitterTheirProfile } from '@/stores/twitterTheirProfile';
 import Profile from '@/components/templates/Profile.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import { vScrollend } from '@/directives';
+import { debounce } from '@/utils/timing';
+import { useUi } from '@/stores/ui';
 
 const path = ref(window.location.pathname)
 const isMine = ref(false);
@@ -16,6 +18,7 @@ const route = useRoute();
 const myProfile = useTwitterMyProfile()
 const theirProfile = useTwitterTheirProfile()
 const timeline = useTwitterTimeline()
+const uiStore = useUi()
 
 async function loginUserIfAlreadyAuthenticated() {
   const authStore = useAuthStore();
@@ -24,6 +27,7 @@ async function loginUserIfAlreadyAuthenticated() {
 
 async function updatePageData(screenName = null) {
   try {
+    uiStore.loadingOn()
     if (!myProfile.isSelf(screenName)) {
       isMine.value = false;
       await theirProfile.setProfile(screenName)
@@ -40,6 +44,7 @@ async function updatePageData(screenName = null) {
       await myProfile.getFollowers()
       await myProfile.getFollowing()
     }
+    debounce(uiStore.loadingOff())
   } catch (err) {
     console.error('Err [ProfileView/updatePageData] ::', err.message)
     console.info(JSON.stringify(err))
