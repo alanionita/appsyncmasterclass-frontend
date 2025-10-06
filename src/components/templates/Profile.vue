@@ -39,8 +39,8 @@ function toggleSetupProfile() {
       <button class="grow text-dark font-bold border-b-2 border-lighter px-10 py-4 hover:bg-lightblue">Media</button>
       <button class="grow text-dark font-bold border-b-2 border-lighter px-10 py-4 hover:bg-lightblue">Like</button>
     </div>
-    <Timeline :tweets="tweets" />
   </section>
+  <Timeline :tweets="tweets" />
   <EditProfileOverlay v-if="showEditProfile" @hide="toggleEditProfile"/>
   <SetupProfileOverlay v-if="showSetupProfile" @hide="toggleSetupProfile" />
 </template>

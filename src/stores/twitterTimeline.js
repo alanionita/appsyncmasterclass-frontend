@@ -15,10 +15,12 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
             try {
                 const timeline = await gql.getMyTimeline(limit, nextToken);
 
-                this.tweets = timeline.tweets
+                this.tweets = [...this.tweets, ...timeline.tweets]
 
                 if (timeline.nextToken) {
                     this.nextToken = timeline.nextToken
+                } else {
+                    this.nextToken = null
                 }
             } catch (err) {
                 console.error('twitterTimeline.getMyTimeline :', err.message)

@@ -7,6 +7,7 @@ import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useTwitterTheirProfile } from '@/stores/twitterTheirProfile';
 import Profile from '@/components/templates/Profile.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
+import { vScrollend } from '@/directives';
 
 const path = ref(window.location.pathname)
 const isMine = ref(false);
@@ -42,8 +43,24 @@ async function updatePageData(screenName = null) {
   } catch (err) {
     console.error('Err [ProfileView/updatePageData] ::', err.message)
     console.info(JSON.stringify(err))
-    return 
+    return
   }
+}
+
+async function loadMoreTweets() {
+  try {
+    if (timeline.nextToken) {
+      if (!myProfile.isSelf(route.params.screenName)) {
+        await timeline.getTweets(theirProfile.id, 10, timeline.nextToken)
+      } else {
+        await timeline.getMyTimeline(10, timeline.nextToken)
+      }
+    }
+  } catch (err) {
+    console.error('Err [ProfileView/loadMoreTweets] ::', err.message)
+    console.info(JSON.stringify(err))
+  }
+
 }
 
 onMounted(async () => {
@@ -58,9 +75,11 @@ onBeforeRouteUpdate(async (to, from) => {
 </script>
 
 <template>
-  <ThreeColTemplate :trending="true" :follow-who="true">
-    <template #middle>
-      <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="timeline.tweets" />
+  <ThreeColTemplate :trending="true" :follow-who="true" v-scrollend:bottom="loadMoreTweets">
+    <template #middle v-scrollend:bottom="loadMoreTweets">
+      <div class="overflow-y-auto" v-scrollend:bottom="loadMoreTweets">
+        <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="timeline.tweets"/>
+      </div>
     </template>
   </ThreeColTemplate>
 </template>
