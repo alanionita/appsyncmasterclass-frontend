@@ -359,6 +359,7 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 
 # 05-24-Profile_page_following_and_unfollowing 
 
+Diffs
 - store/twitterTheirProfile: adds logic to handle presigned url; refactored older logic and more abstractions into utils/*
 - UI: Tweet, adds link to /profile/* to the Tweet.screenName UI element
 - UI: Profile back button navigation logic added within ProfileHeader because of a different abstraction to source material, implemented via links instead of <button> onClick for valid semantics 
@@ -368,4 +369,10 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 - components/FollowButton: component is an abstracted version of the profile follow button; includes logic for showing if someone is following you and whether you should follow them back - feature implemented via nested Pinia states
 - components/User: implements direct call to gql.follow and unfollow controllers, bypassing the state methods altogether. Why? There's no theirProfile here, just a list of multiple profiles with objects for each. TheirProfile is a singular state thus incompatible
 
-Release
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-24-Profile_page_following_and_unfollowing
+
+#  05-25-UI_add_infinite_scrolling 
+
+Diffs:
+- vScrollend: renamed the directive, defined it in a setup style pattern; opted to keep the directive locally scoped, thus not requiring global registration
+- Implements the tweet loading via `loadMoreTweets()` helper defined at *View level
