@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUpdated, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authentication';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
@@ -10,15 +10,18 @@ import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import { vScrollend } from '@/directives';
 import { debounce } from '@/utils/timing';
 import { useUi } from '@/stores/ui';
+import { storeToRefs } from 'pinia';
 
 const path = ref(window.location.pathname)
-const isMine = ref(false);
 const route = useRoute();
 
 const myProfile = useTwitterMyProfile()
 const theirProfile = useTwitterTheirProfile()
-const timeline = useTwitterTimeline()
+const timeline = useTwitterTimeline();
+const { tweets } = storeToRefs(timeline)
 const uiStore = useUi()
+
+const isMine = ref(myProfile.isSelf(route.params.screenName));
 
 async function loginUserIfAlreadyAuthenticated() {
   const authStore = useAuthStore();
@@ -27,45 +30,32 @@ async function loginUserIfAlreadyAuthenticated() {
 
 async function updatePageData(screenName = null) {
   try {
+    timeline.$reset();
     uiStore.loadingOn()
-    if (!myProfile.isSelf(screenName)) {
-      isMine.value = false;
-      await theirProfile.setProfile(screenName)
-      await timeline.getTweets(theirProfile.id)
-      await theirProfile.refreshBgImgUrl()
-      await theirProfile.refreshImgUrl()
-      await theirProfile.getFollowers()
-      await theirProfile.getFollowing()
-    } else {
-      isMine.value = true;
-      await timeline.getMyTimeline()
+    if (isMine.value) {
+      // My profile
       await myProfile.refreshBgImgUrl()
       await myProfile.refreshImgUrl()
       await myProfile.getFollowers()
       await myProfile.getFollowing()
+      await timeline.getMyTimeline()
+      debounce(uiStore.loadingOff())
+      return
     }
+    // Their profile
+    await theirProfile.setProfile(screenName)
+    await theirProfile.refreshBgImgUrl()
+    await theirProfile.refreshImgUrl()
+    await theirProfile.getFollowers()
+    await theirProfile.getFollowing()
+    await timeline.getTweets(theirProfile.id)
     debounce(uiStore.loadingOff())
+    return
   } catch (err) {
     console.error('Err [ProfileView/updatePageData] ::', err.message)
     console.info(JSON.stringify(err))
     return
   }
-}
-
-async function loadMoreTweets() {
-  try {
-    if (timeline.nextToken) {
-      if (!myProfile.isSelf(route.params.screenName)) {
-        await timeline.getTweets(theirProfile.id, 10, timeline.nextToken)
-      } else {
-        await timeline.getMyTimeline(10, timeline.nextToken)
-      }
-    }
-  } catch (err) {
-    console.error('Err [ProfileView/loadMoreTweets] ::', err.message)
-    console.info(JSON.stringify(err))
-  }
-
 }
 
 onMounted(async () => {
@@ -82,8 +72,8 @@ onBeforeRouteUpdate(async (to, from) => {
 <template>
   <ThreeColTemplate :trending="true" :follow-who="true" v-scrollend:bottom="loadMoreTweets">
     <template #middle v-scrollend:bottom="loadMoreTweets">
-      <div class="overflow-y-auto" v-scrollend:bottom="loadMoreTweets">
-        <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="timeline.tweets"/>
+      <div class="overflow-y-auto" v-scrollend:bottom="() => timeline.loadMoreTweets(isMine)">
+        <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="tweets" />
       </div>
     </template>
   </ThreeColTemplate>

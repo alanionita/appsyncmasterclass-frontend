@@ -53,7 +53,7 @@ onMounted(async () => {
 <template>
   <ThreeColTemplate :trending="true" :follow-who="true">
     <template #middle>
-      <div v-if="profile" v-scrollend:bottom="loadMoreTweets" class="flex h-full flex-col overflow-y-auto gap-4">
+      <div v-if="profile" v-scrollend:bottom="() => loadMoreTweets()" class="flex h-full flex-col overflow-y-auto gap-4">
         <section class="border-b border-lighter flex items-center justify-between py-4">
           <h1 class="text-2xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
