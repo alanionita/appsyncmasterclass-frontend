@@ -8,6 +8,7 @@ import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { vScrollend } from '@/directives/index';
 import { useUi } from '@/stores/ui';
 import { debounce } from '@/utils/timing';
+import { storeToRefs } from 'pinia';
 
 const tweet = defineModel('tweet', {
   default: ''
@@ -18,6 +19,8 @@ const path = ref(window.location.pathname)
 
 const profile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
+const { getMyTimeline, loadMoreTweets, createTweet } = timeline;
+const { tweets } = storeToRefs(timeline);
 const uiStore = useUi()
 
 async function loginUserIfAlreadyAuthenticated() {
@@ -28,25 +31,14 @@ async function loginUserIfAlreadyAuthenticated() {
 async function fetchPageData() {
   timeline.$reset();
   uiStore.loadingOn()
-  await timeline.getMyTimeline()
+  await getMyTimeline()
   debounce(uiStore.loadingOff())
-}
-
-async function loadMoreTweets() {
-  try {
-    if (timeline.nextToken) {
-      await timeline.getMyTimeline(10, timeline.nextToken)
-    }
-  } catch (err) {
-    console.error('Err [HomeView/loadMoreTweets] ::', err.message)
-    console.info(JSON.stringify(err))
-  }
 }
 
 async function postNewTweet() {
   buttonDisable.value = true
   if (!tweet.value.length === 0) return;
-  await timeline.createTweet(tweet.value);
+  await createTweet(tweet.value);
   tweet.value = ''
   buttonDisable.value = false
 }
@@ -89,7 +81,7 @@ onMounted(async () => {
         </section>
 
         <!-- timeline -->
-        <Timeline :tweets="timeline.tweets" />
+        <Timeline :tweets="tweets" />
       </div>
     </template>
   </ThreeColTemplate>
