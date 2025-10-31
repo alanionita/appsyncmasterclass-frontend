@@ -2,7 +2,6 @@ export const vScrollend = {
     mounted: function (el, binding) {
         if (typeof binding.value !== 'function') return;
         el.__callback__ = (event) => {
-            // console.log(el)
             if (binding.arg == 'bottom') {
                 if (!el) return;
                 const isBottom = Math.ceil(el.offsetHeight + el.scrollTop) >= el.scrollHeight;
