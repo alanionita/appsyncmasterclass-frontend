@@ -1,6 +1,65 @@
 import { defineStore } from 'pinia';
 import * as gql from '@/services/graphql/controllers'
 import { useTwitterMyProfile } from './twitterMyProfile';
+import { useTwitterTheirProfile } from './twitterTheirProfile';
+
+async function paginateMyTweets(state) {
+    try {
+        const { tweetsCount } = useTwitterMyProfile();
+        if (!state.nextToken) return
+        const tweetsLeft = tweetsCount - state.fetchedCount
+        const perPage = tweetsLeft >= state.limit ? state.limit : tweetsLeft
+        if (perPage < state.limit) {
+            state.hasMore = false
+        }
+
+        const data = await gql.getMyTimeline(perPage, state.nextToken);
+
+        const timeline = JSON.parse(JSON.stringify(data))
+
+        state.tweets = [...state.tweets, ...timeline.tweets]
+        state.fetchedCount += timeline.tweets.length
+        if (!timeline.nextToken) {
+            state.nextToken = null
+        } else {
+            state.nextToken = timeline.nextToken
+        }
+    } catch (err) {
+        console.error('Err [twitterTimeline.paginateMyTweets] ::', err.message)
+        console.info(JSON.stringify(err))
+    }
+}
+
+async function paginateTweets(state) {
+    try {
+        const { tweetsCount, id } = useTwitterTheirProfile();
+        if (!state.nextToken) return
+        const tweetsLeft = tweetsCount - state.fetchedCount
+        const perPage = tweetsLeft >= state.limit ? state.limit : tweetsLeft
+        if (perPage < state.limit) {
+            state.hasMore = false
+        }
+
+        const data = await gql.getTweets({ 
+            userId: id, 
+            limit: perPage, 
+            nextToken: state.nextToken 
+        });
+
+        const timeline = JSON.parse(JSON.stringify(data))
+        state.tweets = [...state.tweets, ...timeline.tweets]
+        state.fetchedCount += timeline.tweets.length
+        if (!timeline.nextToken) {
+            state.nextToken = null
+        } else {
+            state.nextToken = timeline.nextToken
+        }
+    } catch (err) {
+        console.error('Err [twitterTimeline.paginateTweets] ::', err.message)
+        console.info(JSON.stringify(err))
+    }
+
+}
 
 export const useTwitterTimeline = defineStore('twitterTimeline', {
     state: () => ({
@@ -51,25 +110,9 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
             try {
                 if (this.hasMore) {
                     if (myProfile) {
-                        const { tweetsCount } = useTwitterMyProfile();
-                        if (!this.nextToken) return
-                        const tweetsLeft = tweetsCount - this.fetchedCount
-                        const perPage = tweetsLeft >= this.limit ? this.limit : tweetsLeft
-                        if (perPage < this.limit) {
-                            this.hasMore = false
-                        }
-
-                        const data = await gql.getMyTimeline(perPage, this.nextToken);
-        
-                        const timeline = JSON.parse(JSON.stringify(data))
-    
-                        this.tweets = [...this.tweets, ...timeline.tweets]
-                        this.fetchedCount += timeline.tweets.length
-                        if (!timeline.nextToken) {
-                            this.nextToken = null
-                        } else {
-                            this.nextToken = timeline.nextToken
-                        }
+                        await paginateMyTweets(this)
+                    } else {
+                        await paginateTweets(this)
                     }
                 }
             } catch (err) {

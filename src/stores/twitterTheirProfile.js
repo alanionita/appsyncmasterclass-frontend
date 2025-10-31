@@ -39,6 +39,7 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         followingCount: 0,
         followed: false,
         followMe: false,
+        tweetsCount: 0
     }),
     actions: {
         async setProfile(screenName) {
