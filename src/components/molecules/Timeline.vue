@@ -51,7 +51,7 @@ onUpdated(() => {
             <div v-if="isSelf" class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
                 <p class="font-bold text-lg">You haven’t tweeted yet</p>
                 <p class="text-sm text-dark">When you post a tweet, it will show up here.</p>
-                <TextButton text="t now" action="() => {}" />
+                <TextButton text="Tweet now" action="() => {}" />
             </div>
             <div v-else class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
                 <p class="font-bold text-lg">{{ theirProfile.name }} hasn’t tweeted yet</p>
