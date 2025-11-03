@@ -11,11 +11,14 @@ export default async (to, from, next) => {
       next("/");
       return;
     }
-    const storeAuth = useAuthStore();
-    await storeAuth.verifyAuth(to.fullPath);
 
-    const storeUi = useUi()
-    storeUi.setOwnProfile(to.params.screenName)
+    if (userSub) {
+      const storeAuth = useAuthStore();
+      await storeAuth.verifyAuth(to.fullPath);
+  
+      const storeUi = useUi()
+      storeUi.setOwnProfile(to.params.screenName)
+    }
     next();
   } catch (err) {
     console.error('Router/auth :', err.message)
