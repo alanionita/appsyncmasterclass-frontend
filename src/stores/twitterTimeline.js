@@ -40,10 +40,10 @@ async function paginateTweets(state) {
             state.hasMore = false
         }
 
-        const data = await gql.getTweets({ 
-            userId: id, 
-            limit: perPage, 
-            nextToken: state.nextToken 
+        const data = await gql.getTweets({
+            userId: id,
+            limit: perPage,
+            nextToken: state.nextToken
         });
 
         const timeline = JSON.parse(JSON.stringify(data))
@@ -67,7 +67,7 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
         nextToken: null,
         fetchedCount: 0,
         hasMore: true,
-        limit: 10,
+        limit: 25,
     }),
     actions: {
         async createTweet(text) {
@@ -76,9 +76,20 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
         },
         async getMyTimeline(nextToken = null) {
             try {
-                const data = await gql.getMyTimeline(this.limit, nextToken);
+                const { tweetsCount } = useTwitterMyProfile();
+                let data;
 
+                const tweetsLeft = tweetsCount - this.fetchedCount
+                const perPage = tweetsLeft >= this.limit ? this.limit : tweetsLeft
+                if (perPage < this.limit) {
+                    this.hasMore = false
+                }
 
+                if (nextToken) {
+                    data = await gql.getMyTimeline(perPage, nextToken);
+                }
+
+                data = await gql.getMyTimeline(perPage);
                 const timeline = JSON.parse(JSON.stringify(data))
 
                 this.tweets = timeline.tweets
