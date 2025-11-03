@@ -2,33 +2,15 @@
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
-import { ulid } from 'ulid';
 import { useSearch } from '@/stores/search';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
-import { debounce } from '@/utils/timing';
-import { SUBMIT_DELAY, SEARCH_MODES, ROUTE_NAMES } from '@/utils/constants';
+import { SEARCH_MODES } from '@/utils/constants';
 
 const router = useRouter();
 const route = useRoute()
 const storeSearch = useSearch();
 const { query, mode } = storeToRefs(storeSearch)
-const { handleSearch } = storeSearch;
-
-const handleModeChange = debounce(() => {
-    router.push({
-        name: ROUTE_NAMES.Search,
-        query: {
-            q: query.value,
-            m: mode.value,
-            h: ulid()
-        }
-    })
-}, SUBMIT_DELAY)
-
-function changeMode(newMode) {
-    mode.value = newMode
-    handleModeChange()
-}
+const { handleSearch, changeMode } = storeSearch;
 
 onMounted(() => {
     if (route.query && route.query.q) {
@@ -61,10 +43,10 @@ onMounted(() => {
                 <section class="grid grid-rows-1 grid-cols-5">
                     <button
                         class="col-span-1 row-span-1 text-dark font-bold border-b-2 md:px-8 md:py-4 hover:bg-lightblue">Top</button>
-                    <button @click="changeMode(SEARCH_MODES.latest)"
+                    <button @click="changeMode(router, SEARCH_MODES.latest)"
                         class="col-span-1 row-span-1 text-dark font-bold border-b-2 md:px-5 md:py-4 hover:bg-lightblue"
                         :class="`${mode == SEARCH_MODES.latest ? 'border-blue' : ''}`">{{ SEARCH_MODES.latest }}</button>
-                    <button @click="changeMode(SEARCH_MODES.people)"
+                    <button @click="changeMode(router, SEARCH_MODES.people)"
                         class="col-span-1 row-span-1 text-dark font-bold border-b-2 md:px-5 md:py-4 hover:bg-lightblue"
                         :class="`${mode == SEARCH_MODES.people ? 'border-blue' : ''}`">{{ SEARCH_MODES.people }}</button>
                     <button

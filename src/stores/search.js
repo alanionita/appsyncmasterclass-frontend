@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { ulid } from 'ulid'
-import { SEARCH_MODES, SUBMIT_DELAY, ROUTE_NAMES } from '@/utils/constants';
-import { debounce } from '@/utils/timing';
+import { SEARCH_MODES, ROUTE_NAMES } from '@/utils/constants';
 
 export const useSearch = defineStore('search', {
     state: () => ({
@@ -22,7 +21,11 @@ export const useSearch = defineStore('search', {
                     })
                 }
             }
-            debounce(cb(_router, this.query, this.mode), SUBMIT_DELAY)()
+            cb(_router, this.query, this.mode)
+        },
+        changeMode(router, newMode) {
+            this.mode = newMode;
+            this.handleSearch(router);
         }
     },
     getters: {
