@@ -1,6 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useAuthStore } from '@/stores/authentication';
+import { onMounted } from 'vue';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
@@ -12,43 +11,53 @@ import { debounce } from '@/utils/timing';
 import { useUi } from '@/stores/ui';
 import { storeToRefs } from 'pinia';
 
-const path = ref(window.location.pathname)
-const route = useRoute();
-
 const myProfile = useTwitterMyProfile()
 const theirProfile = useTwitterTheirProfile()
 const timeline = useTwitterTimeline();
 const { tweets } = storeToRefs(timeline)
 const uiStore = useUi()
+const route = useRoute();
 
-const isMine = ref(myProfile.isSelf(route.params.screenName));
-
-async function loginUserIfAlreadyAuthenticated() {
-  const authStore = useAuthStore();
-  await authStore.verifyAuth(path);
+async function updateMyProfile() {
+  try {
+    await myProfile.refreshBgImgUrl()
+    await myProfile.refreshImgUrl()
+    await myProfile.getFollowers()
+    await myProfile.getFollowing()
+    await timeline.getMyTimeline()
+  } catch (err) {
+    console.error('Err [ProfileView/updateMyProfile] ::', err.message)
+    console.info(JSON.stringify(err))
+    return
+  }
 }
 
-async function updatePageData(screenName = null) {
+async function updateTheirProfile(screenName) {
   try {
-    timeline.$reset();
-    uiStore.loadingOn()
-    if (isMine.value) {
-      // My profile
-      await myProfile.refreshBgImgUrl()
-      await myProfile.refreshImgUrl()
-      await myProfile.getFollowers()
-      await myProfile.getFollowing()
-      await timeline.getMyTimeline()
-      debounce(uiStore.loadingOff())
-      return
-    }
-    // Their profile
+    
     await theirProfile.setProfile(screenName)
     await theirProfile.refreshBgImgUrl()
     await theirProfile.refreshImgUrl()
     await theirProfile.getFollowers()
     await theirProfile.getFollowing()
     await timeline.getTweets(theirProfile.id)
+  } catch (err) {
+    console.error('Err [ProfileView/updateTheirProfile] ::', err.message)
+    console.info(JSON.stringify(err))
+    return
+  }
+}
+
+async function updatePageData(screenName) {
+  try {
+    timeline.$reset();
+    uiStore.loadingOn();
+    if (uiStore.ownProfile) {
+      await updateMyProfile();
+      debounce(uiStore.loadingOff())
+      return
+    }
+    await updateTheirProfile(screenName)
     debounce(uiStore.loadingOff())
     return
   } catch (err) {
@@ -59,7 +68,6 @@ async function updatePageData(screenName = null) {
 }
 
 onMounted(async () => {
-  await loginUserIfAlreadyAuthenticated()
   await updatePageData(route.params.screenName)
 })
 
@@ -73,7 +81,7 @@ onBeforeRouteUpdate(async (to, from) => {
   <ThreeColTemplate :trending="true" :follow-who="true" v-scrollend:bottom="loadMoreTweets">
     <template #middle v-scrollend:bottom="loadMoreTweets">
       <div class="overflow-y-auto" v-scrollend:bottom="() => timeline.loadMoreTweets(isMine)">
-        <Profile :my-profile="isMine" :profile="isMine ? myProfile : theirProfile" :tweets="tweets" />
+        <Profile :profile="uiStore.ownProfile ? myProfile : theirProfile" :tweets="tweets" />
       </div>
     </template>
   </ThreeColTemplate>
