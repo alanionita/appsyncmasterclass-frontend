@@ -1,19 +1,15 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { debounce } from '@/utils/timing';
+import { SEARCH_MODES, SUBMIT_DELAY } from '@/utils/constants';
 import * as Routes from '../../router/routeNames';
 import { ulid } from 'ulid'
 import { ref } from 'vue';
 
 const router = useRouter();
 const query = defineModel('');
-const searchModes = {
-    people: 'People',
-    latest: 'Latest'
-}
-const mode = ref(searchModes.latest)
 
-const SUBMIT_DELAY = 700
+const mode = ref(SEARCH_MODES.latest)
 
 const handleSearch = debounce(() => {
     router.push({
@@ -31,8 +27,8 @@ const handleSearch = debounce(() => {
 <template>
     <section class="relative">
         <i class="fas fa-search absolute mt-3 ml-4 text-sm text-light"></i>
-        <label for="search-field"></label>
-        <input id="search-field" v-on:keyup="handleSearch" v-model="query"
+        <label class="hidden" for="search-field">Search tweets</label>
+        <input id="search-field" v-on:keyup.enter="handleSearch" v-model="query"
             class="pl-10 rounded-full w-full p-2 bg-lighter text-sm" placeholder="Search Tweet" />
     </section>
 </template>
