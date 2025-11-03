@@ -6,6 +6,7 @@ export const useSearch = defineStore('search', {
     state: () => ({
         query: '',
         mode: SEARCH_MODES.latest,
+        results: [],
     }),
     actions: {
         handleSearch(_router) {
