@@ -38,7 +38,7 @@ onBeforeRouteUpdate(async (to, from) => {
 
 </script>
 <template>
-    <ThreeColTemplate>
+    <ThreeColTemplate :search="true">
         <template #middle>
             <FollowList :profile="ui.ownProfile ? myProfile : theirProfile"
                 :profile-name="ui.ownProfile ? myProfile.name : theirProfile.name"

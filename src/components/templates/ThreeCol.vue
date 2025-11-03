@@ -2,7 +2,7 @@
 import SideNav from '@/components/organisms/SideNav.vue'
 import DefaultRightBar from '@/components/organisms/DefaultRightBar.vue';
 
-const { trending, followWho } = defineProps(['trending', 'follow-who'])
+const { trending, followWho, search } = defineProps(['trending', 'follow-who', 'search'])
 
 </script>
 
@@ -15,7 +15,7 @@ const { trending, followWho } = defineProps(['trending', 'follow-who'])
       <slot name="middle"></slot>
     </section>
     <section class="hidden md:flex md:flex-col md:flex-3/12">
-      <DefaultRightBar :trending="trending" :followWho="followWho" />
+      <DefaultRightBar :trending="trending" :followWho="followWho" :search="search"/>
     </section>
   </main>
 </template>
