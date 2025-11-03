@@ -54,7 +54,7 @@ onUpdated(() => {
                 <TextButton text="Tweet now" action="() => {}" />
             </div>
             <div v-else class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
-                <p class="font-bold text-lg">{{ theirProfile.name }} hasn’t tweeted yet</p>
+                <p class="font-bold text-lg">{{ theirProfile.name || 'Account' }} hasn’t tweeted yet</p>
                 <p class="text-sm text-dark">When they post a tweet, it will show up here.</p>
             </div>
         </section>
