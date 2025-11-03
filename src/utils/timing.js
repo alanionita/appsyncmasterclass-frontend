@@ -3,7 +3,12 @@ export const debounce = (callback, wait = 250) => {
     return (...args) => {
         window.clearTimeout(timeoutId);
         timeoutId = window.setTimeout(() => {
-            callback.apply(null, args);
+            try {
+                callback.apply(null, args);
+            } catch (err) {
+                console.error(err.message)
+                console.info(JSON.stringify(err))
+            }
         }, wait);
     };
 }
