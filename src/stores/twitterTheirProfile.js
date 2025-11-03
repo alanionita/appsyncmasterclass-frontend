@@ -23,6 +23,31 @@ async function fetchS3SignedUrl(state, stateKey) {
     }
 }
 
+function followsMe(followingList) {
+    try {
+        const myProfile = useTwitterMyProfile();
+        const theirUserFollowsMe = followingList.filter(({ id }) => {
+            return id === myProfile.id
+        })
+        return theirUserFollowsMe.length == 1
+    } catch (err) {
+        console.error('Err [twitterMyProfile.followsMe()', err.message)
+
+    }
+}
+function iFollowThem(followersList) {
+    try {
+        const myProfile = useTwitterMyProfile();
+        const iFollowThem = followersList.filter(({ id }) => {
+            return id === myProfile.id
+        })
+
+        return iFollowThem.length == 1
+    } catch (err) {
+        console.error('Err [twitterMyProfile.iFollowThem()', err.message)
+    }
+}
+
 export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
     state: () => ({
         createdAt: defaultCreatedAt,
@@ -64,30 +89,21 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         },
         async getFollowing(limit = 10, nextToken = null) {
             try {
-                const myProfile = useTwitterMyProfile();
                 if (nextToken) {
                     const data = await gql.getFollowing({ userId: this.id, limit, nextToken });
+
                     this.following = data.profiles;
                     this.followingNextToken = data.nextToken
                     this.followingCount = data.profiles.length;
 
-                    const iFollowThem = data.profiles.filter((profile) => {
-                        return profile.id === myProfile.id
-                    })
-                    if (iFollowThem.length == 1) {
-                        this.followed = true;
-                    }
+                    this.followMe = followsMe(data.profiles)
                 } else {
                     const data = await gql.getFollowing({ userId: this.id, limit });
                     this.following = data.profiles;
                     this.followingNextToken = null
                     this.followingCount = data.profiles.length;
-                    const iFollowThem = data.profiles.filter((profile) => {
-                        return profile.id === myProfile.id
-                    })
-                    if (iFollowThem.length == 1) {
-                        this.followed = true;
-                    }
+
+                    this.followMe = followsMe(data.profiles)
                 }
             } catch (err) {
                 console.error('Err [twitterMyProfile.getFollowing()', err.message)
@@ -96,32 +112,20 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         },
         async getFollowers(limit = 10, nextToken = null) {
             try {
-                const myProfile = useTwitterMyProfile();
                 if (nextToken) {
                     const data = await gql.getFollowers({ userId: this.id, limit, nextToken });
                     this.followers = data.profiles;
                     this.followersNextToken = data.nextToken
                     this.followersCount = data.profiles.length;
 
-                    const theyFollowMe = data.profiles.filter((profile) => {
-                        return profile.id === myProfile.id
-                    })
-                    
-                    if (theyFollowMe.length !== 0) {
-                        this.followMe = true;
-                    }
+                    this.followed = iFollowThem(data.profiles)
                 } else {
                     const data = await gql.getFollowers({ userId: this.id, limit });
                     this.followers = data.profiles;
                     this.followersNextToken = null
                     this.followersCount = data.profiles.length;
-                    const iFollowMe = data.profiles.filter((profile) => {
-                        return profile.id === myProfile.id
-                    })
-                    
-                    if (iFollowMe.length !== 0) {
-                        this.followMe = true;
-                    }
+
+                    this.followed = iFollowThem(data.profiles)
                 }
             } catch (err) {
                 console.error('Err [twitterMyProfile.getFollowers()', err.message)

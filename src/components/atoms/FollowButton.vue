@@ -5,7 +5,6 @@ import { ref } from 'vue';
 const followLabel = 'Follow'
 const theyFollowMeLabel = 'Follow back'
 const followingLabel = ref('Following')
-const { myProfile } = defineProps(['my-profile'])
 
 const theirProfileStore = useTwitterTheirProfile();
 

@@ -29,7 +29,7 @@ function toggleSetupProfile() {
 <template>
   <ProfileHeader :profile="profile" :tweetsCount="profile.tweetsCount" :bgImgUrl="profile.bgImgUrl" />
   <section class="px-4 flex flex-col">
-    <ProfileHeaderActions :profile="profile" :img-url="profile.imgUrl" :following="profile.following" :toggleSetupProfile="toggleSetupProfile" :toggleEditProfile="toggleEditProfile" />
+    <ProfileHeaderActions :profile="profile" :img-url="profile.imgUrl" :toggleSetupProfile="toggleSetupProfile" :toggleEditProfile="toggleEditProfile" />
     <ProfileDetails :name="profile.name" :screen-name="profile.screenName" :bio="profile.bio"
       :location="profile.location" :website="profile.website" :joined-date="profile.joinedDate"
       :followers-count="profile.followersCount" :following-count="profile.followingCount" />

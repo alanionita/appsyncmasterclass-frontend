@@ -1,7 +1,10 @@
 <script setup>
+import { useUi } from '@/stores/ui';
 import FollowButton from '../atoms/FollowButton.vue';
 
-const { imgUrl, myProfile, following, toggleEditProfile, toggleSetupProfile, profile } = defineProps(['imgUrl', 'myProfile', 'following', 'toggleSetupProfile', 'toggleEditProfile', 'profile'])
+const { imgUrl, toggleEditProfile, toggleSetupProfile, profile } = defineProps(['imgUrl', 'toggleSetupProfile', 'toggleEditProfile', 'profile'])
+
+const storeUi = useUi()
 
 async function handleImageError() {
     await profile.imgUrlSigned;
@@ -15,7 +18,7 @@ async function handleImageError() {
             style="margin-top:-80px" />
 
         <!-- My Profile Actions -->
-        <section v-if="myProfile" class="flex gap-4 py-4">
+        <section v-if="storeUi.ownProfile" class="flex gap-4 py-4">
             <button v-if="imgUrl === null || imgUrl === 'default_profile.png'" @click.prevent="toggleSetupProfile"
                 class="ml-auto text-blue font-bold px-4 py-2 rounded-full border border-blue hover:bg-lightblue">
                 Set up profile
@@ -27,14 +30,14 @@ async function handleImageError() {
         </section>
 
         <!-- Their Profile Actions -->
-        <section v-if="!myProfile" class="flex gap-4 py-4">
+        <section v-if="!storeUi.ownProfile" class="flex gap-4 py-4">
             <button class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue">
                 <i class="fas fa-ellipsis-h"></i>
             </button>
             <button class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue">
                 <i class="fas fa-envelope"></i>
             </button>
-            <FollowButton :my-profile="myProfile"/>
+            <FollowButton />
         </section>
     </section>
 </template>
