@@ -6,7 +6,7 @@ export const debounce = (callback, wait = 250) => {
             try {
                 callback.apply(null, args);
             } catch (err) {
-                console.error(err.message)
+                console.error('Err [util/debounce] :', err.message)
                 console.info(JSON.stringify(err))
             }
         }, wait);
