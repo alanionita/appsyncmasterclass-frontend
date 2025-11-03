@@ -67,7 +67,7 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
         nextToken: null,
         fetchedCount: 0,
         hasMore: true,
-        limit: 25,
+        limit: 10,
     }),
     actions: {
         async createTweet(text) {

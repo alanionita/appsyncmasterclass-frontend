@@ -78,9 +78,9 @@ onBeforeRouteUpdate(async (to, from) => {
 </script>
 
 <template>
-  <ThreeColTemplate :trending="true" :follow-who="true" :search="true" v-scrollend:bottom="loadMoreTweets">
-    <template #middle v-scrollend:bottom="loadMoreTweets">
-      <div class="overflow-y-auto" v-scrollend:bottom="() => timeline.loadMoreTweets(isMine)">
+  <ThreeColTemplate :trending="true" :follow-who="true" :search="true">
+    <template #middle>
+      <div class="overflow-y-auto" v-scrollend:bottom="() => timeline.loadMoreTweets(uiStore.ownProfile)">
         <Profile :profile="uiStore.ownProfile ? myProfile : theirProfile" :tweets="tweets" />
       </div>
     </template>
