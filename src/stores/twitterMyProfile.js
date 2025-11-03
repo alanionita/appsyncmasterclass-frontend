@@ -14,7 +14,9 @@ async function fetchS3SignedUrl(state, stateKey) {
 
         if (!validKeys.includes(stateKey)) throw new Error('Invalid state key');
 
-        state[stateKey] = await S3Urls.refreshSignedUrl(state[stateKey])
+        if (state && state[stateKey]) {
+            state[stateKey] = await S3Urls.refreshSignedUrl(state[stateKey])
+        }
     } catch (err) {
         console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
         console.info(JSON.stringify(err))

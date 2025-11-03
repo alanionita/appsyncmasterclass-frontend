@@ -11,7 +11,9 @@ const profile = useTwitterMyProfile();
 
 async function handleImageError(url) {
     try {
-        user.imgUrl = await S3Urls.refreshSignedUrl(url)
+        if (url) {
+            user.imgUrl = await S3Urls.refreshSignedUrl(url)
+        }
     } catch (err) {
         console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
         console.info(JSON.stringify(err))

@@ -63,7 +63,9 @@ async function handleReplyBtn() {
 
 async function handleImageError(url) {
     try {
-        tweet.profile.imgUrl = await S3Urls.refreshSignedUrl(url)
+        if (url) {
+            tweet.profile.imgUrl = await S3Urls.refreshSignedUrl(url)
+        }
     } catch (err) {
         console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
         console.info(JSON.stringify(err))

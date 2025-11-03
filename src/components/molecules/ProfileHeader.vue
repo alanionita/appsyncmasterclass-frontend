@@ -1,9 +1,11 @@
 <script setup>
 
-const { name, tweetsCount, bgImgUrl, profile } = defineProps(['name', 'tweetsCount', 'bgImgUrl', 'profile']);
+const { name, tweetsCount, bgImgUrl, profile } = defineProps(['name', 'tweetsCount', 'bg-img-url', 'profile']);
 
 async function handleImageError() {
-    await profile.bgImgUrlSigned;
+    if (profile) {
+        await profile.bgImgUrlSigned;
+    }
 }
 
 </script>

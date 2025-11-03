@@ -7,7 +7,9 @@ const { imgUrl, toggleEditProfile, toggleSetupProfile, profile } = defineProps([
 const storeUi = useUi()
 
 async function handleImageError() {
-    await profile.imgUrlSigned;
+    if (profile) {
+        await profile.imgUrlSigned;
+    }
 }
 
 </script>
