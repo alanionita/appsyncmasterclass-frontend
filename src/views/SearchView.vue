@@ -1,30 +1,18 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
-import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useRoute, useRouter } from 'vue-router';
 import { ulid } from 'ulid';
+import { useSearch } from '@/stores/search';
+import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { debounce } from '@/utils/timing';
 import { SUBMIT_DELAY, SEARCH_MODES, ROUTE_NAMES } from '@/utils/constants';
 
+const router = useRouter();
 const route = useRoute()
-const router = useRouter()
-const query = defineModel("query", {
-    default: ""
-})
-const mode = defineModel("mode", {
-    default: SEARCH_MODES.latest
-})
-
-const handleSearch = debounce(() => {
-    router.push({
-        name: ROUTE_NAMES.Search,
-        query: {
-            q: query.value,
-            m: mode.value,
-            h: ulid()
-        }
-    })
-}, SUBMIT_DELAY)
+const storeSearch = useSearch();
+const { query, mode } = storeToRefs(storeSearch)
+const { handleSearch } = storeSearch;
 
 const handleModeChange = debounce(() => {
     router.push({
@@ -58,7 +46,7 @@ onMounted(() => {
         <template #middle>
             <section class="flex flex-col gap-8 py-4">
                 <div class=" border-lighter flex items-center">
-                    <a @click="gotoHome()" class="rounded-full md:pr-2 focus:outline-none hover:bg-lightblue">
+                    <a href="/" class="rounded-full md:pr-2 focus:outline-none hover:bg-lightblue">
                         <i class="fas fa-arrow-left text-blue"></i>
                     </a>
                     <section class="lg:block ml-4 w-full">
@@ -67,7 +55,7 @@ onMounted(() => {
                         <input id="search-field"
                             class="pl-12 rounded-full w-full p-2 bg-lighter text-m focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue"
                             placeholder="Search Twitter" type="search" v-model="query"
-                            v-on:keyup.enter="handleSearch()" />
+                            v-on:keyup.enter="handleSearch(router)" />
                     </section>
                 </div>
                 <section class="grid grid-rows-1 grid-cols-5">
