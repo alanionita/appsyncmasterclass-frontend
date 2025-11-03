@@ -7,6 +7,7 @@ import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { SEARCH_MODES } from '@/utils/constants';
 import Loader from '@/components/atoms/Loader.vue';
 import { useUi } from '@/stores/ui';
+import SearchResults from '@/components/molecules/SearchResults.vue';
 
 const router = useRouter();
 const route = useRoute()
@@ -74,9 +75,9 @@ onMounted(() => {
                         </section>
                     </div>
 
-                    <!-- <Results :results="results"/> -->
-
+                    <SearchResults :results="results"/>
                 </section>
+                <!-- TODO: remove, debugging only -->
                 <section class="bg-dark text-lighter font-bold">
                     <h2>Query buster</h2>
                     <p>q: {{ $route.query.q }}</p>
