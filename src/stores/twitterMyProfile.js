@@ -114,7 +114,6 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
     },
     getters: {
         joinedDate: state => DateUtils.formatProfileCreatedAt(state),
-        isSelf: state => screenName => state.screenName == screenName,
         bgImgUrlSigned: state => fetchS3SignedUrl(state, 'bgImgUrl'),
         imgUrlSigned: state => fetchS3SignedUrl(state, 'imgUrl')
     },
