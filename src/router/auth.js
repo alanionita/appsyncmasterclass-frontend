@@ -1,3 +1,5 @@
+import { useAuthStore } from '@/stores/authentication';
+import { useUi } from '@/stores/ui';
 import { fetchAuthSession } from 'aws-amplify/auth';
 
 export default async (to, from, next) => {
@@ -9,6 +11,11 @@ export default async (to, from, next) => {
       next("/");
       return;
     }
+    const storeAuth = useAuthStore();
+    await storeAuth.verifyAuth(to.fullPath);
+
+    const storeUi = useUi()
+    storeUi.setOwnProfile(to.params.screenName)
     next();
   } catch (err) {
     console.error('Router/auth :', err.message)
