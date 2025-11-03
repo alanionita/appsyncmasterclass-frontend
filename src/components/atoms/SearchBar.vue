@@ -4,19 +4,18 @@ import { debounce } from '@/utils/timing';
 import { SEARCH_MODES, SUBMIT_DELAY } from '@/utils/constants';
 import * as Routes from '../../router/routeNames';
 import { ulid } from 'ulid'
-import { ref } from 'vue';
 
 const router = useRouter();
-const query = defineModel('');
-
-const mode = ref(SEARCH_MODES.latest)
+const query = defineModel('query', {
+    default: ''
+});
 
 const handleSearch = debounce(() => {
     router.push({
         name: Routes.Search,
         query: {
             q: query.value,
-            m: mode.value,
+            m: SEARCH_MODES.latest,
             h: ulid()
         }
     })
