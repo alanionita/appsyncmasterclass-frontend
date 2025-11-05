@@ -80,20 +80,20 @@ async function handleImageError(url) {
         <div class="flex-none mr-4">
             <a :href="`/${tweet.profile.screenName}`">
                 <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
-                    @error="handleImageError(tweet.profile.imgUrl)"
-                    class="h-12 w-12 rounded-full flex-none" />
+                    @error="handleImageError(tweet.profile.imgUrl)" class="h-12 w-12 rounded-full flex-none" />
             </a>
         </div>
         <div class="w-full">
-            <a :href="`/${tweet.profile.screenName}`">
-                <div class="flex items-center w-full">
+            <div class="flex items-center w-full justify-between">
+                <a :href="`/${tweet.profile.screenName}`" 
+                class="flex items-center w-auto grow-0">
                     <p class="font-semibold">{{ tweet.profile.name }}</p>
                     <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
                     <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
-                    <i class="fas fa-angle-down text-sm ml-auto"></i>
-                </div>
+                </a>
+                <i class="fas fa-angle-down text-sm ml-auto"></i>
+            </div>
 
-            </a>
             <p v-if="tweet.inReplyToUsers && tweet.inReplyToUsers.length > 0" class="text-dark">
                 Replying to {{tweet.inReplyToUsers.map(x => `@${x.screenName}`).join(",")}}
             </p>
