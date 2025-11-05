@@ -15,7 +15,7 @@ const route = useRoute()
 const storeSearch = useSearch();
 const storeUi = useUi()
 const { query, mode, results } = storeToRefs(storeSearch)
-const { handleSearch, changeMode, loadMore, reset } = storeSearch;
+const { handleSearch, changeMode, loadMore, reset, firstLoad } = storeSearch;
 const { loading } = storeToRefs(storeUi);
 
 async function searchSubmit() {
@@ -26,14 +26,17 @@ async function searchSubmit() {
 }
 
 onMounted(() => {
-    storeUi.loadingOn()
     if (route.query && route.query.q) {
         query.value = route.query.q
     }
     if (route.query && route.query.m) {
         mode.value = route.query.m
     }
-    storeUi.loadingOff()
+    if (firstLoad) {
+        console.log('here2')
+        searchSubmit()
+        return;
+    }
 })
 
 </script>

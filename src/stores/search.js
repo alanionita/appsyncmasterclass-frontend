@@ -90,5 +90,6 @@ export const useSearch = defineStore('search', {
         }
     },
     getters: {
+        firstLoad: state => state.fetchedCount === 0 && state.totalCount === 0 && state.hasMore === true
     },
 });
