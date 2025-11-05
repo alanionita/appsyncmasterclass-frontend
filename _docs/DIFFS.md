@@ -385,4 +385,41 @@ Diffs:
 - loader state: implemented via a new Pinia store for UI elements, including the loading values; the Loader component now show/hides based on it; data calls now trigger the loading value from the UI state; adds a debounce to make the loader stay alive for a natural amount of time
 - Home: fixes issue with multiple tweet posting on double-click
 
-Release:
+Release:https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-26-UI_add_loading_indicator
+
+# 05-25-1-UI_add_infinite_scrolling
+
+Usage:
+- consider with 05-25
+- compare against 05-26
+
+Diffs: 
+- store/tweetTimeline: implements the loadMoreTweets entirely within the store; makes sure that getMyTimeline and getTweets don't expand the tweets list, just replace it with latest 10 items; overall leading to more predictable results across testing scenarios
+- *View: implementation allowed the removal of fetching related data from the Home and ProfileViews
+
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-25-1-UI_add_infinite_scrolling
+
+# 05-24-1-Profile_page_following_and_unfollowing 
+
+Usage:
+- consider with 05-24
+- compare against 05-25-1
+
+Diffs:
+- FollowButton: fixes rendering of all states; improves how stores contain information about logged in user being followed/following another user
+- ProfileView: fixes behaviour on reload and direct navigation to the page; moves a the auth to run per routing; adds new ui.ownProfile in the same flow to make sure that ownProfile is know at every step
+
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/05-24-1-Profile_page_following_and_unfollowing
+
+# 07-01-Search_page
+
+Diffs:
+- layouts/ThreeCols: implements dynamic rendering for 'search' and implments it on all existing pages
+- store/search: implemented the store using Pinia; store now contains handleSearch, changeMode, as well as the query, mode, results, and nextToken; uses the storeToRefs patters; loadMore is also implemented here in a similar fashion to loadMoreTweets; also implemented a new custom reset() method to help with state clean up
+- urls: continues to rely on route.query for data transfer, using hook patterns
+- ui: makes more use of grid css styling and reduces specific spacing rules for blanket rules like gap; makes use of the store/ui for loading
+- backend: adds new value to SearchPageResults type, totalCount; used in store/search.loadMore(), actings as flag for no more items available
+
+Release:   
+
+Backend release: 
