@@ -8,14 +8,16 @@ export const useSearch = defineStore('search', {
         query: '',
         mode: SEARCH_MODES.latest,
         results: [],
-        nextToken: null
+        nextToken: null,
+        limit: 10
     }),
     actions: {
         async handleSearch(router) {
             if (this.query && this.query.length > 0) {
                 const resp = await gql.search({
                     query: this.query,
-                    mode: this.mode
+                    mode: this.mode,
+                    limit: this.limit
                 })
 
                 const { results, nextToken} = resp;
