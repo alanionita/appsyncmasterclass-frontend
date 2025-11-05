@@ -290,3 +290,231 @@ export const getFollowing = /* GraphQL */ `
     }
   }
 `;
+
+export const search = /* GraphQL */ `
+  query Search($query: String!, $mode: SearchMode!, $limit: Int!, $nextToken: String) {
+      search(limit: $limit, mode: $mode, query: $query, nextToken: $nextToken) {
+        nextToken
+        results {
+          __typename
+            ... on MyProfile {
+              id
+              name
+              screenName
+              imgUrl
+              bgImgUrl
+              bio
+              location
+              website
+              birthdate
+              createdAt
+              followersCount
+              followingCount
+              tweetsCount
+              likesCount
+            }
+            ... on OtherProfile {
+              id
+              name
+              screenName
+              imgUrl
+              bgImgUrl
+              bio
+              location
+              website
+              birthdate
+              createdAt
+              followersCount
+              followingCount
+              tweetsCount
+              likesCount
+              following
+              followedBy
+            }
+            ... on Tweet {
+              id
+              profile {
+                ... on MyProfile {
+                  id
+                  name
+                  screenName
+                  imgUrl
+                  bgImgUrl
+                  bio
+                  location
+                  website
+                  birthdate
+                  createdAt
+                  followersCount
+                  followingCount
+                  tweetsCount
+                  likesCount
+                }
+
+                ... on OtherProfile {
+                  id
+                  name
+                  screenName
+                  imgUrl
+                  bgImgUrl
+                  bio
+                  location
+                  website
+                  birthdate
+                  createdAt
+                  followersCount
+                  followingCount
+                  tweetsCount
+                  likesCount
+                  following
+                  followedBy
+                }
+              }
+              createdAt
+              text
+              replies
+              likes
+              retweets
+              liked
+              retweeted
+            }
+            ... on Reply {
+              id
+              profile {
+                ... on MyProfile {
+                  id
+                  name
+                  screenName
+                  imgUrl
+                  bgImgUrl
+                  bio
+                  location
+                  website
+                  birthdate
+                  createdAt
+                  followersCount
+                  followingCount
+                  tweetsCount
+                  likesCount
+                }
+
+                ... on OtherProfile {
+                  id
+                  name
+                  screenName
+                  imgUrl
+                  bgImgUrl
+                  bio
+                  location
+                  website
+                  birthdate
+                  createdAt
+                  followersCount
+                  followingCount
+                  tweetsCount
+                  likesCount
+                  following
+                  followedBy
+                }
+              }
+              createdAt
+              text
+              replies
+              likes
+              retweets
+              liked
+              retweeted   
+              inReplyToTweet {
+                  id 
+                  profile {
+                    ... on MyProfile {
+                      id
+                      name
+                      screenName
+                      imgUrl
+                      bgImgUrl
+                      bio
+                      location
+                      website
+                      birthdate
+                      createdAt
+                      followersCount
+                      followingCount
+                      tweetsCount
+                      likesCount
+                    }
+
+                    ... on OtherProfile {
+                      id
+                      name
+                      screenName
+                      imgUrl
+                      bgImgUrl
+                      bio
+                      location
+                      website
+                      birthdate
+                      createdAt
+                      followersCount
+                      followingCount
+                      tweetsCount
+                      likesCount
+                      following
+                      followedBy
+                    }
+                  }
+                  createdAt
+                  ... on Tweet {
+                      replies
+                      liked
+                      retweeted
+                  }
+
+                  ... on Reply {
+                      replies
+                      liked
+                      retweeted
+                  }
+              }
+              inReplyToUsers {
+                ... on MyProfile {
+                  id
+                  name
+                  screenName
+                  imgUrl
+                  bgImgUrl
+                  bio
+                  location
+                  website
+                  birthdate
+                  createdAt
+                  followersCount
+                  followingCount
+                  tweetsCount
+                  likesCount
+                }
+
+                ... on OtherProfile {
+                  id
+                  name
+                  screenName
+                  imgUrl
+                  bgImgUrl
+                  bio
+                  location
+                  website
+                  birthdate
+                  createdAt
+                  followersCount
+                  followingCount
+                  tweetsCount
+                  likesCount
+                  following
+                  followedBy
+                }
+              }
+            }
+        }
+      }
+  }
+`;
