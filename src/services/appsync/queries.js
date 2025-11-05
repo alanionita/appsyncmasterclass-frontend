@@ -295,6 +295,7 @@ export const search = /* GraphQL */ `
   query Search($query: String!, $mode: SearchMode!, $limit: Int!, $nextToken: String) {
       search(limit: $limit, mode: $mode, query: $query, nextToken: $nextToken) {
         nextToken
+        totalCount
         results {
           __typename
             ... on MyProfile {

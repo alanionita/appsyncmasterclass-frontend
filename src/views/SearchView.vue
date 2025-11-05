@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useSearch } from '@/stores/search';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { SEARCH_MODES } from '@/utils/constants';
+import { vScrollend } from '@/directives';
 import Loader from '@/components/atoms/Loader.vue';
 import { useUi } from '@/stores/ui';
 import SearchResults from '@/components/molecules/SearchResults.vue';
@@ -14,8 +15,15 @@ const route = useRoute()
 const storeSearch = useSearch();
 const storeUi = useUi()
 const { query, mode, results } = storeToRefs(storeSearch)
-const { handleSearch, changeMode } = storeSearch;
+const { handleSearch, changeMode, loadMore, reset } = storeSearch;
 const { loading } = storeToRefs(storeUi);
+
+async function searchSubmit() {
+    storeUi.loadingOn()
+    reset()
+    await handleSearch(router)
+    storeUi.loadingOff()
+}
 
 onMounted(() => {
     storeUi.loadingOn()
@@ -33,7 +41,7 @@ onMounted(() => {
 <template>
     <ThreeColTemplate>
         <template #middle>
-            <section class="flex flex-col gap-4 py-4">
+            <section class="flex flex-col gap-4 py-4 overflow-y-auto" v-scrollend:bottom="() => loadMore()">
                 <div class=" border-lighter flex items-center">
                     <a href="/" class="rounded-full md:pr-2 focus:outline-none hover:bg-lightblue">
                         <i class="fas fa-arrow-left text-blue"></i>
@@ -44,7 +52,7 @@ onMounted(() => {
                         <input id="search-field"
                             class="pl-12 rounded-full w-full p-2 bg-lighter text-m focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue"
                             placeholder="Search Twitter" type="search" v-model="query"
-                            v-on:keyup.enter="handleSearch(router)" />
+                            v-on:keyup.enter="searchSubmit" />
                     </section>
                 </div>
                 <section class="grid grid-rows-1 grid-cols-5">
@@ -75,14 +83,7 @@ onMounted(() => {
                         </section>
                     </div>
 
-                    <SearchResults :results="results"/>
-                </section>
-                <!-- TODO: remove, debugging only -->
-                <section class="bg-dark text-lighter font-bold">
-                    <h2>Query buster</h2>
-                    <p>q: {{ $route.query.q }}</p>
-                    <p>m: {{ $route.query.m }}</p>
-                    <p>h: {{ $route.query.h }}</p>
+                    <SearchResults :results="results" />
                 </section>
             </section>
         </template>
