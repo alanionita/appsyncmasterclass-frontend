@@ -413,6 +413,10 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 
 # 07-01-Search_page
 
+Usage:
+- consider with backend/07-01
+- compare against 05-24-1
+
 Diffs:
 - layouts/ThreeCols: implements dynamic rendering for 'search' and implments it on all existing pages
 - store/search: implemented the store using Pinia; store now contains handleSearch, changeMode, as well as the query, mode, results, and nextToken; uses the storeToRefs patters; loadMore is also implemented here in a similar fashion to loadMoreTweets; also implemented a new custom reset() method to help with state clean up
@@ -420,6 +424,6 @@ Diffs:
 - ui: makes more use of grid css styling and reduces specific spacing rules for blanket rules like gap; makes use of the store/ui for loading
 - backend: adds new value to SearchPageResults type, totalCount; used in store/search.loadMore(), actings as flag for no more items available
 
-Release:   
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/07-01-Search_page
 
-Backend release: 
+Backend release: https://github.com/alanionita/appsyncmasterclass-backend/releases/tag/07-01-Adds-search-total-count
