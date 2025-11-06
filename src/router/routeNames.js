@@ -1,7 +1,8 @@
-export const Root = 'root';
-export const Login = 'login';
-export const Home = 'home';
-export const Profile = 'profile';
-export const Followers = 'Followers';
-export const Following = 'Following';
-export const Search = 'Search';
+export const Root = 'root'
+export const Login = 'login'
+export const Home = 'home'
+export const Profile = 'profile'
+export const Followers = 'Followers'
+export const Following = 'Following'
+export const Search = 'Search'
+export const Hashtag = 'Hashtag'
