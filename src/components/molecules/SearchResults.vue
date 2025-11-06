@@ -11,11 +11,11 @@ const { results } = storeToRefs(storeSearch)
 
 </script>
 <template>
-    <div>
-        <div v-for="result in results" :key="result.id">
+    <ul>
+        <template v-for="result in results" v-bind:key="result.id" role="list" class="list-none">
             <User v-if="result.screenName" :user="result" />
             <Retweet v-else-if="result.retweetOf" :tweet="result" />
             <Tweet v-else :tweet="result" />
-        </div>
-    </div>
+        </template>
+    </ul>
 </template>
