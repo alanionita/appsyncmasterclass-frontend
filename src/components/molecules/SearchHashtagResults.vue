@@ -2,7 +2,13 @@
 import Tweet from '../atoms/Tweet.vue'
 import Retweet from '../atoms/Retweet.vue'
 import User from './User.vue'
-const { results } = defineProps(['results'])
+
+import { storeToRefs } from 'pinia'
+import { useSearchHashtags } from '@/stores/searchHashtags'
+
+const storeSearchHashtags = useSearchHashtags()
+const { results } = storeToRefs(storeSearchHashtags)
+
 </script>
 <template>
   <ul role="list" class="list-none">

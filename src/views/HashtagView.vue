@@ -15,12 +15,8 @@ const route = useRoute()
 const storeUi = useUi()
 const { loading } = storeToRefs(storeUi)
 const storeSearchHastags = useSearchHashtags()
-const { mode, query } = storeToRefs(storeSearchHastags)
+const { mode, query, results } = storeToRefs(storeSearchHastags)
 const { changeMode, handleSearchHashtags } = storeSearchHastags;
-
-const results = defineModel('results', {
-  default: [],
-})
 
 async function searchSubmit() {
   storeUi.loadingOn()
@@ -90,7 +86,7 @@ onMounted(() => {
             </section>
           </div>
 
-          <SearchHastagResults v-if="!loading && results && results.length > 0" results="results" />
+          <SearchHastagResults />
         </section>
       </section>
     </template>
