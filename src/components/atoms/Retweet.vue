@@ -18,7 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="w-full border-b border-lighter hover:bg-lightest flex flex-col">
+    <li class="w-full border-b border-lighter hover:bg-lightest flex flex-col">
         <!-- Retweet header -->
         <div class="pt-4 pl-4 flex flex-row">
             <div class="w-12 mr-4 flex justify-end">
@@ -28,5 +28,5 @@ onMounted(() => {
         </div>
 
         <Tweet :tweet="tweet.retweetOf" />
-    </div>
+    </li>
 </template>

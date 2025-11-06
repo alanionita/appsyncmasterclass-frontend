@@ -37,31 +37,31 @@ onUpdated(() => {
 
 </script>
 <template>
-    <div>
-        <Loader v-if="loading" />
-        <section v-else-if="tweets.length === 0">
-            <div v-if="route.name === 'home'"
-                class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-24 py-8">
-                <p class="font-semibold text-lg">Welcome to Twitter!</p>
-                <p class="text-sm text-dark text-center">This is the best place to see what is happening in your world.
-                    Find
-                    some people and topics to follow now.</p>
-                <TextButton text="Let's go!" action="() => {}" />
-            </div>
-            <div v-if="isSelf" class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
-                <p class="font-bold text-lg">You haven’t tweeted yet</p>
-                <p class="text-sm text-dark">When you post a tweet, it will show up here.</p>
-                <TextButton text="Tweet now" action="() => {}" />
-            </div>
-            <div v-else class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
-                <p class="font-bold text-lg">{{ theirProfile.name || 'Account' }} hasn’t tweeted yet</p>
-                <p class="text-sm text-dark">When they post a tweet, it will show up here.</p>
-            </div>
-        </section>
-        <section v-else-if="tweets.length > 0" v-for="tweet in tweets" :key="tweet.id">
+    <Loader v-if="loading" />
+    <section v-else-if="tweets.length === 0">
+        <div v-if="route.name === 'home'"
+            class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-24 py-8">
+            <p class="font-semibold text-lg">Welcome to Twitter!</p>
+            <p class="text-sm text-dark text-center">This is the best place to see what is happening in your world.
+                Find
+                some people and topics to follow now.</p>
+            <TextButton text="Let's go!" action="() => {}" />
+        </div>
+        <div v-if="isSelf" class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
+            <p class="font-bold text-lg">You haven’t tweeted yet</p>
+            <p class="text-sm text-dark">When you post a tweet, it will show up here.</p>
+            <TextButton text="Tweet now" action="() => {}" />
+        </div>
+        <div v-else class="flex flex-col items-center justify-center w-full gap-4 mt-8 px-4 py-8">
+            <p class="font-bold text-lg">{{ theirProfile.name || 'Account' }} hasn’t tweeted yet</p>
+            <p class="text-sm text-dark">When they post a tweet, it will show up here.</p>
+        </div>
+    </section>
+    <ul v-else-if="tweets.length > 0">
+        <template v-for="tweet in tweets" :key="tweet.id">
             <Tweet v-if="!tweet.retweetOf" :tweet="tweet" />
 
             <Retweet v-if="tweet.retweetOf" :tweet="tweet" />
-        </section>
-    </div>
+        </template>>
+    </ul>
 </template>

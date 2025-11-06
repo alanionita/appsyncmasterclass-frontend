@@ -76,7 +76,7 @@ async function handleImageError(url) {
 </script>
 
 <template>
-    <div v-if="tweet" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
+    <li v-if="tweet" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
         <div class="flex-none mr-4">
             <a :href="`/${tweet.profile.screenName}`">
                 <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
@@ -127,5 +127,5 @@ async function handleImageError(url) {
         </div>
 
         <ReplyOverlay v-if="replyUI" :tweet="tweet" @hide="handleReplyBtn" />
-    </div>
+    </li>
 </template>
