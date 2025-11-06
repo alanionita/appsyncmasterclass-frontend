@@ -13,4 +13,5 @@ export const ROUTE_NAMES = {
     Followers: 'Followers',
     Following: 'Following',
     Search: 'Search',
+    Hashtag: 'Hashtag',
 }
