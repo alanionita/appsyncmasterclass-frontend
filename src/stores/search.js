@@ -45,6 +45,7 @@ export const useSearch = defineStore('search', {
             }
         },
         changeMode(router, newMode) {
+            this.reset()
             this.mode = newMode;
             this.handleSearch(router);
         },

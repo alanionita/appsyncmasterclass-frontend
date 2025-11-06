@@ -33,7 +33,6 @@ onMounted(() => {
         mode.value = route.query.m
     }
     if (firstLoad) {
-        console.log('here2')
         searchSubmit()
         return;
     }
@@ -86,7 +85,7 @@ onMounted(() => {
                         </section>
                     </div>
 
-                    <SearchResults :results="results" />
+                    <SearchResults />
                 </section>
             </section>
         </template>
