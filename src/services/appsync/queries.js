@@ -533,6 +533,7 @@ export const searchHashtags = /* GraphQL */ `
       limit: $limit
       nextToken: $nextToken
     ) {
+      totalCount
       results {
         ... on MyProfile {
           id
