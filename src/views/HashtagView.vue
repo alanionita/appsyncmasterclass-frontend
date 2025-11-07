@@ -16,11 +16,17 @@ const storeUi = useUi()
 const { loading } = storeToRefs(storeUi)
 const storeSearchHastags = useSearchHashtags()
 const { mode, query, results } = storeToRefs(storeSearchHastags)
-const { changeMode, handleSearchHashtags } = storeSearchHastags;
+const { changeMode, handleSearchHashtags, firstLoad } = storeSearchHastags;
 
 async function searchSubmit() {
   storeUi.loadingOn()
   await handleSearchHashtags(router)
+  storeUi.loadingOff()
+}
+
+async function changeSubmit(_router, newMode) {
+  storeUi.loadingOn()
+  await changeMode(_router, newMode)
   storeUi.loadingOff()
 }
 
@@ -31,7 +37,10 @@ onMounted(() => {
   if (route.query && route.query.m) {
     mode.value = route.query.m
   }
-  storeUi.loadingOff()
+  if (firstLoad) {
+    searchSubmit()
+    return;
+  }
 })
 </script>
 
@@ -55,12 +64,12 @@ onMounted(() => {
           <button class="col-span-1 row-span-1 text-dark font-bold border-b-2 md:px-8 md:py-4 hover:bg-lightblue">
             Top
           </button>
-          <button @click="changeMode(router, SEARCH_MODES.latest)"
+          <button @click="changeSubmit(router, SEARCH_MODES.latest)"
             class="col-span-1 row-span-1 text-dark font-bold border-b-2 md:px-5 md:py-4 hover:bg-lightblue"
             :class="`${mode == SEARCH_MODES.latest ? 'border-blue' : ''}`">
             {{ SEARCH_MODES.latest }}
           </button>
-          <button @click="changeMode(router, SEARCH_MODES.people)"
+          <button @click="changeSubmit(router, SEARCH_MODES.people)"
             class="col-span-1 row-span-1 text-dark font-bold border-b-2 md:px-5 md:py-4 hover:bg-lightblue"
             :class="`${mode == SEARCH_MODES.people ? 'border-blue' : ''}`">
             {{ SEARCH_MODES.people }}
@@ -86,7 +95,7 @@ onMounted(() => {
             </section>
           </div>
 
-          <SearchHastagResults />
+          <SearchHastagResults v-if="results && results.length !== 0"/>
         </section>
       </section>
     </template>
