@@ -5,6 +5,7 @@ export const useUi = defineStore('ui', {
     state: () => ({
         loading: true,
         ownProfile: false,
+        noProfile: false
     }),
     actions: {
         loadingOff() {
@@ -15,8 +16,14 @@ export const useUi = defineStore('ui', {
         },
         setOwnProfile(screenName) {
             const myProfile = useTwitterMyProfile();
-            
+
             this.ownProfile = myProfile.screenName == screenName;
+        },
+        toggleNoProfile() {
+            this.noProfile = !this.noProfile
+        },
+        reset() {
+            this.noProfile = false
         }
     },
     getters: {
