@@ -2,12 +2,13 @@
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
-import ThreeColTemplate from '@/components/templates/ThreeCol.vue'
-import { SEARCH_MODES } from '@/utils/constants'
-import Loader from '@/components/atoms/Loader.vue'
-import { useUi } from '@/stores/ui'
-import SearchHastagResults from '@/components/molecules/SearchHashtagResults.vue'
 import { useSearchHashtags } from '@/stores/searchHashtags'
+import { useUi } from '@/stores/ui'
+import { vScrollend } from '@/directives';
+import { SEARCH_MODES } from '@/utils/constants'
+import ThreeColTemplate from '@/components/templates/ThreeCol.vue'
+import Loader from '@/components/atoms/Loader.vue'
+import SearchHastagResults from '@/components/molecules/SearchHashtagResults.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -16,10 +17,11 @@ const storeUi = useUi()
 const { loading } = storeToRefs(storeUi)
 const storeSearchHastags = useSearchHashtags()
 const { mode, query, results } = storeToRefs(storeSearchHastags)
-const { changeMode, handleSearchHashtags, firstLoad } = storeSearchHastags;
+const { changeMode, handleSearchHashtags, firstLoad, loadMore, reset } = storeSearchHastags;
 
 async function searchSubmit() {
   storeUi.loadingOn()
+  reset()
   await handleSearchHashtags(router)
   storeUi.loadingOff()
 }
@@ -47,7 +49,7 @@ onMounted(() => {
 <template>
   <ThreeColTemplate>
     <template #middle>
-      <section class="flex flex-col gap-4 py-4 overflow-y-auto">
+      <section class="flex flex-col gap-4 py-4 overflow-y-auto" v-scrollend:bottom="() => loadMore()">
         <div class="border-lighter flex items-center">
           <a href="/" class="rounded-full md:pr-2 focus:outline-none hover:bg-lightblue">
             <i class="fas fa-arrow-left text-blue"></i>

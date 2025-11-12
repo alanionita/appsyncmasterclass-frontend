@@ -11,7 +11,7 @@ const { results } = storeToRefs(storeSearchHashtags)
 
 </script>
 <template>
-  <ul role="list" class="list-none">
+  <ul role="list" class="list-none mb-8">
     <template v-for="result in results" v-bind:key="result.id">
       <User v-if="result.screenName" :user="result" />
       <Retweet v-else-if="result.retweetOf" :tweet="result" />
