@@ -65,3 +65,11 @@ input[type="search"]:focus::-webkit-search-cancel-button {
   opacity: .2;
   pointer-events: all;
 }
+
+a:link, a {
+  color: var(--color-darkblue);
+}
+
+a:hover {
+  text-decoration: underline;
+}
