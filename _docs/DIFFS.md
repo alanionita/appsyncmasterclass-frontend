@@ -428,3 +428,21 @@ Diffs:
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/07-01-Search_page
 
 Backend release: https://github.com/alanionita/appsyncmasterclass-backend/releases/tag/07-01-Adds-search-total-count
+
+# 07-02-Hashtag_page
+
+Usage:
+- consider with backend/07-02
+- compare against 07-01
+
+Diffs:
+- HashtagView: largely the same new pattern from above; introduces a new comp for SearchHashtagResults since they are store aware
+- store/searchHastags: in the spirit of Pinia, keeps the stores, small and context aware, instead of using an existing store to house hashtag logic and results; similar API to store/search
+- SearchHashtagResults: directly dependent on store/searchHashtag results vs prop-drilling; created a separate component instead of reusing SearchResults; adds some margin-bottom to ensure scroll exists on 10 list items
+- backend: adds new value to SearchPageResults type, totalCount; used in store/searchHashtags.loadMore(), actings as flag for no more items available
+- util/urls: implemented the linkify logic as a util not a directive, used with `v-html` and refs to take advantage of Vue v3 reactivity 
+- ProfileView: implemented with a new ui store property for `noProfile` and nested store method triggering; renders a new template when noProfile is detected vs multiple small changes to the main template; "NoProfile" ui features a simplified look that does not contain interactive elements that cannot be interacted with, at the loss of like-for-like authenticity
+
+Release: 
+
+Backend release: https://github.com/alanionita/appsyncmasterclass-backend/releases/tag/07-02-Hashtag_page
