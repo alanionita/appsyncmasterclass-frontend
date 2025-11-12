@@ -35,7 +35,10 @@ async function updateMyProfile() {
 async function updateTheirProfile(screenName) {
   try {
     
-    await theirProfile.setProfile(screenName)
+    const profile = await theirProfile.setProfile(screenName);
+    if (profile === null) {
+      return;
+    }
     await theirProfile.refreshBgImgUrl()
     await theirProfile.refreshImgUrl()
     await theirProfile.getFollowers()

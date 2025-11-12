@@ -1,6 +1,6 @@
 <script setup>
 
-const { name, tweetsCount, bgImgUrl, profile } = defineProps(['name', 'tweetsCount', 'bg-img-url', 'profile']);
+const { tweetsCount, bgImgUrl, profile } = defineProps(['tweetsCount', 'bg-img-url', 'profile']);
 
 async function handleImageError() {
     if (profile) {
@@ -17,7 +17,7 @@ async function handleImageError() {
                 <i class="fas fa-arrow-left text-blue"></i>
             </a>
             <div class="lg:block">
-                <h1 class="text-xl font-bold">{{ name }}</h1>
+                <h1 class="text-xl font-bold">{{ profile.name || 'Profile' }}</h1>
                 <p class="text-left text-sm leading-tight text-dark">{{ tweetsCount }} Tweets</p>
             </div>
         </section>
