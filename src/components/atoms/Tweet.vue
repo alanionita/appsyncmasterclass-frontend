@@ -1,13 +1,16 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import { likeTweet, retweetTweet, unlikeTweet, unretweetTweet } from '@/services/graphql/controllers'
-import { ref } from 'vue'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import * as S3Urls from '@/services/s3/urls';
+import { generateHtmlLinks } from '@/utils/urls';
 
 const { tweet } = defineProps(["tweet"])
 const timeline = useTwitterTimeline();
 const replyUI = ref(false);
+const tweetTextEl = ref(null);
+const tweetTextElHtml = ref(null);
 
 async function handleLikeBtn() {
     // TODO: add a debounce
@@ -73,6 +76,13 @@ async function handleImageError(url) {
     }
 }
 
+onMounted(() => {
+    if (tweet.text && tweet.text.length > 0) {
+        const tweetTextHtml = generateHtmlLinks(tweet.text)
+        tweetTextElHtml.value = tweetTextHtml
+    }
+})
+
 </script>
 
 <template>
@@ -85,8 +95,7 @@ async function handleImageError(url) {
         </div>
         <div class="w-full">
             <div class="flex items-center w-full justify-between">
-                <a :href="`/${tweet.profile.screenName}`" 
-                class="flex items-center w-auto grow-0">
+                <a :href="`/${tweet.profile.screenName}`" class="flex items-center w-auto grow-0">
                     <p class="font-semibold">{{ tweet.profile.name }}</p>
                     <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
                     <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
@@ -98,8 +107,7 @@ async function handleImageError(url) {
                 Replying to {{tweet.inReplyToUsers.map(x => `@${x.screenName}`).join(",")}}
             </p>
 
-            <p class="pb-2">
-                {{ tweet.text }}
+            <p ref="tweetTextEl" class="pb-2" v-html="tweetTextElHtml">
             </p>
             <div class="flex w-full">
                 <div class="flex items-center text-sm text-dark w-1/4">

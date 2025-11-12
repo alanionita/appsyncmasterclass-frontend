@@ -1,11 +1,14 @@
 <script setup>
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import * as S3Urls from '@/services/s3/urls';
 import * as gql from '@/services/graphql/controllers'
+import { generateHtmlLinks } from '@/utils/urls';
 
 const { user } = defineProps(['user'])
 const followingLabel = ref('Following');
+const userBioEl = ref(null);
+const userBioElHtml = ref(null);
 
 const profile = useTwitterMyProfile();
 
@@ -43,6 +46,13 @@ async function unfollowUser(id) {
     }
 }
 
+onMounted(() => {
+    if (user.bio && user.bio.length > 0) {
+        const userBioHtml = generateHtmlLinks(user.bio)
+        userBioElHtml.value = userBioHtml
+    }
+})
+
 </script>
 
 <template>
@@ -55,8 +65,8 @@ async function unfollowUser(id) {
             <a :href="`/${user.screenName}`" class="">
                 <p class="font-bold">{{ user.name }}</p>
                 <p class="text-dark text-sm">@{{ user.screenName }}</p>
-                <p class="w-auto">{{ user.bio }}</p>
             </a>
+            <p ref="userBioEl" class="w-auto" v-html="userBioElHtml"></p>
         </section>
         <div class="col-start-11 col-span-3 self-center" v-if="profile.id !== user.id">
             <button v-if="!user.following" @click="followUser(user.id)"
