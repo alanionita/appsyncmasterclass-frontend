@@ -1,45 +1,45 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RootView from '../views/RootView.vue'
 import authMiddleware from './auth'
-import * as Routes from './routeNames'
+import { ROUTE_NAMES } from '@/utils/constants'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: Routes.Root,
+      name: ROUTE_NAMES.Root,
       component: RootView,
     },
     {
       path: '/login',
-      name: Routes.Login,
+      name: ROUTE_NAMES.Login,
       component: () => import('../views/LoginView.vue'),
     },
 
     {
       path: '/home',
-      name: Routes.Home,
+      name: ROUTE_NAMES.Home,
       component: () => import('../views/HomeView.vue'),
       meta: { protected: true },
     },
 
     {
       path: '/:screenName',
-      name: Routes.Profile,
+      name: ROUTE_NAMES.Profile,
       component: () => import('../views/ProfileView.vue'),
       meta: { protected: true },
     },
     {
       path: '/:screenName/followers',
-      name: Routes.Followers,
+      name: ROUTE_NAMES.Followers,
       component: () => import('../views/FollowersView.vue'),
       props: true,
       meta: { protected: true },
     },
     {
       path: '/:screenName/following',
-      name: Routes.Following,
+      name: ROUTE_NAMES.Following,
       component: () => import('../views/FollowingView.vue'),
       props: true,
       meta: { protected: true },
@@ -47,21 +47,21 @@ const router = createRouter({
 
     {
       path: '/search',
-      name: Routes.Search,
+      name: ROUTE_NAMES.Search,
       component: () => import('../views/SearchView.vue'),
       meta: { protected: true },
     },
 
     {
       path: '/hashtag',
-      name: Routes.Hashtag,
+      name: ROUTE_NAMES.Hashtag,
       component: () => import('../views/HashtagView.vue'),
       meta: { protected: true },
     },
 
     {
       path: '/notifications',
-      name: Routes.Notifications,
+      name: ROUTE_NAMES.Notifications,
       component: () => import('../views/NotificationsView.vue'),
       meta: { protected: true },
     },
