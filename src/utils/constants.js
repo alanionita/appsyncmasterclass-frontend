@@ -16,3 +16,8 @@ export const ROUTE_NAMES = {
     Hashtag: 'Hashtag',
     Notifications: 'notifications'
 }
+
+export const NOTIFICATION_MODES = {
+    all: 'All',
+    mentions: "Mentions"
+}
