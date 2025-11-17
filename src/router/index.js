@@ -58,6 +58,13 @@ const router = createRouter({
       component: () => import('../views/HashtagView.vue'),
       meta: { protected: true },
     },
+
+    {
+      path: '/notifications',
+      name: Routes.Notifications,
+      component: () => import('../views/NotificationsView.vue'),
+      meta: { protected: true },
+    },
   ],
 })
 
