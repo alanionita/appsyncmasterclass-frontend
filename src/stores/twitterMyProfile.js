@@ -3,6 +3,7 @@ import * as gql from '@/services/graphql/controllers'
 import * as S3Urls from '@/services/s3/urls';
 import * as DateUtils from '@/utils/date';
 import { useUi } from './ui';
+import { useAppsync } from './appsync';
 
 const defaultImgUrl = 'default_profile.png';
 const defaultCreatedAt = '1970-01-01';
@@ -45,12 +46,15 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
         async setProfile() {
             try {
                 const ui = useUi();
-                const profile = await gql.getMyProfile()
-                ui.reset()
-                if (profile) {
-                    const keys = Object.keys(profile);
-                    for (let key of keys) {
-                        this[key] = profile[key]
+                const { appsyncClient } = useAppsync();
+                if (appsyncClient) {
+                    const profile = await appsyncClient.getMyProfile();
+                    ui.reset()
+                    if (profile) {
+                        const keys = Object.keys(profile);
+                        for (let key of keys) {
+                            this[key] = profile[key]
+                        }
                     }
                 }
             } catch (err) {

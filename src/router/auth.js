@@ -1,3 +1,5 @@
+import { throwWithLabel } from '@/utils/error';
+import { useAppsync } from '@/stores/appsync';
 import { useAuthStore } from '@/stores/authentication';
 import { useUi } from '@/stores/ui';
 import { fetchAuthSession } from 'aws-amplify/auth';
@@ -13,16 +15,24 @@ export default async (to, from, next) => {
     }
 
     if (userSub) {
+      // 1. Appsync store
+      const { appsyncClient, initClient } = useAppsync();
+
+      if (!appsyncClient && tokens.accessToken) {
+        await initClient(tokens.accessToken);
+      }
+
+      // 2. Auth store
       const storeAuth = useAuthStore();
       await storeAuth.verifyAuth(to.fullPath);
-  
+
+      // 3. UI update
       const storeUi = useUi()
       storeUi.setOwnProfile(to.params.screenName)
     }
     next();
   } catch (err) {
-    console.error('Router/auth :', err.message)
-    return
+    throwWithLabel(err, "Router/auth")
   }
 
 }
