@@ -1,0 +1,65 @@
+import { createAuthLink } from "aws-appsync-auth-link";
+import { createSubscriptionHandshakeLink } from "aws-appsync-subscription-link";
+import { ApolloClient, ApolloLink, gql, HttpLink, InMemoryCache } from "@apollo/client";
+import { throwWithLabel } from "@/utils/error";
+import * as Queries from "@/services/appsync/queries";
+
+export class ApolloAppSync {
+    client;
+    constructor({ region, appSyncUrl, accessToken }) {
+        const auth = {
+            type: "AMAZON_COGNITO_USER_POOLS",
+            jwtToken: accessToken
+        };
+
+        const httpLink = new HttpLink({
+            uri: appSyncUrl
+        });
+
+        const config = {
+            url: appSyncUrl,
+            region,
+            auth
+        }
+
+        const link = ApolloLink.from([
+            createAuthLink(config),
+            createSubscriptionHandshakeLink(config, httpLink),
+        ]);
+
+        this.client = new ApolloClient({
+            link,
+            cache: new InMemoryCache(), // Required
+        });
+    }
+
+    /**
+     * Triggers Query.getMyProfile with payload
+     * @returns {Promise<MyProfile>} my profile object
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+    async getMyProfile() {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+            const GET_MYPROFILE = gql`${Queries.getMyProfile}`
+            const { data, errors } = await this.client.query({
+                query: GET_MYPROFILE,
+                variables: {},
+                errorPolicy: 'all'
+            })
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+            if (data) {
+                const profile = data.getMyProfile
+
+                const profileEnriched = Object.assign({}, profile, { imgUrl: profile.imgUrl || 'default_profile.png' })
+
+                return profileEnriched
+            };
+        } catch (caught) {
+            throwWithLabel(caught, `GraphQL.getMyProfile`)
+        }
+    }
+}
