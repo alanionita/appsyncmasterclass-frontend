@@ -2,10 +2,12 @@ import { defineStore } from 'pinia';
 import * as gql from '@/services/graphql/controllers'
 import { useTwitterMyProfile } from './twitterMyProfile';
 import { useTwitterTheirProfile } from './twitterTheirProfile';
+import { useAppsync } from './appsync';
 
 async function paginateMyTweets(state) {
     try {
         const { tweetsCount } = useTwitterMyProfile();
+        const { appsyncClient } = useAppsync();
         if (!state.nextToken) return
         const tweetsLeft = tweetsCount - state.fetchedCount
         const perPage = tweetsLeft >= state.limit ? state.limit : tweetsLeft
@@ -13,7 +15,7 @@ async function paginateMyTweets(state) {
             state.hasMore = false
         }
 
-        const data = await gql.getMyTimeline(perPage, state.nextToken);
+        const data = await appsyncClient.getMyTimeline(perPage, state.nextToken);
 
         const timeline = JSON.parse(JSON.stringify(data))
 
@@ -77,6 +79,7 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
         async getMyTimeline(nextToken = null) {
             try {
                 const { tweetsCount } = useTwitterMyProfile();
+                const { appsyncClient } = useAppsync();
                 let data;
 
                 const tweetsLeft = tweetsCount - this.fetchedCount
@@ -86,10 +89,10 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
                 }
 
                 if (nextToken) {
-                    data = await gql.getMyTimeline(perPage, nextToken);
+                    data = await appsyncClient.getMyTimeline(perPage, nextToken);
                 }
 
-                data = await gql.getMyTimeline(perPage);
+                data = await appsyncClient.getMyTimeline(perPage);
                 const timeline = JSON.parse(JSON.stringify(data))
 
                 this.tweets = timeline.tweets

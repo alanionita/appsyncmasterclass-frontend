@@ -62,4 +62,46 @@ export class ApolloAppSync {
             throwWithLabel(caught, `GraphQL.getMyProfile`)
         }
     }
+
+    /**
+     * Triggers Query.getMyProfile with payload
+     * @param {Object} limit - max amout fetched per page
+     * @param {String} nextToken - token used for navigating to next page
+     * @returns {Promise<UnhydratedTweetsPage>} { tweets: [], nextToken: string | null }
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+    async getMyTimeline(limit = 10, nextToken = null) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            const GET_MYTIMELINE = gql`${Queries.getMyTimeline}`
+
+            const queryParams = {
+                query: GET_MYTIMELINE,
+                variables: {
+                    limit
+                },
+                errorPolicy: 'all'
+            }
+
+            if (nextToken) {
+                queryParams.variables["nextToken"] = nextToken
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+            
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+            
+            if (data) {
+                const timeline = data.getMyTimeline
+
+                return timeline
+            };
+        } catch (err) {
+            throwWithLabel(caught, `GraphQL.getMyTimeline`)
+        }
+    }
 }
