@@ -95,7 +95,7 @@ onMounted(() => {
         </div>
         <div class="w-full">
             <div class="flex items-center w-full justify-between">
-                <a :href="`/${tweet.profile.screenName}`" class="flex items-center w-auto grow-0">
+                <a id="custom-link" :href="`/${tweet.profile.screenName}`" class="flex items-center w-auto grow-0">
                     <p class="font-semibold">{{ tweet.profile.name }}</p>
                     <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
                     <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
