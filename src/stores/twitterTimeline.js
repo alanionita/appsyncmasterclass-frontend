@@ -73,7 +73,9 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
     }),
     actions: {
         async createTweet(text) {
-            const newTweet = await gql.postTweet(text);
+            const { appsyncClient } = useAppsync();
+
+            const newTweet = await appsyncClient.postTweet(text);
             this.tweets = this.tweets.toSpliced(0, 0, newTweet);
         },
         async getMyTimeline(nextToken = null) {

@@ -3,6 +3,7 @@ import { createSubscriptionHandshakeLink } from "aws-appsync-subscription-link";
 import { ApolloClient, ApolloLink, gql, HttpLink, InMemoryCache } from "@apollo/client";
 import { throwWithLabel } from "@/utils/error";
 import * as Queries from "@/services/appsync/queries";
+import * as Mutations from "@/services/appsync/mutations";
 
 export class ApolloAppSync {
     client;
@@ -58,8 +59,8 @@ export class ApolloAppSync {
 
                 return profileEnriched
             };
-        } catch (caught) {
-            throwWithLabel(caught, `GraphQL.getMyProfile`)
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.getMyProfile`)
         }
     }
 
@@ -89,19 +90,58 @@ export class ApolloAppSync {
             }
 
             const { data, errors } = await this.client.query(queryParams)
-            
+
             if (errors) {
                 console.error('GraphQL Errors :', JSON.stringify(errors))
                 throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
             }
-            
+
             if (data) {
                 const timeline = data.getMyTimeline
 
                 return timeline
             };
         } catch (err) {
-            throwWithLabel(caught, `GraphQL.getMyTimeline`)
+            throwWithLabel(err, `services/apollo.getMyTimeline`)
+        }
+    }
+
+    /**
+     * Triggers Mutation.tweet with payload
+     * @param {String} text - text of new tweet to be created
+     * @returns {Promise<Tweet>} 
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async postTweet(text) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!text) throw Error('Missing required param text')
+
+            const TWEET = gql`${Mutations.tweet}`
+
+            const mutationsParams = {
+                mutation: TWEET,
+                variables: {
+                    text
+                },
+                errorPolicy: 'all'
+            }
+
+            const { data, errors } = await this.client.mutate(mutationsParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            if (data) {
+                return data.tweet
+            };
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.postTweet`)
         }
     }
 }
