@@ -179,4 +179,39 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.likeTweet`)
         }
     }
+
+    /**
+     * Triggers Mutation.unlike with payload
+     * @param {String} tweetId - tweet.id of tweet to be liked
+     * @returns {Promise<Boolean>} 
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+    async unlikeTweet(tweetId) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!tweetId) throw Error('Missing required param tweetId')
+
+            const UNLIKE = gql`${Mutations.unlike}`
+
+            const mutationParams = {
+                mutation: UNLIKE,
+                variables: {
+                    tweetId
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.unlikeTweet`)
+        }
+    }
 }

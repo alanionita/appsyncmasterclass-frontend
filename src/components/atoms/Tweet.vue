@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { retweetTweet, unlikeTweet, unretweetTweet } from '@/services/graphql/controllers'
+import { retweetTweet, unretweetTweet } from '@/services/graphql/controllers'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import * as S3Urls from '@/services/s3/urls';
@@ -28,7 +28,7 @@ async function handleLikeBtn() {
     } else {
         tweet.liked = false
         tweet.likes--
-        await unlikeTweet(tweet.id)
+        await appsyncClient.unlikeTweet(tweet.id)
             .catch(err => {
                 console.error(`failed to unlike tweet [${tweet.id}]`, err)
                 tweet.liked = true
