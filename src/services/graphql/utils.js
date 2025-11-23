@@ -1,18 +1,7 @@
 import { generateClient } from 'aws-amplify/api';
-import { getCurrentUser } from 'aws-amplify/auth'
+import { checkAuth } from "@/services/amplify/utils";
 
 const client = generateClient();
-
-const checkAuth = async () => {
-  try {
-    const currentUser = await getCurrentUser()
-    console.info('✅ User authenticated:', currentUser.signInDetails.loginId)
-    return true
-  } catch (err) {
-    console.error('❌ User not authenticated:', err)
-    return false
-  }
-}
 
 export async function query({ queryStr, variables = null }) {
   try {
