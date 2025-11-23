@@ -121,7 +121,7 @@ export class ApolloAppSync {
 
             const TWEET = gql`${Mutations.tweet}`
 
-            const mutationsParams = {
+            const mutationParams = {
                 mutation: TWEET,
                 variables: {
                     text
@@ -129,7 +129,7 @@ export class ApolloAppSync {
                 errorPolicy: 'all'
             }
 
-            const { data, errors } = await this.client.mutate(mutationsParams)
+            const { data, errors } = await this.client.mutate(mutationParams)
 
             if (errors) {
                 console.error('GraphQL Errors :', JSON.stringify(errors))
@@ -142,6 +142,41 @@ export class ApolloAppSync {
 
         } catch (err) {
             throwWithLabel(err, `services/apollo.postTweet`)
+        }
+    }
+
+    /**
+     * Triggers Mutation.like with payload
+     * @param {String} tweetId - tweet.id of tweet to be liked
+     * @returns {Promise<Boolean>} 
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+    async likeTweet(tweetId) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!tweetId) throw Error('Missing required param tweetId')
+
+            const LIKE = gql`${Mutations.like}`
+
+            const mutationParams = {
+                mutation: LIKE,
+                variables: {
+                    tweetId
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.likeTweet`)
         }
     }
 }

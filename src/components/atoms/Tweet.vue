@@ -1,13 +1,15 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { likeTweet, retweetTweet, unlikeTweet, unretweetTweet } from '@/services/graphql/controllers'
+import { retweetTweet, unlikeTweet, unretweetTweet } from '@/services/graphql/controllers'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import * as S3Urls from '@/services/s3/urls';
 import { generateHtmlLinks } from '@/utils/urls';
+import { useAppsync } from '@/stores/appsync';
 
 const { tweet } = defineProps(["tweet"])
 const timeline = useTwitterTimeline();
+const { appsyncClient } = useAppsync();
 const replyUI = ref(false);
 const tweetTextEl = ref(null);
 const tweetTextElHtml = ref(null);
@@ -17,7 +19,7 @@ async function handleLikeBtn() {
     if (!tweet.liked) {
         tweet.liked = true
         tweet.likes++
-        await likeTweet(tweet.id)
+        await appsyncClient.likeTweet(tweet.id)
             .catch(err => {
                 console.error(`failed to like tweet [${tweet.id}]`, err)
                 tweet.liked = false
