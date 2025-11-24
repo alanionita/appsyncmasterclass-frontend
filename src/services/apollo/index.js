@@ -412,4 +412,44 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.getTweets`)
         }
     }
+
+    /**
+     * Triggers Query.getImageUploadUrl with payload
+     * @param {String} extension - eg. .png | .jpeg
+     * @param {String} contentType - eg, image/png | image/jpeg
+     * @returns {Promise<ImageUploadUrlRes>} - or { url: AWSUrl, fileKey: String }
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+    async getImgUploadUrl({ extension, contentType }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!extension || !contentType) throw Error("Missing required parameters.")
+
+            const GET_IMAGE_UPLOADURL = gql`${Queries.getImageUploadUrl}`
+
+            let queryParams = {
+                query: GET_IMAGE_UPLOADURL,
+                variables: {
+                    extension,
+                    contentType
+                }
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            if (data) {
+                return data.getImageUploadUrl
+            }
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.getImgUploadUrl`)
+        }
+
+    }
 }

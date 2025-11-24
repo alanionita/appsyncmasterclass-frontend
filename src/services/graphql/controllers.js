@@ -3,38 +3,6 @@ import * as Mutations from "@/services/appsync/mutations";
 import * as gql from "./utils";
 
 
-
-
-/**
- * Generates a presigned upload url on the backend
- * @param extension file extension
- * @param contentType .jpeg or .png
- * @returns Obj { url, fileKey } : presigned url to file, path to file
-*/
-
-export const getImgUploadUrl = async ({ extension, contentType }) => {
-  try {
-    if (!extension || !contentType) throw Error("Missing required parameters.")
-
-    const queryParam = {
-      queryStr: Queries.getImageUploadUrl,
-      variables: {
-        extension,
-        contentType
-      }
-    }
-
-    const res = await gql.query(queryParam)
-
-    const data = res.data.getImageUploadUrl;
-    
-    return data
-
-  } catch (err) {
-    console.error('Error [gql/controllers/getImgUploadUrl] :', err.message)
-  }
-}
-
 export const updateMyProfile = async (profile) => {
   try {
     if (!profile) throw Error("Missing required parameter.")

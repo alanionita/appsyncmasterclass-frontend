@@ -2,9 +2,9 @@
 import { ref, onMounted, nextTick } from 'vue';
 import fetch from 'axios';
 import Overlay from '../templates/Overlay.vue';
-import { getImgUploadUrl } from '@/services/graphql/controllers';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
+import { useAppsync } from '@/stores/appsync';
 
 const mainFocus = ref(null);
 const nextFocus = ref(null);
@@ -12,6 +12,7 @@ const newImage = ref("default_profile.png");
 const fileInput = ref(null);
 const myProfile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
+const { appsyncClient } = useAppsync();
 
 const emit = defineEmits(['hide'])
 
@@ -28,7 +29,7 @@ async function fileChange() {
         const file = fileInput.value.files[0];
         const extension = file.name.split('.').pop();
         const contentType = extension === 'png' ? 'image/png' : 'image/jpeg';
-        const {url, fileKey} = await getImgUploadUrl({ extension, contentType });
+        const {url, fileKey} = await appsyncClient.getImgUploadUrl({ extension, contentType });
         const formData = new FormData();
         formData.append("image", file);
         const headers = { ['Content-Type']: contentType };

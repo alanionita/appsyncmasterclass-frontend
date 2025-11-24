@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import * as gql from '@/services/graphql/controllers'
 import { useTwitterMyProfile } from './twitterMyProfile';
 import { useTwitterTheirProfile } from './twitterTheirProfile';
 import { useAppsync } from './appsync';

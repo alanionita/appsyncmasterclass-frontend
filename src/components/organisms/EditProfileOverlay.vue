@@ -3,7 +3,7 @@ import { ref, defineModel, onMounted } from 'vue';
 import { format, parse } from 'date-fns';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
-import { getImgUploadUrl } from '@/services/graphql/controllers';
+import { useAppsync } from '@/stores/appsync';
 import Overlay from '../templates/Overlay.vue';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { uploadData } from "aws-amplify/storage";
@@ -36,6 +36,7 @@ const imgUrl = ref("default_profile.png");
 // Stores
 const myProfile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
+const { appsyncClient } = useAppsync();
 
 // Emits
 const emit = defineEmits(['hide'])
@@ -56,7 +57,7 @@ async function fileChange(label) {
         const file = fileInputs[label].value.files[0];
         const extension = file.name.split('.').pop();
         const contentType = extension === 'png' ? 'image/png' : 'image/jpeg';
-        const { fileKey } = await getImgUploadUrl({ extension, contentType });
+        const { fileKey } = await appsyncClient.getImgUploadUrl({ extension, contentType });
         
         const formData = new FormData();
         
