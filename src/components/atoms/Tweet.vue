@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { retweetTweet, unretweetTweet } from '@/services/graphql/controllers'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import * as S3Urls from '@/services/s3/urls';
@@ -42,23 +41,21 @@ async function handleRetweetBtn() {
     if (!tweet.retweeted) {
         tweet.retweeted = true
         tweet.retweets++
-        await retweetTweet(tweet.id)
+        await appsyncClient.retweetTweet(tweet.id)
             .catch(err => {
                 console.error(`failed to retweet [${tweet.id}]`, err)
                 tweet.retweeted = false
                 tweet.retweets--
             })
-        timeline.getMyTimeline();
     } else {
-        tweet.retweeted = false
-        tweet.retweets--
-        await unretweetTweet(tweet.id)
+        await appsyncClient.unretweetTweet(tweet.id)
             .catch(err => {
                 console.error(`failed to unretweet [${tweet.id}]`, err)
                 tweet.retweeted = true
                 tweet.retweets++
             })
-        timeline.getMyTimeline();
+        tweet.retweeted = false
+        tweet.retweets--
     }
 }
 
@@ -88,7 +85,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <li v-if="tweet" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
+    <li v-if="tweet" id="tweet.id" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
         <div class="flex-none mr-4">
             <a :href="`/${tweet.profile.screenName}`">
                 <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
@@ -120,7 +117,8 @@ onMounted(() => {
                 </div>
                 <div class="flex items-center text-sm text-dark w-1/4">
                     <button @click="handleRetweetBtn()" class="mr-2 rounded-full hover:bg-lighter cursor-pointer">
-                        <i :class="`fas fa-retweet ${tweet.retweeted ? 'text-green-500' : ''}`"></i>
+                        <i v-if="tweet.retweeted" :class="`fas fa-retweet text-green-500`"></i>
+                        <i v-else :class="`fas fa-retweet`"></i>
                     </button>
                     <p v-if="tweet.retweets > 0"> {{ tweet.retweets }} </p>
                 </div>

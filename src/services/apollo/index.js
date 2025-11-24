@@ -214,4 +214,74 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.unlikeTweet`)
         }
     }
+
+    /**
+     * Triggers Mutation.retweet with payload
+     * @param {String} tweetId - tweet.id of tweet to be retweeted
+     * @returns {Promise<Retweet>} 
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async retweetTweet(tweetId) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!tweetId) throw Error('Missing required param tweetId')
+
+            const RETWEET = gql`${Mutations.retweet}`
+
+            const mutationParams = {
+                mutation: RETWEET,
+                variables: {
+                    tweetId
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.retweet
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.retweetTweet`)
+        }
+    }
+
+    /**
+     * Triggers Mutation.unretweet with payload
+     * @param {String} tweetId - tweet.id of tweet to be unretweeted
+     * @returns {Promise<Boolean>} 
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async unretweetTweet(tweetId) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!tweetId) throw Error('Missing required param tweetId')
+
+            const UNRETWEET = gql`${Mutations.unretweet}`
+
+            const mutationParams = {
+                mutation: UNRETWEET,
+                variables: {
+                    tweetId
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.unretweet
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.unretweetTweet`)
+        }
+    }
 }
