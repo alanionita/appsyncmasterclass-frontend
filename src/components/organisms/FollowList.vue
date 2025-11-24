@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import * as Routes from '../../router/routeNames'
 import UsersList from '../molecules/UsersList.vue';
 import Loader from '../atoms/Loader.vue';
 import { storeToRefs } from 'pinia';
 import { useUi } from '@/stores/ui';
+import { ROUTE_NAMES } from '@/utils/constants';
 
 const router = useRouter();
 const route = useRoute();
@@ -23,7 +23,7 @@ const tabs = ref(['Following', 'Followers'])
 
 function goTo(route) {
     router.push({
-        name: Routes[route],
+        name: ROUTE_NAMES[route],
         params: {
             screenName
         }
