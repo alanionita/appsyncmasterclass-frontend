@@ -365,4 +365,51 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.getProfile`)
         }
     }
+    /**
+     * Triggers Query.getTweets with payload
+     * @param {String} userId - user who's tweets we'd like to fetch
+     * @param {String} limit - tweets per page, defaults to 10
+     * @param {String} nextToken - pagination token
+     * @returns {Promise<TweetsPage>} - or { tweets: [...], nextToken: null | String}
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async getTweets({ userId, limit = 10, nextToken = null }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!userId) throw Error('Missing required param userId')
+
+            if (!limit) throw Error('Missing required param limit')
+
+
+            const GET_TWEETS = gql`${Queries.getTweets}`
+
+            let queryParams = {
+                query: GET_TWEETS,
+                variables: {
+                    userId,
+                    limit
+                }
+            }
+
+            if (nextToken) {
+                queryParams.nextToken = nextToken
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            if (data) {
+                return data.getTweets
+            }
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.getTweets`)
+        }
+    }
 }

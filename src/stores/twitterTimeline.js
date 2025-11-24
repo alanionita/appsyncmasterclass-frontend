@@ -36,6 +36,7 @@ async function paginateMyTweets(state) {
 async function paginateTweets(state) {
     try {
         const { tweetsCount, id } = useTwitterTheirProfile();
+        const { appsyncClient } = useAppsync();
         if (!state.nextToken) return
         const tweetsLeft = tweetsCount - state.fetchedCount
         const perPage = tweetsLeft >= state.limit ? state.limit : tweetsLeft
@@ -43,7 +44,7 @@ async function paginateTweets(state) {
             state.hasMore = false
         }
 
-        const data = await gql.getTweets({
+        const data = await appsyncClient.getTweets({
             userId: id,
             limit: perPage,
             nextToken: state.nextToken
@@ -112,7 +113,8 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
         },
         async getTweets(userId, limit = 10, nextToken = null) {
             try {
-                const timeline = await gql.getTweets({ userId, limit, nextToken });
+                const { appsyncClient } = useAppsync();
+                const timeline = await appsyncClient.getTweets({ userId, limit, nextToken });
 
                 this.tweets = timeline.tweets
 
