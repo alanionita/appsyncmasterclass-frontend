@@ -284,4 +284,43 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.unretweetTweet`)
         }
     }
+
+    /**
+     * Triggers Mutation.reply with payload
+     * @param {String} tweetId - tweet.id of tweet being replied to
+     * @param {String} text - reply text
+     * @returns {Promise<Reply>} 
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async postReply({ tweetId, text }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!tweetId) throw Error('Missing required param tweetId')
+            if (!text) throw Error('Missing required param text')
+
+            const REPLY = gql`${Mutations.reply}`
+
+            const mutationParams = {
+                mutation: REPLY,
+                variables: {
+                    tweetId,
+                    text
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.reply
+
+        } catch (err) {
+            console.info('Error [gql/controllers/postReply] :', err.message)
+        }
+    }
 }

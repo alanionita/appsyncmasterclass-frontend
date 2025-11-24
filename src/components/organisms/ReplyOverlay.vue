@@ -1,5 +1,5 @@
 <script setup>
-import { postReply } from '@/services/graphql/controllers';
+import { useAppsync } from '@/stores/appsync';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import { onMounted, ref } from 'vue';
@@ -11,14 +11,19 @@ const replyInput = ref(null);
 
 const profile = useTwitterMyProfile();
 const timeline = useTwitterTimeline();
+const { appsyncClient } = useAppsync();
 
 const replyText = defineModel('replyText');
 
 async function sendReply() {
     try {
         if (!replyText.value.length === 0) throw Error('Cannot post an empty reply');
-        await postReply({ tweetId: tweet.id, text: replyText.value })
-        await timeline.getMyTimeline();
+        const replied = await appsyncClient.postReply({ tweetId: tweet.id, text: replyText.value })
+
+        if (replied) {
+            timeline.pushToTimeline(replied);
+        }
+
         emit('hide');
     } catch (err) {
         console.error('Err [ReplyOverlay/sendReply] :', err.message)
@@ -47,8 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div @keydown.esc="handleESCkey()"
-        class="fixed w-full h-full z-10 top-0 left-0 flex items-center justify-center">
+    <div @keydown.esc="handleESCkey()" class="fixed w-full h-full z-10 top-0 left-0 flex items-center justify-center">
         <div @click.prevent="$emit('hide')" class="absolute w-full h-full bg-gray-900 opacity-50"></div>
 
         <div class="modal-main bg-white mx-auto rounded-lg z-0 overflow-y-auto" style="width:40%">

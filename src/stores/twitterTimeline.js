@@ -3,6 +3,7 @@ import * as gql from '@/services/graphql/controllers'
 import { useTwitterMyProfile } from './twitterMyProfile';
 import { useTwitterTheirProfile } from './twitterTheirProfile';
 import { useAppsync } from './appsync';
+import { throwWithLabel } from '@/utils/error';
 
 async function paginateMyTweets(state) {
     try {
@@ -134,6 +135,18 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
             } catch (err) {
                 console.error('Err [twitterTimeline.loadMoreTweets] ::', err.message)
                 console.info(JSON.stringify(err))
+            }
+        },
+        pushToTimeline(tweet) {
+            try {
+                const foundTweet = this.tweets.filter(t => t.id === tweet.id)[0]
+                if (!foundTweet) {
+                    this.tweets = [tweet, ...this.tweets];
+                    return;
+                }
+                return;
+            } catch (err) {
+                throwWithLabel('store/twitterTimeline.pushToTimeline')
             }
         }
     },
