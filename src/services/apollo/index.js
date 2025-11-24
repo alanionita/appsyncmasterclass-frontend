@@ -320,7 +320,49 @@ export class ApolloAppSync {
             return data && data.reply
 
         } catch (err) {
-            console.info('Error [gql/controllers/postReply] :', err.message)
+            throwWithLabel(err, `services/apollo.postReply`)
+        }
+    }
+
+    /**
+     * Triggers Query.getProfile with payload
+     * @param {String} screenName - user screenName to fetch
+     * @returns {Promise<OtherProfile>} 
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async getProfile({ screenName }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!screenName) throw Error('Missing required param screenName')
+
+            const GET_PROFILE = gql`${Queries.getProfile}`
+
+            const queryParams = {
+                query: GET_PROFILE,
+                variables: {
+                    screenName,
+                }
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            if (data) {
+                const profile = data.getProfile
+
+                const enrichedProfile = Object.assign({}, profile, { imgUrl: profile.imgUrl || 'default_profile.png' })
+
+                return enrichedProfile;
+            }
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.getProfile`)
         }
     }
 }
