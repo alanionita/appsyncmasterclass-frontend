@@ -87,13 +87,14 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
         },
         async getFollowing(limit = 10, nextToken = null) {
             try {
+                const { appsyncClient } = useAppsync()
                 if (nextToken) {
-                    const data = await gql.getFollowing({ userId: this.id, limit, nextToken });
+                    const data = await appsyncClient.getFollowing({ userId: this.id, limit, nextToken });
                     this.following = data.profiles;
                     this.followingNextToken = data.nextToken
                     this.followingCount = data.profiles.length;
                 } else {
-                    const data = await gql.getFollowing({ userId: this.id, limit });
+                    const data = await appsyncClient.getFollowing({ userId: this.id, limit });
                     this.following = data.profiles;
                     this.followingNextToken = null
                     this.followingCount = data.profiles.length;
