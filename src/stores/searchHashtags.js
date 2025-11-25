@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ulid } from 'ulid'
 import { SEARCH_MODES, ROUTE_NAMES } from '@/utils/constants';
-import * as gql from '@/services/graphql/controllers'
+import { useAppsync } from './appsync';
 
 export const useSearchHashtags = defineStore('searchHashtags', {
     state: () => ({
@@ -17,8 +17,9 @@ export const useSearchHashtags = defineStore('searchHashtags', {
     actions: {
         async handleSearchHashtags(router) {
             try {
+                const { appsyncClient } = useAppsync()
                 if (this.query && this.query.length > 0) {
-                    const resp = await gql.searchHashtags({
+                    const resp = await appsyncClient.searchHashtags({
                         query: this.query,
                         mode: this.mode,
                         limit: this.limit
@@ -64,6 +65,7 @@ export const useSearchHashtags = defineStore('searchHashtags', {
         },
         async loadMore() {
             try {
+                const { appsyncClient } = useAppsync()
                 if (this.hasMore) {
                     if (!this.nextToken) return
                     const tagsLeft = this.totalCount - this.fetchedCount
@@ -72,7 +74,7 @@ export const useSearchHashtags = defineStore('searchHashtags', {
                         this.hasMore = false
                     }
 
-                    const resp = await gql.searchHashtags({
+                    const resp = await appsyncClient.searchHashtags({
                         query: this.query,
                         mode: this.mode,
                         limit: this.limit,

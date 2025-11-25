@@ -689,5 +689,46 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.search`)
         }
     }
+
+    /**
+     * Triggers Query.searchHashtags with payload
+     * @param {String} query - query to execute the hashtag search with
+     * @param {HashtagsMode} mode - HashtagsMode eg Latest | People
+     * @param {Number} limit - no of search results per page, default 25
+     * @param {String} givenNextToken - pagination token
+     * @returns {Promise<HashtagsResultsPage>}  eg {results: [HashtagResult!], nextToken: String, totalCount: Int!}
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async searchHashtags({ query, mode, limit = 25, givenNextToken = null }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!query && !mode) throw Error('Missing required param screenName')
+
+            const SEARCH_HASHTAGS = gql`${Queries.searchHashtags}`
+
+            const queryParams = {
+                query: SEARCH_HASHTAGS,
+                variables: {
+                    hashtags: query,
+                    mode,
+                    limit,
+                    nextToken: givenNextToken
+                }
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.searchHashtags
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.searchHashtags`)
+        }
+    }
 }
 
