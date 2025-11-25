@@ -2,31 +2,6 @@ import * as Queries from "@/services/appsync/queries";
 import * as Mutations from "@/services/appsync/mutations";
 import * as gql from "./utils";
 
-export const getFollowers = async ({ userId, limit = 10, nextToken = null }) => {
-  try {
-    const queryParam = {
-      queryStr: Queries.getFollowers,
-      variables: {
-        userId,
-        limit
-      }
-    }
-
-    if (nextToken) {
-      queryParam.variables["nextToken"] = nextToken
-    }
-
-    const res = await gql.query(queryParam)
-
-    const followers = res.data.getFollowers;
-
-    return followers
-
-  } catch (err) {
-    console.error('Error [gql/controllers/getFollowers] :', err.message)
-  }
-}
-
 export const follow = async ({ userId }) => {
   try {
     const queryParam = {

@@ -495,12 +495,17 @@ export class ApolloAppSync {
      * @param {String} userId - user who's following we'd like to fetch
      * @param {String} limit - following users per page, defaults to 10
      * @param {String} nextToken - pagination token
-     * @returns {Promise<MyProfile>}
+     * @returns {Promise<ProfilesPage>} - eg { profiles: [], nextToken: String }
      * @throws {Error} Either with custom payloads or GraphQL errors
      */
     async getFollowing({ userId, limit = 10, nextToken = null }) {
         try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!userId) throw Error("Missing required parameters.")
+
             const GET_FOLLOWING = gql`${Queries.getFollowing}`
+
             let queryParams = {
                 query: GET_FOLLOWING,
                 variables: {
@@ -527,4 +532,49 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.getFollowing`)
         }
     }
+    /**
+     * Triggers Query.getFollowers with payload
+     * @param {String} userId - user who's followers we'd like to fetch
+     * @param {String} limit - followers users per page, defaults to 10
+     * @param {String} nextToken - pagination token
+     * @returns {Promise<ProfilesPage>} - eg { profiles: [], nextToken: String }
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async getFollowers({ userId, limit = 10, nextToken = null }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!userId) throw Error("Missing required parameters.")
+
+            const GET_FOLLOWERS = gql`${Queries.getFollowers}`
+
+            let queryParams = {
+                query: GET_FOLLOWERS,
+                variables: {
+                    userId,
+                    limit
+                }
+            }
+
+            if (nextToken) {
+                queryParams.variables["nextToken"] = nextToken
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            if (data) {
+                return data.getFollowers
+            }
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.getFollowers`)
+        }
+    }
 }
+
