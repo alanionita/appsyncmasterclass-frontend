@@ -66,7 +66,7 @@ export class ApolloAppSync {
 
     /**
      * Triggers Query.getMyProfile with payload
-     * @param {Object} limit - max amout fetched per page
+     * @param {Number} limit - max amout fetched per page
      * @param {String} nextToken - token used for navigating to next page
      * @returns {Promise<UnhydratedTweetsPage>} { tweets: [], nextToken: string | null }
      * @throws {Error} Either with custom payloads or GraphQL errors
@@ -368,7 +368,7 @@ export class ApolloAppSync {
     /**
      * Triggers Query.getTweets with payload
      * @param {String} userId - user who's tweets we'd like to fetch
-     * @param {String} limit - tweets per page, defaults to 10
+     * @param {Number} limit - tweets per page, defaults to 10
      * @param {String} nextToken - pagination token
      * @returns {Promise<TweetsPage>} - or { tweets: [...], nextToken: null | String}
      * @throws {Error} Either with custom payloads or GraphQL errors
@@ -493,7 +493,7 @@ export class ApolloAppSync {
     /**
      * Triggers Query.getFollowing with payload
      * @param {String} userId - user who's following we'd like to fetch
-     * @param {String} limit - following users per page, defaults to 10
+     * @param {Number} limit - following users per page, defaults to 10
      * @param {String} nextToken - pagination token
      * @returns {Promise<ProfilesPage>} - eg { profiles: [], nextToken: String }
      * @throws {Error} Either with custom payloads or GraphQL errors
@@ -535,7 +535,7 @@ export class ApolloAppSync {
     /**
      * Triggers Query.getFollowers with payload
      * @param {String} userId - user who's followers we'd like to fetch
-     * @param {String} limit - followers users per page, defaults to 10
+     * @param {Number} limit - followers users per page, defaults to 10
      * @param {String} nextToken - pagination token
      * @returns {Promise<ProfilesPage>} - eg { profiles: [], nextToken: String }
      * @throws {Error} Either with custom payloads or GraphQL errors
@@ -646,6 +646,47 @@ export class ApolloAppSync {
 
         } catch (err) {
             throwWithLabel(err, `services/apollo.unfollow`)
+        }
+    }
+
+    /**
+     * Triggers Query.search with payload
+     * @param {String} query - query to execute the search with
+     * @param {SearchMode} mode - SearchMode eg Latest | People
+     * @param {Number} limit - no of search results per page, default 25
+     * @param {String} givenNextToken - pagination token
+     * @returns {Promise<SearchResultsPage>}  eg {results: [SearchResult!], nextToken: String, totalCount: Int!}
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async search({ query, mode, limit = 25, givenNextToken = null }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!query && !mode) throw Error('Missing required param screenName')
+
+            const SEARCH = gql`${Queries.search}`
+
+            const queryParams = {
+                query: SEARCH,
+                variables: {
+                    query,
+                    mode,
+                    limit,
+                    nextToken: givenNextToken
+                }
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.search
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.search`)
         }
     }
 }

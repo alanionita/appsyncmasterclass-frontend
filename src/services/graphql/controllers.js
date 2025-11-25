@@ -1,30 +1,6 @@
 import * as Queries from "@/services/appsync/queries";
 import * as gql from "./utils";
 
-export const search = async ({ query, mode, limit = 25, givenNextToken = null }) => {
-  try {
-    const queryParam = {
-      queryStr: Queries.search,
-      variables: {
-        query, 
-        mode,
-        limit,
-        nextToken: givenNextToken
-      }
-    }
-
-    const res = await gql.query(queryParam)
-
-    const searchResults = res.data.search;
-
-    return searchResults
-
-  } catch (err) {
-    console.error('Error [gql/controllers/search] :', err.message)
-    return err
-  }
-}
-
 export const searchHashtags = async ({ query, mode, limit = 25, givenNextToken = null }) => {
   try {
     const queryParam = {

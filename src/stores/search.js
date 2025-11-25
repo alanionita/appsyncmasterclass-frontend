@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ulid } from 'ulid'
-import * as gql from '@/services/graphql/controllers'
 import { SEARCH_MODES, ROUTE_NAMES } from '@/utils/constants';
+import { useAppsync } from './appsync';
 
 export const useSearch = defineStore('search', {
     state: () => ({
@@ -16,8 +16,9 @@ export const useSearch = defineStore('search', {
     }),
     actions: {
         async handleSearch(router) {
+            const { appsyncClient } = useAppsync()
             if (this.query && this.query.length > 0) {
-                const resp = await gql.search({
+                const resp = await appsyncClient.search({
                     query: this.query,
                     mode: this.mode,
                     limit: this.limit
@@ -51,6 +52,7 @@ export const useSearch = defineStore('search', {
         },
         async loadMore() {
             try {
+                const { appsyncClient } = useAppsync()
                 if (this.hasMore) {
                     if (!this.nextToken) return
                     const tweetsLeft = this.totalCount - this.fetchedCount
@@ -59,7 +61,7 @@ export const useSearch = defineStore('search', {
                         this.hasMore = false
                     }
 
-                    const resp = await gql.search({
+                    const resp = await appsyncClient.search({
                         query: this.query,
                         mode: this.mode,
                         limit: this.limit,
