@@ -58,10 +58,10 @@ onUpdated(() => {
         </div>
     </section>
     <ul v-else-if="tweets.length > 0">
-        <template v-for="tweet in tweets" :key="tweet.id">
-            <Tweet v-if="!tweet.retweetOf" :tweet="tweet" />
+        <template v-for="tweet in tweets">
+            <Tweet v-if="!tweet.retweetOf" :tweet="tweet" :key="tweet.id" />
 
-            <Retweet v-if="tweet.retweetOf" :tweet="tweet" />
+            <Retweet v-if="tweet.retweetOf" :tweet="tweet" :key="tweet.id"/>
         </template>>
     </ul>
 </template>

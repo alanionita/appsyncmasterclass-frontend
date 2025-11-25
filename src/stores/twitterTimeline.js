@@ -3,6 +3,7 @@ import { useTwitterMyProfile } from './twitterMyProfile';
 import { useTwitterTheirProfile } from './twitterTheirProfile';
 import { useAppsync } from './appsync';
 import { throwWithLabel } from '@/utils/error';
+import * as S3Urls from '@/services/s3/urls';
 
 async function paginateMyTweets(state) {
     try {
@@ -148,6 +149,26 @@ export const useTwitterTimeline = defineStore('twitterTimeline', {
                 return;
             } catch (err) {
                 throwWithLabel('store/twitterTimeline.pushToTimeline')
+            }
+        },
+        async updateImgUrl({url}) {
+            try {
+                const tweetRequests = this.tweets.map(async t => {
+                    if (t.profile.imgUrl === url) {
+                        const tweetObj = JSON.parse(JSON.stringify(t))
+                        const newImgUrl = await S3Urls.refreshSignedUrl(t.profile.imgUrl)
+                        if (newImgUrl) {
+                            tweetObj.profile.imgUrl = newImgUrl
+                            return tweetObj;
+                        }
+                        return t
+                    }
+                    return t
+                })
+                const newTweets = await Promise.all(tweetRequests);
+                this.tweets = newTweets
+            } catch (err) {
+                throwWithLabel(err, 'store/twitterTimeline.updateImgUrl')
             }
         }
     },

@@ -2,12 +2,11 @@
 import { onMounted, ref } from 'vue'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
 import { useTwitterTimeline } from '@/stores/twitterTimeline';
-import * as S3Urls from '@/services/s3/urls';
 import { generateHtmlLinks } from '@/utils/urls';
 import { useAppsync } from '@/stores/appsync';
 
 const { tweet } = defineProps(["tweet"])
-const timeline = useTwitterTimeline();
+const { updateImgUrl } = useTwitterTimeline();
 const { appsyncClient } = useAppsync();
 const replyUI = ref(false);
 const tweetTextEl = ref(null);
@@ -63,11 +62,11 @@ async function handleReplyBtn() {
     replyUI.value = !replyUI.value
 }
 
-async function handleImageError(url) {
+async function handleImageError(event) {
     try {
-        if (url) {
-            tweet.profile.imgUrl = await S3Urls.refreshSignedUrl(url)
-        }
+        await updateImgUrl({
+            url: event.target.currentSrc
+        })
     } catch (err) {
         console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
         console.info(JSON.stringify(err))
@@ -85,11 +84,11 @@ onMounted(() => {
 </script>
 
 <template>
-    <li v-if="tweet" id="tweet.id" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
+    <li v-if="tweet" :id="tweet.id" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
         <div class="flex-none mr-4">
             <a :href="`/${tweet.profile.screenName}`">
                 <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
-                    @error="handleImageError(tweet.profile.imgUrl)" class="h-12 w-12 rounded-full flex-none" />
+                    @error="handleImageError" class="h-12 w-12 rounded-full flex-none" />
             </a>
         </div>
         <div class="w-full">
