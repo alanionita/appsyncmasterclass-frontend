@@ -452,4 +452,41 @@ export class ApolloAppSync {
         }
 
     }
+    /**
+     * Triggers Mutation.updateMyProfile with payload
+     * @param {MyProfile} profile 
+     * @returns {Promise<MyProfile>}
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+    async updateMyProfile(profile) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!profile) throw Error("Missing required parameter.")
+
+            const EDIT_PROFILE = gql`${Mutations.editMyProfile}`
+
+            const mutationParams = {
+                mutation: EDIT_PROFILE,
+                variables: {
+                    newProfile: {
+                        ...profile
+                    }
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            if (data) {
+                return data.editMyProfile
+            }
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.updateMyProfile`)
+        }
+    }
 }

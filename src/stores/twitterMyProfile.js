@@ -64,9 +64,10 @@ export const useTwitterMyProfile = defineStore('twitterMyProfile', {
         },
         async changeProfile(newProfile) {
             try {
+                const { appsyncClient } = useAppsync();
                 if (!newProfile || !newProfile.name) throw Error("Missing required param")
 
-                const profile = await gql.updateMyProfile(newProfile);
+                const profile = await appsyncClient.updateMyProfile(newProfile);
                 if (profile) {
                     const keys = Object.keys(profile);
                     for (let key of keys) {

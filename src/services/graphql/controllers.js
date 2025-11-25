@@ -2,30 +2,6 @@ import * as Queries from "@/services/appsync/queries";
 import * as Mutations from "@/services/appsync/mutations";
 import * as gql from "./utils";
 
-
-export const updateMyProfile = async (profile) => {
-  try {
-    if (!profile) throw Error("Missing required parameter.")
-    const params = {
-      queryStr: Mutations.editMyProfile,
-      variables: {
-        newProfile: {
-          ...profile
-        }
-      }
-    }
-
-    const res = await gql.query(params)
-
-    const newProfile = res.data.editMyProfile;
-
-    return newProfile
-
-  } catch (err) {
-    console.error('Error [gql/controllers/editMyProfile] :', err.message)
-  }
-}
-
 export const getFollowing = async ({ userId, limit = 10, nextToken = null }) => {
   try {
     const queryParam = {
