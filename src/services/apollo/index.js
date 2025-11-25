@@ -576,5 +576,77 @@ export class ApolloAppSync {
             throwWithLabel(err, `services/apollo.getFollowers`)
         }
     }
+
+    /**
+     * Triggers Mutation.follow with payload
+     * @param {String} userId - user to be followed
+     * @returns {Promise<Boolean>}
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async follow({ userId }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!userId) throw Error("Missing required parameters.")
+
+            const FOLLOW = gql`${Mutations.follow}`
+
+            const mutationParam = {
+                mutation: FOLLOW,
+                variables: {
+                    userId
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParam)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.follow
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.follow`)
+        }
+    }
+
+    /**
+     * Triggers Mutation.unfollow with payload
+     * @param {String} userId - user to be unfollowed
+     * @returns {Promise<Boolean>}
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async unfollow({ userId }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!userId) throw Error("Missing required parameters.")
+
+            const UNFOLLOW = gql`${Mutations.unfollow}`
+
+            const mutationParam = {
+                mutation: UNFOLLOW,
+                variables: {
+                    userId
+                }
+            }
+
+            const { data, errors } = await this.client.mutate(mutationParam)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.unfollow
+
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.unfollow`)
+        }
+    }
 }
 

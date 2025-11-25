@@ -1,44 +1,5 @@
 import * as Queries from "@/services/appsync/queries";
-import * as Mutations from "@/services/appsync/mutations";
 import * as gql from "./utils";
-
-export const follow = async ({ userId }) => {
-  try {
-    const queryParam = {
-      queryStr: Mutations.follow,
-      variables: {
-        userId
-      }
-    }
-
-    const res = await gql.query(queryParam)
-
-    return res
-
-  } catch (err) {
-    console.error('Error [gql/controllers/follow] :', err.message)
-    return err
-  }
-}
-
-export const unfollow = async ({ userId }) => {
-  try {
-    const queryParam = {
-      queryStr: Mutations.unfollow,
-      variables: {
-        userId
-      }
-    }
-
-    const res = await gql.query(queryParam)
-
-    return res
-
-  } catch (err) {
-    console.error('Error [gql/controllers/unfollow] :', err.message)
-    return err
-  }
-}
 
 export const search = async ({ query, mode, limit = 25, givenNextToken = null }) => {
   try {

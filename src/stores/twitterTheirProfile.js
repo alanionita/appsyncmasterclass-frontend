@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import * as gql from '@/services/graphql/controllers'
 import * as S3Urls from '@/services/s3/urls';
 import * as DateUtils from '@/utils/date';
 import { useTwitterMyProfile } from './twitterMyProfile';
@@ -147,7 +146,8 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         },
         async follow() {
             try {
-                const res = await gql.follow({ userId: this.id })
+                const { appsyncClient } = useAppsync();
+                const res = await appsyncClient.follow({ userId: this.id })
                 if (res) {
                     this.followersCount += 1;
                     this.followed = true
@@ -158,7 +158,8 @@ export const useTwitterTheirProfile = defineStore('twitterTheirProfile', {
         },
         async unfollow() {
             try {
-                const res = await gql.unfollow({ userId: this.id })
+                const { appsyncClient } = useAppsync();
+                const res = await appsyncClient.unfollow({ userId: this.id })
                 if (res) {
                     this.followersCount -= 1;
                     this.followed = false
