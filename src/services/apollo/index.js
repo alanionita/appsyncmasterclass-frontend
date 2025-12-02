@@ -2,9 +2,9 @@ import { createAuthLink } from "aws-appsync-auth-link";
 import { createSubscriptionHandshakeLink } from "aws-appsync-subscription-link";
 import { ApolloClient, ApolloLink, gql, HttpLink, InMemoryCache } from "@apollo/client";
 import { throwWithLabel } from "@/utils/error";
-import * as Queries from "@/services/appsync/queries";
-import * as Mutations from "@/services/appsync/mutations";
-import * as Subscriptions from "@/services/appsync/subscriptions";
+import * as Queries from "@/services/apollo/appsync/queries";
+import * as Mutations from "@/services/apollo/appsync/mutations";
+import * as Subscriptions from "@/services/apollo/appsync/subscriptions";
 
 export class ApolloAppSync {
     client;

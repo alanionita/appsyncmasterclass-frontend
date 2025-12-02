@@ -449,6 +449,10 @@ Backend release: https://github.com/alanionita/appsyncmasterclass-backend/releas
 
 # 07-03-Notifications_page
 
+Usage:
+- consider with backend/07-03
+- compare against 07-02
+
 Diffs:
 - NotificationsView: uses the existing ThreeCol template, reused across all other views in this remix of the original codebase; implements the notifications store via hooks
 - components/*: favours components abstraction and reusability; introduces the NotificationsList which works for both modes; introduces the NotificationsListEmpty fallback ui; NotificatinListItem to further abstract logic per notification; NotificationBadge to show the notification amounts as a badge
@@ -459,4 +463,6 @@ Diffs:
 - services/apollo: introduces the Apollo Client module with official aws packages for linking with Appsync; aims to move away from `aws-appsync` package towards Apollo use; in the process refactors and removes the need for using graphql controllers and utils; refactors all existing controllers into one big Apollo Client class; 
 - router: initialises the new Apollo Client within the auth middleware
 
-Release: 
+Release (backend): https://github.com/alanionita/appsyncmasterclass-backend/releases/tag/07-03-Notifications_page
+
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/07-03-Notifications_page
