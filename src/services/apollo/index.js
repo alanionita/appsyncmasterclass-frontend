@@ -4,6 +4,7 @@ import { ApolloClient, ApolloLink, gql, HttpLink, InMemoryCache } from "@apollo/
 import { throwWithLabel } from "@/utils/error";
 import * as Queries from "@/services/appsync/queries";
 import * as Mutations from "@/services/appsync/mutations";
+import * as Subscriptions from "@/services/appsync/subscriptions";
 
 export class ApolloAppSync {
     client;
@@ -663,7 +664,7 @@ export class ApolloAppSync {
         try {
             if (!this.client) throw Error("Cannot find required Appsync client")
 
-            if (!query && !mode) throw Error('Missing required param screenName')
+            if (!query && !mode) throw Error("Missing required parameters.")
 
             const SEARCH = gql`${Queries.search}`
 
@@ -704,7 +705,7 @@ export class ApolloAppSync {
         try {
             if (!this.client) throw Error("Cannot find required Appsync client")
 
-            if (!query && !mode) throw Error('Missing required param screenName')
+            if (!query && !mode) throw Error("Missing required parameters.")
 
             const SEARCH_HASHTAGS = gql`${Queries.searchHashtags}`
 
@@ -728,6 +729,46 @@ export class ApolloAppSync {
             return data && data.searchHashtags
         } catch (err) {
             throwWithLabel(err, `services/apollo.searchHashtags`)
+        }
+    }
+
+    /**
+     * Triggers Subscribe.onNotified with payload
+     * @param {String} userId - userId for the notifications
+     * @param {String} type - Retweeted | Liked | Mentioned | Replied | DMed
+     * @returns {Promise<Notification>} async Notification type structure
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async onNotified({ userId, type }) {
+        try {
+
+            if (!this.client) throw Error("Cannot find required Appsync client")
+
+            if (!userId) throw Error("Missing required parameters.")
+
+            const ON_NOTIFIED = gql`${Subscriptions.onNotified}`
+
+            let subscriptionParams = {
+                query: ON_NOTIFIED,
+                variables: {
+                    userId
+                },
+                errorPolicy: 'all'
+            }
+
+            if (type) {
+                subscriptionParams.variables = {
+                    userId,
+                    type
+                }
+            }
+
+            const observable = this.client.subscribe(subscriptionParams)
+
+            return observable
+        } catch (caught) {
+            throwWithLabel(caught, `GraphQL.onNotified`)
         }
     }
 }
