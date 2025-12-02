@@ -31,7 +31,6 @@ export const useNotifications = defineStore('notifications', {
         },
         changeMode(router, newMode) {
             if (NOTIFICATION_MODES[newMode]) {
-                this.reset()
                 this.mode = NOTIFICATION_MODES[newMode];
                 this.handleNotifications(router);
                 return
