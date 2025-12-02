@@ -1,16 +1,16 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
-import { useTwitterTimeline } from '@/stores/twitterTimeline';
 import { generateHtmlLinks } from '@/utils/urls';
 import { useAppsync } from '@/stores/appsync';
+import * as S3Urls from '@/services/s3/urls';
 
 const { tweet } = defineProps(["tweet"])
-const { updateImgUrl } = useTwitterTimeline();
 const { appsyncClient } = useAppsync();
 const replyUI = ref(false);
 const tweetTextEl = ref(null);
 const tweetTextElHtml = ref(null);
+const imgUrl = ref('default_profile.png');
 
 async function handleLikeBtn() {
     // TODO: add a debounce
@@ -64,9 +64,8 @@ async function handleReplyBtn() {
 
 async function handleImageError(event) {
     try {
-        await updateImgUrl({
-            url: event.target.currentSrc
-        })
+        const newImgUrl = await S3Urls.refreshSignedUrl(event.target.currentSrc)
+        imgUrl.value = newImgUrl
     } catch (err) {
         console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
         console.info(JSON.stringify(err))
@@ -79,6 +78,9 @@ onMounted(() => {
         const tweetTextHtml = generateHtmlLinks(tweet.text)
         tweetTextElHtml.value = tweetTextHtml
     }
+    if(tweet.profile.imgUrl) {
+        imgUrl.value = tweet.profile.imgUrl
+    }
 })
 
 </script>
@@ -87,7 +89,7 @@ onMounted(() => {
     <li v-if="tweet" :id="tweet.id" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
         <div class="flex-none mr-4">
             <a :href="`/${tweet.profile.screenName}`">
-                <img :src="`${tweet.profile.imgUrl || 'default_profile.png'}`"
+                <img :src="`${imgUrl}`"
                     @error="handleImageError" class="h-12 w-12 rounded-full flex-none" />
             </a>
         </div>
