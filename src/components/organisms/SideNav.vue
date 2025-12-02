@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authentication';
 import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useRouter, useRoute } from 'vue-router'
 import { ROUTE_NAMES } from '@/utils/constants';
+import NotificationBadge from '../atoms/NotificationBadge.vue';
 
 const router = useRouter()
 const route = useRoute()
@@ -70,6 +71,7 @@ async function handleTabClick(target) {
                     class="focus:outline-none hover:text-blue flex items-center w-full justify-between gap-4 px-4 py-2 hover:bg-lightblue rounded-full">
                     <i class="text-2xl" :class="tab.icon"></i>
                     <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
+                    <NotificationBadge v-if="tab.id === 'notifications'" />
                 </button>
             </nav>
             <TextButton text="Tweet" action="() => {}" />
@@ -80,8 +82,9 @@ async function handleTabClick(target) {
                 <div class="hidden lg:block ml-4 truncate">
                     <div class="text-left text-sm font-bold leading-tight truncate">{{ profile.name }}
                     </div>
-                    <div class="text-left text-sm leading-tight text-dark truncate">{{ profile.screenName
-                    }}</div>
+                    <div class="text-left text-sm leading-tight text-dark truncate">
+                        {{ profile.screenName }}
+                    </div>
                 </div>
                 <i class="hidden lg:block fas fa-angle-down ml-auto text-lg"></i>
             </button>
