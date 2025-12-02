@@ -3,12 +3,17 @@ import NotificationsList from '@/components/molecules/NotificationsList.vue';
 import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
 import { useNotifications } from '@/stores/notifications';
 import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const notificationsStore = useNotifications();
 const { mentions, mode, all } = storeToRefs(notificationsStore);
-const { changeMode } = notificationsStore;
+const { changeMode, resetBadge } = notificationsStore;
+
+onMounted(() => {
+    resetBadge()
+})
 
 </script>
 
