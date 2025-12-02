@@ -19,7 +19,7 @@ export default async (to, from, next) => {
       const { appsyncClient, initClient } = useAppsync();
 
       if (!appsyncClient && tokens.accessToken) {
-        await initClient(tokens.accessToken);
+        await initClient(tokens.accessToken.toString());
       }
 
       // 2. Auth store

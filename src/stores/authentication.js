@@ -3,6 +3,7 @@ import * as AmplifyAuth from 'aws-amplify/auth';
 import router from '@/router';
 import { startAuthListener } from '@/services/amplify/hub';
 import { useTwitterMyProfile } from './twitterMyProfile';
+import { useNotifications } from './notifications';
 
 export const useAuthStore = defineStore('authentication', {
     state: () => ({
@@ -18,16 +19,22 @@ export const useAuthStore = defineStore('authentication', {
             }
         },
         resetState() {
+            const storeNotification = useNotifications();
             this.loggedIn = false;
             this.user = undefined;
+            storeNotification.reset();
         },
         async verifyAuth(path = null) {
             const store = useTwitterMyProfile();
+            const storeNotification = useNotifications();
             try {
                 const user = await AmplifyAuth.getCurrentUser();
                 if (user) {
                     this.setState(user);
                     await store.setProfile();
+                    if (!storeNotification.hasSub) {
+                        await storeNotification.subscribe()
+                    }
                     !path && router.push('/home');
                     this.listener && this.stopListener();
                 } else {
@@ -39,9 +46,22 @@ export const useAuthStore = defineStore('authentication', {
             }
         },
         async logout() {
-            await AmplifyAuth.signOut({ global: true });
-            this.resetState();
-            router.push('/');
+            try { 
+                const storeNotification = useNotifications();
+
+                if (!storeNotification.isSubClosed) {
+                    await storeNotification.unsubscribe();
+                    if (storeNotification.isSubClosed) {
+                        storeNotification.reset();
+                    }
+                }
+                await AmplifyAuth.signOut({ global: true });
+                this.resetState();
+                router.push('/');
+            } catch (err) {
+                console.error('Err [auth.logout] :', err.message)
+                return err;
+            }   
         },
 
         async signUp(userData) {
@@ -115,6 +135,7 @@ export const useAuthStore = defineStore('authentication', {
 
         async signIn(userData) {
             const store = useTwitterMyProfile();
+            const storeNotification = useNotifications();
             try {
                 const { email, password } = userData;
                 if (!email || !password) {
@@ -127,6 +148,10 @@ export const useAuthStore = defineStore('authentication', {
                 })
 
                 await store.setProfile();
+
+                if (storeNotification.hasSub) {
+                    await storeNotification.subscribe()
+                }
 
                 return {
                     nextStep
