@@ -446,3 +446,17 @@ Diffs:
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/07-02-Hashtag_page
 
 Backend release: https://github.com/alanionita/appsyncmasterclass-backend/releases/tag/07-02-Hashtag_page
+
+# 07-03-Notifications_page
+
+Diffs:
+- NotificationsView: uses the existing ThreeCol template, reused across all other views in this remix of the original codebase; implements the notifications store via hooks
+- components/*: favours components abstraction and reusability; introduces the NotificationsList which works for both modes; introduces the NotificationsListEmpty fallback ui; NotificatinListItem to further abstract logic per notification; NotificationBadge to show the notification amounts as a badge
+- components/SidebarNav: abstracted the notification amound to a NotificationBadge component
+- styles: favours declarative style, focusing on containers and item rules; refactors positioning based on micro-adjustments of padding / margin and repeated styles; vastly simplifies styling rules and removes redudant styles
+- html: favours declarative style, prefering semantic elements vs <divs>; adds logical lists and sections where needed; removes redundant nested <divs> 
+- stores: implements notifications as a Pinia store, with all related props stored within; implements subscribe(), unsubscribe(), reset(), and helpers; methods use other store within; notification store methods later integrated in authentication store methods for login, logout, signin, verifyAuth
+- services/apollo: introduces the Apollo Client module with official aws packages for linking with Appsync; aims to move away from `aws-appsync` package towards Apollo use; in the process refactors and removes the need for using graphql controllers and utils; refactors all existing controllers into one big Apollo Client class; 
+- router: initialises the new Apollo Client within the auth middleware
+
+Release: 
