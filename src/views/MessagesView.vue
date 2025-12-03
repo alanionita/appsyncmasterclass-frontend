@@ -1,12 +1,10 @@
 <script setup>
-import ThreeColTemplate from '@/components/templates/ThreeCol.vue';
+import TwoColTemplate from '@/components/templates/TwoCol.vue';
 
 </script>
 
 <template>
-  <ThreeColTemplate :trending="false" :follow-who="false" :search="false">
-    <template #middle>
+  <TwoColTemplate>
       <h1>Messages</h1>
-    </template>
-  </ThreeColTemplate>
+  </TwoColTemplate>
 </template>
