@@ -14,7 +14,8 @@ export const ROUTE_NAMES = {
     Following: 'Following',
     Search: 'Search',
     Hashtag: 'Hashtag',
-    Notifications: 'notifications'
+    Notifications: 'notifications',
+    Messages: 'messages'
 }
 
 export const NOTIFICATION_MODES = {

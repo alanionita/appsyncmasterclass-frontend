@@ -17,7 +17,7 @@ const tabs = defineModel('tabs', {
         { icon: 'fas fa-home', title: 'Home', id: 'home', target: ROUTE_NAMES.Home },
         { icon: 'fas fa-hashtag', title: 'Explore', id: 'explore' },
         { icon: 'far fa-bell', title: 'Notifications', id: 'notifications', target: ROUTE_NAMES.Notifications },
-        { icon: 'far fa-envelope', title: 'Messages', id: 'messages' },
+        { icon: 'far fa-envelope', title: 'Messages', id: 'messages', target: ROUTE_NAMES.Messages },
         { icon: 'far fa-bookmark', title: 'Bookmarks', id: 'bookmarks' },
         { icon: 'fas fa-clipboard-list', title: 'Lists', id: 'lists' },
         { icon: 'far fa-user', title: 'Profile', id: 'profile', target: ROUTE_NAMES.Profile },

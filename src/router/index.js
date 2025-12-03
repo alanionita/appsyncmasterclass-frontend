@@ -65,6 +65,13 @@ const router = createRouter({
       component: () => import('../views/NotificationsView.vue'),
       meta: { protected: true },
     },
+
+    {
+      path: '/messages',
+      name: ROUTE_NAMES.Messages,
+      component: () => import('../views/MessagesView.vue'),
+      meta: { protected: true },
+    },
   ],
 })
 
