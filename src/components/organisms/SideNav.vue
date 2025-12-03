@@ -14,14 +14,14 @@ const authStore = useAuthStore();
 
 const tabs = defineModel('tabs', {
     default: [
-        { icon: 'fas fa-home', title: 'Home', id: 'home', target: ROUTE_NAMES.Home },
-        { icon: 'fas fa-hashtag', title: 'Explore', id: 'explore' },
-        { icon: 'far fa-bell', title: 'Notifications', id: 'notifications', target: ROUTE_NAMES.Notifications },
-        { icon: 'far fa-envelope', title: 'Messages', id: 'messages', target: ROUTE_NAMES.Messages },
-        { icon: 'far fa-bookmark', title: 'Bookmarks', id: 'bookmarks' },
-        { icon: 'fas fa-clipboard-list', title: 'Lists', id: 'lists' },
-        { icon: 'far fa-user', title: 'Profile', id: 'profile', target: ROUTE_NAMES.Profile },
-        { icon: 'fas fa-ellipsis-h', title: 'More', id: 'more' }
+        { icon: 'text-xl fas fa-home', iconActive: 'text-2xl fas fa-home', title: 'Home', id: 'home', target: ROUTE_NAMES.Home },
+        { icon: 'text-xl fas fa-hashtag', title: 'Explore', id: 'explore' },
+        { icon: 'text-xl far fa-bell', iconActive: 'text-2xl fas fa-bell', title: 'Notifications', id: 'notifications', target: ROUTE_NAMES.Notifications },
+        { icon: 'text-xl far fa-envelope', iconActive: 'text-2xl fas fa-envelope', title: 'Messages', id: 'messages', target: ROUTE_NAMES.Messages },
+        { icon: 'text-xl far fa-bookmark', title: 'Bookmarks', id: 'bookmarks' },
+        { icon: 'text-xl fas fa-clipboard-list', title: 'Lists', id: 'lists' },
+        { icon: 'text-xl far fa-user', iconActive: 'text-2xl fas fa-user', title: 'Profile', id: 'profile', target: ROUTE_NAMES.Profile },
+        { icon: 'text-xl fas fa-ellipsis-h', title: 'More', id: 'more' }
     ]
 })
 
@@ -62,20 +62,27 @@ async function handleTabClick(target) {
 <template>
     <section
         class="h-screen border-r border-lighter lg:pr-4 flex flex-col items-center md:items-start min-w-max gap-4 justify-between">
-        <div class="w-full flex flex-col gap-4">
+        <nav class="w-full flex flex-col gap-4">
             <button class="size-16 hover:bg-lightblue text-3xl text-blue rounded-full">
                 <i class="fab fa-twitter"></i>
             </button>
-            <nav class="flex flex-col gap-4 justify-center items-center md:items-start">
-                <button v-for="tab in tabs" :key="tab.id" @click="handleTabClick(tab.target)"
-                    class="focus:outline-none hover:text-blue flex items-center w-full justify-between gap-4 px-4 py-2 hover:bg-lightblue rounded-full">
-                    <i class="text-2xl" :class="tab.icon"></i>
-                    <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> {{ tab.title }}</p>
-                    <NotificationBadge v-if="tab.id === 'notifications'" />
-                </button>
-            </nav>
+            <ul class="grid grid-cols-1 gap-4">
+                <li v-for="tab in tabs" :key="tab.id" class="row-span-1">
+                    <a id="nav-link" target="_blank" @click="tab.target && handleTabClick(tab.target)" role="button"
+                        :data-active="tab.id === route.name" 
+                        :data-available="tab.target || false"
+                        class="flex items-center w-full justify-between px-4 py-2 rounded-full cursor-pointer data-[active=true]:bg-lightblue data-[available=false]:cursor-not-allowed"
+                        :class="tab.id === route.name ? 'gap-5' : 'gap-6'">
+                        <i :class="tab.id === route.name ? tab.iconActive : tab.icon"></i>
+                        <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> 
+                            {{ tab.title }}
+                        </p>
+                        <NotificationBadge v-if="tab.id === 'notifications'" />
+                    </a>
+                </li>
+            </ul>
             <TextButton text="Tweet" action="() => {}" />
-        </div>
+        </nav>
         <div class="w-full relative pb-4">
             <button @click="dropdown = !dropdown" class="flex items-center w-full hover:bg-lightblue rounded-full p-4">
                 <img :src="`${profile.imgUrl}`" class="w-10 h-10 rounded-full" />
