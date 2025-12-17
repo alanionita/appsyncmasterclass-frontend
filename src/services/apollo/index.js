@@ -771,5 +771,41 @@ export class ApolloAppSync {
             throwWithLabel(caught, `GraphQL.onNotified`)
         }
     }
+    /**
+     * Triggers Query.listConversations with payload
+     * @param {Number} limit - no of conversation results per page, default 10
+     * @param {String} givenNextToken - pagination token
+     * @returns {Promise<ConversationsPage>}  eg {conversations: [Conversation!], nextToken: String}
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async listConversations({ limit = 10, givenNextToken = null }) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+            
+            if (!limit) throw Error("Missing required parameters.")
+
+            const LIST_CONVERSATIONS = gql`${Queries.listConversations}`
+
+            const queryParams = {
+                query: LIST_CONVERSATIONS,
+                variables: {
+                    limit,
+                    nextToken: givenNextToken
+                }
+            }
+
+            const { data, errors } = await this.client.query(queryParams)
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+
+            return data && data.listConversations
+        } catch (err) {
+            throwWithLabel(err, `services/apollo.listConversations`)
+        }
+    }
 }
 

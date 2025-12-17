@@ -2262,3 +2262,32 @@ export const searchHashtags = /* GraphQL */ `
     }
   }
 `;
+
+export const listConversations = /* GraphQL */ `
+  query ListConversations ($limit: Int!, $nextToken: String) {
+    listConversations(limit: $limit, nextToken: $nextToken) {
+      nextToken
+      conversations {
+        id
+        lastMessage
+        lastModified
+        otherUser {
+          bgImgUrl
+          bio
+          birthdate
+          createdAt
+          followedBy
+          followersCount
+          following
+          followingCount
+          id
+          imgUrl
+          likesCount
+          location
+          name
+          screenName
+        }
+      }
+    }
+  }
+`;
