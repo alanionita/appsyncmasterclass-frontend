@@ -20,12 +20,12 @@ onMounted(() => {
 <template>
     <li class="w-full border-b border-lighter hover:bg-lightest flex flex-col">
         <!-- Retweet header -->
-        <div class="pt-4 pl-4 flex flex-row">
-            <div class="w-12 mr-4 flex justify-end">
+        <aside class="flex p-2 flex-row">
+            <span class="w-12 mr-4 flex justify-end">
                 <i class="text-sm pt-1 fas fa-retweet text-dark"></i>
-            </div>
+            </span>
             <p class="text-sm text-dark">{{ label }}</p>
-        </div>
+        </aside>
 
         <Tweet :tweet="tweet.retweetOf" />
     </li>
