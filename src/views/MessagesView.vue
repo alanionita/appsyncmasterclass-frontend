@@ -29,9 +29,9 @@ onMounted(async () => {
 
 <template>
   <TwoColTemplate>
-    <div class="grid grid-cols-12 auto-cols-fr auto-rows-fr w-full h-screen overflow-hidden">
+    <div class="grid grid-cols-12 auto-cols-fr auto-rows-fr w-full h-full overflow-hidden">
       <!-- LEFT COLUMN -->
-      <section class="col-span-4 border-r border-lighter">
+      <section class="col-span-4 h-full border-r border-lighter">
         <header class="p-4 border-b border-lighter flex items-center gap-4" @click="deselectAll()">
           <h1 class="text-xl font-bold flex-1">Messages</h1>
           <i class="fas fa-cog text-xl text-blue cursor-pointer"></i>
@@ -41,7 +41,7 @@ onMounted(async () => {
         <ConversationsList v-else />
       </section>
       <!-- RIGHT COLUMN -->
-      <section class="col-span-8 h-full border-r border-lighter"">
+      <section class="col-span-8 h-full border-r border-lighter">
         <div class="w-full pt-5 overflow-y-auto">
           <div class="w-full px-5 flex flex-col justify-between">
             <div class="flex flex-col-reverse mt-1 h-full">
