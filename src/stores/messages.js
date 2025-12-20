@@ -57,79 +57,35 @@ export const useMessages = defineStore('messages', {
 
             loadingOff()
         },
-        addNotification(notification) {
-            if (notification) {
-                if (notification.type === "Mentioned") {
-                    this.mentions = [notification, ...this.mentions];
-                }
-                this.all = [notification, ...this.all]
-                this.newBadge += 1
-            }
-        },
-        async subscribe() {
+        findConversation(conversationID = null) {
             try {
-                if (this.subscription && !this.subscription.closed) {
-                    this.subscription.unsubscribe()
-                }
-                const { appsyncClient } = useAppsync()
-                const myProfile = useTwitterMyProfile();
+                if (!conversationID) throw Error('Missing conversationId');
 
-                const onNotifiedVars = {
-                    userId: myProfile.id
-                }
-                const observable = await appsyncClient.onNotified(onNotifiedVars);
-                const _addNotification = this.addNotification.bind(this)
-                this.subscription = observable.subscribe({
-                    next({ data, error }) {
-                        if (data) {
-                            const { onNotified } = data;
-                            return _addNotification(onNotified)
-                        }
-                        if (error) {
-                            console.error('Subscription next / error ', error)
-                        }
-                    },
-                    error(error) {
-                        console.error('Subscription error:', error);
-                        console.info('NetworkError:', error.networkError);
-                        console.info('GraphQLErrors:', error.graphQLErrors);
+                const foundConversation = this.conversations.filter(conversation => conversation.id === conversationID);
 
-                    },
-                    complete() {
-                        console.info('Subscription completed');
-                    }
-                });
+                if (foundConversation.length === 0) throw Error('No conversation found')
+
+                return foundConversation[0];
             } catch (err) {
-                throwWithLabel(err, 'stores/notifications/subscribe')
+                throwWithLabel(err, 'messagesStore.findConversation()')
             }
-
         },
-        async unsubscribe() {
+        setActiveConversation(conversationID = null){
             try {
-                if (this.subscription) {
-                    await this.subscription.unsubscribe();
+                if (!conversationID) throw Error('Missing conversationId');
 
-                    if (this.subscription.closed) {
-                        this.subscription = null
-                    }
-                }
+                const foundConversation = this.findConversation(conversationID)
 
+                if (!foundConversation) throw Error('Conversation not found')
+
+                this.active.conversation = JSON.parse(JSON.stringify(foundConversation))
             } catch (err) {
-                throwWithLabel(err, 'stores/notifications/unsubscribe')
+                throwWithLabel(err, 'messagesStore.setActiveConversation()')
             }
-        },
-        async handleNotifications(router) {
-            router.push({
-                name: ROUTE_NAMES.Notifications,
-                query: {
-                    m: this.mode,
-                    h: ulid()
-                }
-            })
-        },
+        }
     },
     getters: {
-        isSubClosed: state => state.subscription && state.subscription.closed,
-        hasSub: state => state.subscription && state.subscription === null
+        activeConversation: state => state.active && state.active.conversation && state.active.conversation.id,
+        conversationsAmount: state => state.conversations && state.conversations.length
     }
 });
