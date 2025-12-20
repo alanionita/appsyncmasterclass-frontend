@@ -2,6 +2,7 @@
 import { useMessages } from '@/stores/messages';
 import { storeToRefs } from 'pinia';
 import Image from '../atoms/Image.vue';
+import LinkifyText from '../atoms/LinkifyText.vue';
 
 const storeMessages = useMessages();
 const { conversations, activeConversation } = storeToRefs(storeMessages)
@@ -26,29 +27,27 @@ function hasNewMessages() { }
             </p>
         </li>
         <li v-else v-for="conversation in conversations" v-bind:key="conversation.id"
-            class="grid grid-col-6 grid-rows-1 gap-2 p-2 border-b border-lighter hover:bg-lightest cursor-pointer data-active:bg-lightblue"
+            class="grid grid-col-6 grid-rows-3 p-2 pl-4 border-b border-lighter hover:bg-lightest cursor-pointer data-active:bg-lightblue"
             :data-active="conversation.id === activeConversation || undefined"
             @click="handleConversationClick(conversation.id)">
-            <a class="col-start-0 col-span-1 row-end-1" :href="`#/${conversation.otherUser.screenName}`">
-                <figure class="h-full w-full flex items-center ml-2">
-                    <Image :src="conversation.otherUser.imgUrl" :classStr="`h-12 w-12 rounded-full flex-none`"/>
-                </figure>
+            <a class="col-start-1 col-span-1 row-start-1 row-span-3 w-fit flex flex-col justify-center" :href="`#/${conversation.otherUser.screenName}`">
+                <Image :src="conversation.otherUser.imgUrl" :classStr="`h-12 w-12 rounded-full flex-none`"/>
             </a>
-            <section class="col-start-2 col-span-4 row-end-1 items-center flex-col">
+            <header class="col-start-2 col-span-4 row-start-1 row-span-2">
                 <p class="font-semibold">{{ conversation.otherUser.name }}</p>
                 <p class="hidden md:block text-sm text-dark truncate">@{{
                     conversation.otherUser.screenName }}
                 </p>
 
-                {{ conversation.lastMessage }}
-            </section>
+            </header>
 
-            <aside class="col-start-6 col-span-1 row-end-1 grid grid-cols-1 grid-rows-3 gap-2 truncate justify-items-end">
-                <p class="row-start-0 row-span-1 text-sm text-dark">
+            <LinkifyText :text="conversation.lastMessage" :classStr="`col-start-2 col-span-4 row-start-3 row-span-1 truncate`" />
+            <aside class="col-start-6 col-span-1 row-span-3 grid grid-rows-subgrid justify-items-end">
+                <p class="row-start-1 row-span-1 text-sm text-dark">
                     {{ $filters.timeago(conversation.lastModified) }}
                 </p>
                 <figure v-if="hasNewMessages(conversation)"
-                    class="row-start-2 row-span-1 size-4 resize-both overflow-hidden self-end">
+                    class="row-start-3 row-span-1 size-4 resize-both overflow-hidden self-end">
                     <svg width="100%" height="100%" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12" r="12" fill="var(--color-blue)"/>
                     </svg>
