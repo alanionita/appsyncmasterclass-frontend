@@ -1,16 +1,13 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import ReplyOverlay from '../organisms/ReplyOverlay.vue';
-import { generateHtmlLinks } from '@/utils/urls';
 import { useAppsync } from '@/stores/appsync';
-import * as S3Urls from '@/services/s3/urls';
+import LinkifyText from './LinkifyText.vue';
+import Image from './Image.vue';
 
 const { tweet } = defineProps(["tweet"])
 const { appsyncClient } = useAppsync();
 const replyUI = ref(false);
-const tweetTextEl = ref(null);
-const tweetTextElHtml = ref(null);
-const imgUrl = ref('default_profile.png');
 
 async function handleLikeBtn() {
     // TODO: add a debounce
@@ -62,35 +59,13 @@ async function handleReplyBtn() {
     replyUI.value = !replyUI.value
 }
 
-async function handleImageError(event) {
-    try {
-        const newImgUrl = await S3Urls.refreshSignedUrl(event.target.currentSrc)
-        imgUrl.value = newImgUrl
-    } catch (err) {
-        console.error('Err [twitterMyProfile/fetchSignedUrl] ::', err.message)
-        console.info(JSON.stringify(err))
-        return
-    }
-}
-
-onMounted(() => {
-    if (tweet.text && tweet.text.length > 0) {
-        const tweetTextHtml = generateHtmlLinks(tweet.text)
-        tweetTextElHtml.value = tweetTextHtml
-    }
-    if(tweet.profile.imgUrl) {
-        imgUrl.value = tweet.profile.imgUrl
-    }
-})
-
 </script>
 
 <template>
     <li v-if="tweet" :id="tweet.id" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
         <div class="flex-none mr-4">
             <a :href="`/${tweet.profile.screenName}`">
-                <img :src="`${imgUrl}`"
-                    @error="handleImageError" class="h-12 w-12 rounded-full flex-none" />
+                <Image :src="tweet.profile.imgUrl" :classStr="`h-12 w-12 rounded-full flex-none`" />
             </a>
         </div>
         <div class="w-full">
@@ -107,8 +82,7 @@ onMounted(() => {
                 Replying to {{tweet.inReplyToUsers.map(x => `@${x.screenName}`).join(",")}}
             </p>
 
-            <p ref="tweetTextEl" class="pb-2" v-html="tweetTextElHtml">
-            </p>
+            <LinkifyText :text="tweet.text" :classStr="`pb-2`" />
             <div class="flex w-full">
                 <div class="flex items-center text-sm text-dark w-1/4">
                     <button @click="handleReplyBtn()" class="mr-2 rounded-full hover:bg-lighter cursor-pointer">
