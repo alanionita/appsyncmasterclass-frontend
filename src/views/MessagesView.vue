@@ -38,7 +38,7 @@ onMounted(async () => {
         <ConversationsList v-else />
       </section>
       <!-- RIGHT COLUMN -->
-      <section class="col-span-7 pt-4 h-full border-r border-lighter">
+      <section class="col-span-7 h-full border-r border-lighter">
         <MessagesList />
       </section>
     </div>

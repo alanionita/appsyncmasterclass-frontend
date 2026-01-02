@@ -2,7 +2,10 @@
 import { useMessages } from '@/stores/messages';
 import { storeToRefs } from 'pinia';
 import Message from '../atoms/Message.vue';
+import Loader from '../atoms/Loader.vue';
+import { useUi } from '@/stores/ui';
 
+const storeUi = useUi();
 const storeMessages = useMessages();
 const { activeMessages } = storeToRefs(storeMessages)
 
@@ -11,8 +14,9 @@ function newMessage() { }
 </script>
 
 <template>
-    <ul class="list-none h-screen w-full overflow-y-auto pb-80" role="list">
-        <li v-if="activeMessages.length === 0"
+    <ul class="list-none h-screen w-full overflow-y-auto pb-24" role="list">
+        <Loader v-if="storeUi.loadingMessages" />
+        <li v-else-if="activeMessages.length === 0"
             class="flex flex-col px-8 py-12 border-b border-lighter text-xl font-bold">
             <p class="font-bold text-lg">You don't have a conversation selected</p>
             <p class="text-sm text-dark">This is where you’ll see messages from people you don’t follow. They

@@ -5,7 +5,8 @@ export const useUi = defineStore('ui', {
     state: () => ({
         loading: true,
         ownProfile: false,
-        noProfile: false
+        noProfile: false,
+        loadingMessages: false,
     }),
     actions: {
         loadingOff() {
@@ -24,6 +25,9 @@ export const useUi = defineStore('ui', {
         },
         reset() {
             this.noProfile = false
+        },
+        toggleLoadingMessages() {
+            this.loadingMessages = !this.loadingMessages
         }
     },
     getters: {

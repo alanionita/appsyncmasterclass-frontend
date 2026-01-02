@@ -72,8 +72,10 @@ export const useMessages = defineStore('messages', {
         },
         async setActiveConversation(conversationID = null){
             const { appsyncClient } = useAppsync();
-            const { id } = useTwitterMyProfile()
+            const { id } = useTwitterMyProfile();
+            const { toggleLoadingMessages } = useUi();
             try {
+                toggleLoadingMessages();
                 if (!conversationID) throw Error('Missing conversationId');
 
                 const foundConversation = this.findConversation(conversationID)
@@ -104,6 +106,7 @@ export const useMessages = defineStore('messages', {
                 
                 if (messages && messages.messages && messages.messages.length > 0) {
                     this.active.messages = messages.messages
+                    toggleLoadingMessages();
                 }
             } catch (err) {
                 throwWithLabel(err, 'messagesStore.setActiveConversation()')
