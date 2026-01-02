@@ -7,8 +7,8 @@ import LinkifyText from '../atoms/LinkifyText.vue';
 const storeMessages = useMessages();
 const { conversations, activeConversation } = storeToRefs(storeMessages)
 
-function handleConversationClick(id) {
-    storeMessages.setActiveConversation(id)
+async function handleConversationClick(id) {
+    await storeMessages.setActiveConversation(id)
 }
 
 function hasNewMessages() { }
