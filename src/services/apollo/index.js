@@ -2,6 +2,7 @@ import { createAuthLink } from "aws-appsync-auth-link";
 import { createSubscriptionHandshakeLink } from "aws-appsync-subscription-link";
 import { ApolloClient, ApolloLink, gql, HttpLink, InMemoryCache } from "@apollo/client";
 import { throwWithLabel } from "@/utils/error";
+import { otherProfileFrag, tweetFrag, iProfileFrag, iTweetFrag, replyFrag, retweetFrag, myProfileFrag } from './utils'
 import * as Queries from "@/services/apollo/appsync/queries";
 import * as Mutations from "@/services/apollo/appsync/mutations";
 import * as Subscriptions from "@/services/apollo/appsync/subscriptions";
@@ -805,6 +806,71 @@ export class ApolloAppSync {
             return data && data.listConversations
         } catch (err) {
             throwWithLabel(err, `services/apollo.listConversations`)
+        }
+    }
+
+    /**
+     * Triggers Query.getDirectMessages with payload
+     * @param {Object} variables - The getDirectMessages() query params
+     * @param {String} variables.otherUserId - the correspondent 
+     * @param {String} variables.limit - max 25
+     * @param {String} variables.nextToken - optional string value
+     * @returns {Promise<MessagesPage>} async MessagesPage type structure
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async getDirectMessages(variables) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+            const GET_DMS = gql`
+                query getDirectMessages($otherUserId: ID!, $limit: Int!, $nextToken: String) {
+                    getDirectMessages(
+                        otherUserId: $otherUserId
+                        limit: $limit,
+                        nextToken: $nextToken
+                    ) {
+                        nextToken
+                        messages {
+                            messageId
+                            message
+                            timestamp
+                            from {
+                                ... otherProfileFields
+                                ... myProfileFields
+                                tweets {
+                                    nextToken
+                                    tweets {
+                                        ... iTweetFields
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                ${otherProfileFrag},
+                ${myProfileFrag},
+                ${iProfileFrag},
+                ${tweetFrag},
+                ${retweetFrag},
+                ${replyFrag},
+                ${iTweetFrag},
+            `;
+
+            const { data, errors } = await this.client.query({
+                query: GET_DMS,
+                variables,
+                errorPolicy: 'all'
+            })
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+            if (data) {
+                return data.getDirectMessages
+            };
+
+        } catch (caught) {
+            throwWithLabel(caught, `GraphQL.getDirectMessages`)
         }
     }
 }
