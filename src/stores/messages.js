@@ -70,7 +70,9 @@ export const useMessages = defineStore('messages', {
                 throwWithLabel(err, 'messagesStore.findConversation()')
             }
         },
-        setActiveConversation(conversationID = null){
+        async setActiveConversation(conversationID = null){
+            const { appsyncClient } = useAppsync();
+            const { id } = useTwitterMyProfile()
             try {
                 if (!conversationID) throw Error('Missing conversationId');
 
@@ -78,7 +80,31 @@ export const useMessages = defineStore('messages', {
 
                 if (!foundConversation) throw Error('Conversation not found')
 
+                const [partA, partB] = conversationID.split('_');
+
+                let otherUserId;
+                
+                if (partA !== id) {
+                    otherUserId = partA
+                }
+
+                if (partB !== id) {
+                    otherUserId = partB
+                }
+
                 this.active.conversation = JSON.parse(JSON.stringify(foundConversation))
+
+                const messages = await appsyncClient.getDirectMessages({
+                    otherUserId,
+                    limit: 10,
+                    nextToken: null
+                })
+
+                if (!messages) throw Error('Error in retrieving messages')
+                
+                if (messages && messages.messages && messages.messages.length > 0) {
+                    this.active.messages = messages.messages
+                }
             } catch (err) {
                 throwWithLabel(err, 'messagesStore.setActiveConversation()')
             }
@@ -86,6 +112,7 @@ export const useMessages = defineStore('messages', {
     },
     getters: {
         activeConversation: state => state.active && state.active.conversation && state.active.conversation.id,
+        activeMessages: state => state.active && state.active.messages,
         conversationsAmount: state => state.conversations && state.conversations.length
     }
 });
