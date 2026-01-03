@@ -34,6 +34,7 @@ export const useMessages = defineStore('messages', {
                 conversation: null,
                 messages: [],
                 nextTokenMessages: null,
+                otherUserId: null
             }
         },
         resetBadge() {
@@ -70,7 +71,7 @@ export const useMessages = defineStore('messages', {
                 throwWithLabel(err, 'messagesStore.findConversation()')
             }
         },
-        async setActiveConversation(conversationID = null){
+        async setActiveConversation(conversationID = null) {
             const { appsyncClient } = useAppsync();
             const { id } = useTwitterMyProfile();
             const { toggleLoadingMessages } = useUi();
@@ -84,26 +85,17 @@ export const useMessages = defineStore('messages', {
 
                 const [partA, partB] = conversationID.split('_');
 
-                let otherUserId;
-                
-                if (partA !== id) {
-                    otherUserId = partA
-                }
-
-                if (partB !== id) {
-                    otherUserId = partB
-                }
-
+                this.active.otherUserId = partA !== id ? partA : partB;
                 this.active.conversation = JSON.parse(JSON.stringify(foundConversation))
 
                 const messages = await appsyncClient.getDirectMessages({
-                    otherUserId,
+                    otherUserId: this.active.otherUserId,
                     limit: 10,
                     nextToken: null
                 })
 
                 if (!messages) throw Error('Error in retrieving messages')
-                
+
                 if (messages && messages.messages && messages.messages.length > 0) {
                     this.active.messages = messages.messages
                     toggleLoadingMessages();
@@ -111,10 +103,41 @@ export const useMessages = defineStore('messages', {
             } catch (err) {
                 throwWithLabel(err, 'messagesStore.setActiveConversation()')
             }
+        },
+        async sendMessage({ message, to }) {
+            const { appsyncClient } = useAppsync();
+            const { id } = useTwitterMyProfile();
+            try {
+                if (!message || message.length < 1 || !to) throw Error('Invalid inputs')
+
+                const res = await appsyncClient.sendDirectMessage({
+                    otherUserId: to,
+                    message
+                })
+
+                if (res.lastMessage === message) {
+                    const newMessage = {
+                        message: res.lastMessage,
+                        timestamp: res.lastModified,
+                        messageId: ulid(),
+                        from: {
+                            id
+                        }
+                    }
+
+                    this.newBadge += 1;
+                    this.active.messages = [newMessage, ...this.active.messages]
+                }
+
+
+            } catch (err) {
+                throwWithLabel(err, 'messagesStore.sendMessage()')
+            }
         }
     },
     getters: {
         activeConversation: state => state.active && state.active.conversation && state.active.conversation.id,
+        activeOtherUserId: state => state.active && state.active.otherUserId,
         activeMessages: state => state.active && state.active.messages,
         conversationsAmount: state => state.conversations && state.conversations.length
     }

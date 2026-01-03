@@ -873,5 +873,65 @@ export class ApolloAppSync {
             throwWithLabel(caught, `GraphQL.getDirectMessages`)
         }
     }
+
+    /**
+     * Triggers Mutation.sendDirectMessage with payload
+     * @param {Object} variables - The sendDirectMessage() query params
+     * @param {String} variables.otherUserId - message destination user
+     * @param {String} variables.message - message content
+     * @returns {Promise<Conversation>} async Conversation type structure
+     * @throws {Error} Either with custom payloads or GraphQL errors
+     */
+
+    async sendDirectMessage(variables) {
+        try {
+            if (!this.client) throw Error("Cannot find required Appsync client")
+            const SEND_DIRECT_MESSAGE = gql`
+                mutation sendDirectMessage($otherUserId: ID!, $message: String!) {
+                    sendDirectMessage(
+                        otherUserId: $otherUserId,
+                        message: $message
+                    ) {
+                        id
+                        lastMessage
+                        lastModified
+                        otherUser {
+                            ... otherProfileFields
+                            tweets {
+                                nextToken
+                                tweets {
+                                    ... iTweetFields
+                                }
+                            }
+                        }
+                    }
+                }
+                ${otherProfileFrag},
+                ${tweetFrag},
+                ${iTweetFrag},
+                ${iProfileFrag},
+                ${retweetFrag},
+                ${replyFrag},
+                ${myProfileFrag}
+            `;
+
+            const { data, errors } = await this.client.mutate({
+                mutation: SEND_DIRECT_MESSAGE,
+                variables,
+                errorPolicy: 'all'
+            })
+
+            if (errors) {
+                console.error('GraphQL Errors :', JSON.stringify(errors))
+                throwWithLabel(new Error('GraphQL Errors'), 'GraphQL Errors detected')
+            }
+            if (data) {
+                return data.sendDirectMessage
+            };
+
+        } catch (caught) {
+            throwWithLabel(caught, `GraphQL.sendDirectMessage`)
+        }
+    }
 }
 

@@ -16,17 +16,19 @@ function hasNewMessages() { }
 </script>
 
 <template>
-    <ul class="list-none h-screen w-full overflow-y-auto pb-80" role="list">
-        <li v-if="storeMessages.conversationsAmount === 0"
-            class="flex flex-col px-8 py-12 border-b border-lighter text-xl font-bold">
-            <p class="font-bold text-lg">
-                No conversations yet
-            </p>
-            <p class="text-sm text-dark">
-                Wait until someone starts a conversation here.
-            </p>
-        </li>
-        <li v-else v-for="conversation in conversations" v-bind:key="conversation.id"
+    <section v-if="storeMessages.conversationsAmount === 0"
+        class="flex flex-col px-8 py-12 border-b border-lighter text-xl font-bold">
+        <p class="font-bold text-lg">
+            No conversations yet
+        </p>
+        <p class="text-sm text-dark">
+            Wait until someone starts a conversation here.
+        </p>
+    </section>
+    <ul v-else
+        role="list"
+        class="list-none h-screen w-full overflow-y-auto pb-80">
+        <li v-for="conversation in conversations" v-bind:key="conversation.id"
             class="grid grid-col-6 grid-rows-3 p-2 pl-4 border-b border-lighter hover:bg-lightest cursor-pointer data-active:bg-lightblue"
             :data-active="conversation.id === activeConversation || undefined"
             @click="handleConversationClick(conversation.id)">
