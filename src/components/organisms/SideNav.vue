@@ -6,6 +6,7 @@ import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import { useRouter, useRoute } from 'vue-router'
 import { ROUTE_NAMES } from '@/utils/constants';
 import NotificationBadge from '../atoms/NotificationBadge.vue';
+import MessageBadge from '../atoms/MessageBadge.vue';
 
 const router = useRouter()
 const route = useRoute()
@@ -78,6 +79,7 @@ async function handleTabClick(target) {
                             {{ tab.title }}
                         </p>
                         <NotificationBadge v-if="tab.id === 'notifications'" />
+                        <MessageBadge v-if="tab.id === 'messages'" />
                     </a>
                 </li>
             </ul>

@@ -5,6 +5,7 @@ import { useTwitterMyProfile } from './twitterMyProfile';
 import { useAppsync } from './appsync';
 import { throwWithLabel } from '@/utils/error';
 import { useUi } from './ui';
+import { Conversation } from '@/utils/entities';
 
 const defaultState = {
     conversations: [],
@@ -39,6 +40,11 @@ export const useMessages = defineStore('messages', {
         },
         resetBadge() {
             this.newBadge = defaultState.newBadge;
+            this.active.conversation.hasNewMessages = false;
+        },
+        resetConversation(conv) {
+            const resetConversation = Conversation.resetNewMessages(conv)
+            this.updateConversation(resetConversation)
         },
         async list() {
             const { appsyncClient } = useAppsync();
@@ -52,7 +58,9 @@ export const useMessages = defineStore('messages', {
 
             const { conversations, nextToken } = resp; // TODO: add totalCount here and set it below, once backend supports it
 
-            this.conversations = conversations;
+            const expandedConversations = Conversation.expandAll(conversations)
+
+            this.conversations = expandedConversations;
             this.nextToken = nextToken;
             this.fetchedCount += conversations.length;
 
@@ -98,6 +106,8 @@ export const useMessages = defineStore('messages', {
 
                 if (messages && messages.messages && messages.messages.length > 0) {
                     this.active.messages = messages.messages
+                    this.resetBadge()
+                    this.resetConversation(foundConversation)
                     toggleLoadingMessages();
                 }
             } catch (err) {
@@ -125,13 +135,27 @@ export const useMessages = defineStore('messages', {
                         }
                     }
 
-                    this.newBadge += 1;
                     this.active.messages = [newMessage, ...this.active.messages]
                 }
 
 
             } catch (err) {
                 throwWithLabel(err, 'messagesStore.sendMessage()')
+            }
+        },
+        addActiveMessage(message) {
+            this.active.messages = [message, ...this.active.messages]
+        },
+        updateConversation(newConv) {
+            const existingConv = this.findConversation(newConv.id);
+            if (existingConv) {
+                const newList = this.conversations.map((oldConv) => {
+                    if (oldConv.id === existingConv.id) {
+                        return newConv;
+                    }
+                    return oldConv;
+                });
+                this.conversations = newList
             }
         }
     },
