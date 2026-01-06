@@ -2,6 +2,7 @@
 import Loader from '@/components/atoms/Loader.vue';
 import ConversationsList from '@/components/molecules/ConversationsList.vue';
 import MessagesList from '@/components/molecules/MessagesList.vue';
+import NewMessageOverlay from '@/components/organisms/NewMessageOverlay.vue';
 import TwoColTemplate from '@/components/templates/TwoCol.vue';
 import { useMessages } from '@/stores/messages';
 import { useUi } from '@/stores/ui';
@@ -14,7 +15,7 @@ const lastNextToken = ref(null)
 
 const storeUi = useUi();
 const storeMessages = useMessages();
-const { loading } = storeToRefs(storeUi)
+const { loading, newMessageModal } = storeToRefs(storeUi)
 
 function newMessage() { }
 
@@ -32,7 +33,7 @@ onMounted(async () => {
         <header class="p-4 border-b border-lighter flex items-center gap-4" @click="deselectAll()">
           <h1 class="text-xl font-bold flex-1">Messages</h1>
           <i class="fas fa-cog text-xl text-blue cursor-pointer"></i>
-          <i @click="newMessage()" class="fas fa-plus-circle text-xl text-blue cursor-pointer"></i>
+          <i @click="storeUi.openNewMessageModal()" class="fas fa-plus-circle text-xl text-blue cursor-pointer"></i>
         </header>
         <Loader v-if="loading" />
         <ConversationsList v-else />
@@ -42,5 +43,6 @@ onMounted(async () => {
         <MessagesList />
       </section>
     </div>
+    <NewMessageOverlay v-if="newMessageModal"/>
   </TwoColTemplate>
 </template>

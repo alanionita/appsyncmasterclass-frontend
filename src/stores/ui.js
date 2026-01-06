@@ -7,6 +7,8 @@ export const useUi = defineStore('ui', {
         ownProfile: false,
         noProfile: false,
         loadingMessages: false,
+        newMessageModal: false,
+        loadingNewMessageModal: false
     }),
     actions: {
         loadingOff() {
@@ -28,7 +30,16 @@ export const useUi = defineStore('ui', {
         },
         toggleLoadingMessages() {
             this.loadingMessages = !this.loadingMessages
-        }
+        },
+        openNewMessageModal() {
+            this.newMessageModal = true
+        },
+        closeNewMessageModal() {
+            this.newMessageModal = false
+        },
+        toggleLoadingNewMessageModal() {
+            this.loadingNewMessageModal = !this.loadingNewMessageModal
+        },
     },
     getters: {
     },

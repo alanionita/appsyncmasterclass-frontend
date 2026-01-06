@@ -53,7 +53,7 @@ async function sendMessage(message, to) {
             <li v-for="message in storeMessages.activeMessages" 
                 :key="message.messageId" 
                 :id="`message-${message.messageId}`"
-                class="grid grid-col-6 grid-rows-1 gap-y-4 p-4 hover:bg-lightest cursor-pointer">
+                class="grid grid-col-6 grid-rows-1 gap-y-4 p-4 hover:bg-lightest cursor-text">
                 <Message :message="message" />
             </li>
         </ul>
