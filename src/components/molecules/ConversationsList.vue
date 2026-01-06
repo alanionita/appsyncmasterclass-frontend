@@ -31,7 +31,7 @@ function showNewBadge(conversation) {
         role="list"
         class="list-none h-screen w-full overflow-y-auto pb-80">
         <li v-for="conversation in conversations" v-bind:key="`${conversation.id}-${conversation.lastModified}`"
-            class="grid grid-col-6 grid-rows-3 p-2 pl-4 border-b border-lighter hover:bg-lightest cursor-pointer data-active:bg-lightblue"
+            class="grid grid-cols-(--grid-cols-6-avatar) grid-rows-3 p-2 pl-4 border-b border-lighter hover:bg-lightest cursor-pointer data-active:bg-lightblue"
             :data-active="conversation.id === activeConversation || undefined"
             @click="handleConversationClick(conversation.id)">
             <a class="col-start-1 col-span-1 row-start-1 row-span-3 w-fit flex flex-col justify-center" :href="`#/${conversation.otherUser.screenName}`">

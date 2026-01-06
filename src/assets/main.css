@@ -20,7 +20,7 @@
   --font-roboto: "Roboto", sans-serif; 
 
   /* Grids */
-  --grid-cols-6-avatar: 65px repeat(5, minmax(0, 1fr));
+  --grid-cols-6-avatar: 64px repeat(5, minmax(0, 1fr));
 }
 
 @utility container {  
