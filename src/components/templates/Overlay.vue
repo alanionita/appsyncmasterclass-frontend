@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const { mainFocus, menu } = defineProps(["mainFocus", "menu"])
+const { menu, classStr } = defineProps(["menu", "classStr"])
 const emit = defineEmits(['hide'])
 const modal = ref(null);
 
@@ -12,9 +12,9 @@ function hide() {
 </script>
 
 <template>
-    <div ref="modal" @keydown.esc="hide()"
+    <div :ref="modal" @keydown.esc="hide()"
         class="fixed w-full h-full z-3 top-0 left-0 flex items-center justify-center">
-        <span @click="hide()" tabindex="-1" class="absolute w-full h-full bg-gray-900 opacity-50"></span>
+        <span @click="hide()" tabindex="-1" class="absolute w-full h-full bg-gray-900 opacity-70"></span>
 
         <div class="modal-main bg-white mx-auto rounded-lg z-0 overflow-y-auto" style="width:40%">
             <div v-if="menu" class="border-b-2 border-lightblue">
@@ -24,7 +24,7 @@ function hide() {
                 </div>
             </div>
 
-            <div class="border-l-2 border-r-2 border-white flex flex-col p-4 gap-4">
+            <div :class="classStr || 'border-l-2 border-r-2 border-white flex flex-col p-4 gap-4'">
                 <slot name="content"></slot>
             </div>
         </div>
