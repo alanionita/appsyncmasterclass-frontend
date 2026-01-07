@@ -1,4 +1,3 @@
-import { NOTIFICATION_MODES, ROUTE_NAMES } from '@/utils/constants';
 import { defineStore } from 'pinia';
 import { ulid } from 'ulid';
 import { useTwitterMyProfile } from './twitterMyProfile';
@@ -20,6 +19,7 @@ const defaultState = {
         conversation: null,
         messages: [],
         nextTokenMessages: null,
+        otherUserId: null
     },
 }
 
@@ -79,7 +79,7 @@ export const useMessages = defineStore('messages', {
                 throwWithLabel(err, 'messagesStore.findConversation()')
             }
         },
-        async setActiveConversation(conversationID = null) {
+        async activateConversation(conversationID = null) {
             const { appsyncClient } = useAppsync();
             const { id } = useTwitterMyProfile();
             const { toggleLoadingMessages } = useUi();
@@ -94,7 +94,7 @@ export const useMessages = defineStore('messages', {
                 const [partA, partB] = conversationID.split('_');
 
                 this.active.otherUserId = partA !== id ? partA : partB;
-                this.active.conversation = JSON.parse(JSON.stringify(foundConversation))
+                this.active.conversation = foundConversation
 
                 const messages = await appsyncClient.getDirectMessages({
                     otherUserId: this.active.otherUserId,
@@ -111,7 +111,7 @@ export const useMessages = defineStore('messages', {
                     toggleLoadingMessages();
                 }
             } catch (err) {
-                throwWithLabel(err, 'messagesStore.setActiveConversation()')
+                throwWithLabel(err, 'messagesStore.activateConversation()')
             }
         },
         async sendMessage({ message, to }) {

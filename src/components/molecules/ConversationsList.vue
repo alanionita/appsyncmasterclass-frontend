@@ -8,7 +8,7 @@ const storeMessages = useMessages();
 const { conversations, activeConversation } = storeToRefs(storeMessages)
 
 async function handleConversationClick(id) {
-    await storeMessages.setActiveConversation(id)
+    await storeMessages.activateConversation(id)
 }
 
 function showNewBadge(conversation) { 
