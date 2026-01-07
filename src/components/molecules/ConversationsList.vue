@@ -24,7 +24,7 @@ function showNewBadge(conversation) {
             No conversations yet
         </p>
         <p class="text-sm text-dark">
-            Wait until someone starts a conversation here.
+            Send a new message or wait until someone starts a conversation.
         </p>
     </section>
     <ul v-else

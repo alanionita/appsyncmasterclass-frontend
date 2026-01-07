@@ -41,7 +41,7 @@ async function sendMessage(message, to) {
         <p class="text-sm text-dark">This is where you’ll see messages from people you don’t follow. They
             won’t know you’ve seen the request until you accept it.</p>
         <div class="flex justify-start mt-5">
-            <button @click="newMessage()" type="button"
+            <button @click="storeUi.openNewMessageModal()" type="button"
                 class="h-10 py-2 px-4 text-white text-sm font-semibold bg-blue hover:bg-darkblue rounded-full">
                 New Message
             </button>
