@@ -37,6 +37,6 @@ onMounted(async () => {
         <MessagesList />
       </section>
     </div>
-    <NewMessageOverlay v-if="newMessageModal" @hide="storeUi.closeNewMessageModal"/>
+    <NewMessageOverlay v-if="newMessageModal" />
   </TwoColTemplate>
 </template>

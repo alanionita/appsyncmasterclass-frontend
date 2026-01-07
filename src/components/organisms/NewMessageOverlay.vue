@@ -1,98 +1,90 @@
 <script setup>
 
 import Loader from '../atoms/Loader.vue'
-import { reactive, ref } from 'vue';
 import { useUi } from '@/stores/ui';
 import { storeToRefs } from 'pinia';
+import { useSearchUsers } from '@/stores/searchUsers';
+import NewMessageResults from '../molecules/NewMessageResults.vue';
+import Image from '../atoms/Image.vue';
+import { useNewMessage } from '@/stores/newMessage';
+import Overlay from '../templates/Overlay.vue';
+import { onMounted, ref } from 'vue';
 
-const query = ref('')
-const noResults = ref('')
-const mode = ref('People')
+const mainFocus = ref(null);
 
-// store placeholders
 const storeUi = useUi();
 const { closeNewMessageModal } = storeUi;
 const { loadingNewMessageModal } = storeToRefs(storeUi)
-const results = ref([]) // twitter.search
-const profile = reactive({}) // profile
 
-async function openConversation(user) {
-    console.log(user);
-    $emit('update:showNewMessageModal', false);
+const storeSearch = useSearchUsers();
+const { query, results } = storeToRefs(storeSearch)
+const { handleSearch } = storeSearch;
+const storeNewMessage = useNewMessage();
+
+async function searchSubmit() {
+    storeUi.toggleLoadingNewMessageModal()
+    await handleSearch()
+    storeUi.toggleLoadingNewMessageModal()
 }
 
-async function submit() {
-    noResults = query;
-    resetSearch();
-    await loadSearch({
-        query: query,
-        mode: mode,
-        limit: 10,
-    }).then(() => {
-        loading = false;
-    });
-}
-function selected(user) {
-    $emit('selected', user);
+function newMessage() {
+    // TODO: adds server logic to post new message
+    closeNewMessageModal()
 }
 
-// TODO: old component methods, for reference, needs to be refactor to new apis
-// import { mapActions, mapGetters } from 'vuex';
-// export default {
-//     name: "NewMessageOverlay",
-//     methods: {
-//         ...mapActions('twitter', [
-//             'loadProfile',
-//             'loadSearch',
-//             'loadMoreSearch',
-//             'resetSearch'
-//         ]),
-//     },
-//     created() {
-//         window.addEventListener('keyup', () => {
-//             if (event.keyCode === 27) this.$emit('update:showNewMessageModal', false);
-//         })
-//         this.submit();
-//     },
-//     destroyed: function () {
-//         window.removeEventListener('keyup', () => {
-//             if (event.keyCode === 27) this.$emit('update:showNewMessageModal', false);
-//         })
-//     }
+onMounted(() => {
+    if (mainFocus) {
+        mainFocus.value.focus();
+    }
+})
 
 </script>
 
 <template>
-    <div class="fixed w-full h-full top-0 left-0 flex items-center justify-center">
-        <div class="absolute w-full h-full bg-gray-900 opacity-50" @click.prevent="closeNewMessageModal()"></div>
-
-        <article class="modal-main bg-white mx-auto rounded-lg z-50 overflow-y-auto w-full sm:w-3/5 md:w-2/5 max-h-full">
-            <header class="p-4 h-16 flex gap-2 align-center border-b-2 border-lightblue">
-                <span class="size-8 bg-white hover:bg-lightblue rounded-full flex justify-center items-center">
-                    <i @click="closeNewMessageModal()"
-                        class="h-fit fas fa-times text-blue text-2xl text-center"></i>
+    <Overlay @hide="() => closeNewMessageModal()" :classStr="`flex flex-col h-full`">
+        <template #content>
+            <header class="p-4 pl-2 border-b-2 border-lightblue">
+                <button @click="newMessage()"
+                    class="rounded-full bg-blue font-bold text-white relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-darkblue">
+                    Next
+                </button>
+                <span class="flex flex-row items-center gap-4">
+                    <i @click="() => closeNewMessageModal()"
+                        class="fas fa-times text-blue text-2xl rounded-full bg-white p-2 px-3 hover:bg-lightblue"></i>
+                    <p class="text-xl font-bold">New message</p>
                 </span>
-                <p class="text-xl font-bold">New message</p>
             </header>
 
-            <div class="p-4 flex flex-col border-b-2 border-lightblue">
-                <div class="lg:block w-full">
-                    <i class="fas fa-search absolute mt-4 ml-4 text-xl text-light"></i>
-                    <input
-                        class="pl-12 rounded-full w-full p-4 bg-lighter text-m focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue"
-                        placeholder="Search People" type="search" v-model="query" v-on:keyup.enter="submit()" />
+            <form class="flex flex-col p-4 border-b-2 border-lighter" @submit.prevent="searchSubmit()">
+                <div class="w-full grid grid-col-6 grid-row-1">
+                    <i
+                        class="fas fa-search col-start-1 col-span-1 z-1 pl-4 row-start-1 text-xl text-light self-center"></i>
+                    <label for="search-for-people" class="hidden">Search for people input</label>
+                    <input ref="mainFocus"
+                        class="pl-12 col-start-1 col-span-6 row-start-1 rounded-full w-full p-4 bg-lighter text-m focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue"
+                        placeholder="Search People" name="search-for-people" id="search-for-people" type="search"
+                        v-model="query" />
                 </div>
-            </div>
+            </form>
 
+            <ul v-if="storeNewMessage.selectedUsers && storeNewMessage.selectedUsers.size > 0"
+                class="overflow-x-auto overflow-y-hidden w-full p-4 py-6 border-b-2 border-lighter flex gap-2 list-none items-center">
+                <li v-for="[id, user] in storeNewMessage.selectedUsers" :key="id"
+                    class="h-12 flex p-2 border-blue rounded-full border-2 gap-2 items-center">
+                    <Image :src="user.imgUrl" :classStr="`size-8 rounded-full flex-none`" />
+                    <p class="truncate">{{ user.screenName }}</p>
+                    <i @click="storeNewMessage.removeUser(user)"
+                        class="h-fit fas fa-times text-xl text-blue text-center cursor-pointer"></i>
+                </li>
+            </ul>
             <Loader v-if="loadingNewMessageModal" />
             <section v-if="!loadingNewMessageModal && results && results.length === 0"
-                class="flex flex-col items-start justify-center w-full pt-8 p-16">
+                class="w-full pt-8 p-16 row-start-3">
                 <p class="font-bold text-lg">No results for "{{ query }}"</p>
                 <p class="text-sm text-dark">The query you entered did not bring up any results.</p>
-                
-            </section>
 
-            <!-- <ResultsNewMessage :results="results" @selected="selected" /> -->
-        </article>
-    </div>
+            </section>
+            <NewMessageResults />
+        </template>
+    </Overlay>
 </template>
