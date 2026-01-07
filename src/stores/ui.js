@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { useTwitterMyProfile } from './twitterMyProfile';
+import { useNewMessage } from './newMessage';
+import { useSearchUsers } from './searchUsers';
 
 export const useUi = defineStore('ui', {
     state: () => ({
@@ -32,10 +34,14 @@ export const useUi = defineStore('ui', {
             this.loadingMessages = !this.loadingMessages
         },
         openNewMessageModal() {
-            this.newMessageModal = true
+            this.newMessageModal = true;
         },
         closeNewMessageModal() {
-            this.newMessageModal = false
+            const storeNewMessage = useNewMessage();
+            const storeSearchUsers = useSearchUsers();
+            this.newMessageModal = false;
+            storeNewMessage.reset();
+            storeSearchUsers.reset();
         },
         toggleLoadingNewMessageModal() {
             this.loadingNewMessageModal = !this.loadingNewMessageModal
