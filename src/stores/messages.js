@@ -4,128 +4,71 @@ import { useTwitterMyProfile } from './twitterMyProfile';
 import { useAppsync } from './appsync';
 import { throwWithLabel } from '@/utils/error';
 import { useUi } from './ui';
-import { Conversation } from '@/utils/entities';
+import { useConversations } from './conversations';
 
 const defaultState = {
-    conversations: [],
+    messages: [],
     nextToken: null,
     limit: 10,
     totalCount: 0,
     hasMore: true,
     fetchedCount: 0,
-    newBadge: 0,
-    conversationsSet: new Set(),
-    active: {
-        conversation: null,
-        messages: [],
-        nextTokenMessages: null,
-        otherUserId: null
-    },
+    newMessage: '',
 }
 
 export const useMessages = defineStore('messages', {
     state: () => Object.assign({}, defaultState),
     actions: {
         async reset() {
-            this.conversations = [];
-            this.nextToken = null;
-            this.newBadge = 0
-            this.conversationsSet = new Set()
-            this.active = {
-                conversation: null,
-                messages: [],
-                nextTokenMessages: null,
-                otherUserId: null
-            }
+            this.messages = []
+            this.nextToken = null
+            this.totalCount = 0
+            this.hasMore = true
+            this.fetchedCount = 0
+            this.newMessage = ''
         },
-        resetBadge() {
-            this.newBadge = defaultState.newBadge;
-            this.active.conversation.hasNewMessages = false;
-        },
-        resetConversation(conv) {
-            const resetConversation = Conversation.resetNewMessages(conv)
-            this.updateConversation(resetConversation)
-        },
-        async list() {
+        async list(conversation) {
             const { appsyncClient } = useAppsync();
-            const { loadingOn, loadingOff } = useUi();
-
-            loadingOn();
-            const resp = await appsyncClient.listConversations({
-                limit: this.limit,
-                nextToken: this.nextToken
-            })
-
-            const { conversations, nextToken } = resp; // TODO: add totalCount here and set it below, once backend supports it
-
-            const expandedConversations = Conversation.expandAll(conversations)
-
-            this.conversations = expandedConversations;
-            this.nextToken = nextToken;
-            this.fetchedCount += conversations.length;
-
-            loadingOff()
-        },
-        findConversation(conversationID = null) {
-            try {
-                if (!conversationID) throw Error('Missing conversationId');
-
-                const foundConversation = this.conversations.filter(conversation => conversation.id === conversationID);
-
-                if (foundConversation.length === 0) throw Error('No conversation found')
-
-                return foundConversation[0];
-            } catch (err) {
-                throwWithLabel(err, 'messagesStore.findConversation()')
-            }
-        },
-        async activateConversation(conversationID = null) {
-            const { appsyncClient } = useAppsync();
-            const { id } = useTwitterMyProfile();
-            const { toggleLoadingMessages } = useUi();
+            const { toggleLoadingMessages, resetNewMessageBadge } = useUi();
+            const { resetConversation } = useConversations();
             try {
                 toggleLoadingMessages();
-                if (!conversationID) throw Error('Missing conversationId');
+                if (!conversation) throw Error('Missing inputs');
 
-                const foundConversation = this.findConversation(conversationID)
-
-                if (!foundConversation) throw Error('Conversation not found')
-
-                const [partA, partB] = conversationID.split('_');
-
-                this.active.otherUserId = partA !== id ? partA : partB;
-                this.active.conversation = foundConversation
-
-                const messages = await appsyncClient.getDirectMessages({
-                    otherUserId: this.active.otherUserId,
-                    limit: 10,
-                    nextToken: null
+                const { messages, nextToken } = await appsyncClient.getDirectMessages({
+                    otherUserId: conversation.otherUser.id,
+                    limit: this.limit,
+                    nextToken: this.nextToken
                 })
 
                 if (!messages) throw Error('Error in retrieving messages')
 
-                if (messages && messages.messages && messages.messages.length > 0) {
-                    this.active.messages = messages.messages
-                    this.resetBadge()
-                    this.resetConversation(foundConversation)
+                if (messages && messages.length > 0) {
+                    this.messages = messages
+                    this.fetchedCount = messages.length;
+                    resetNewMessageBadge()
+                    resetConversation(conversation)
                     toggleLoadingMessages();
                 }
+                if (nextToken) {
+                    this.nextToken = nextToken
+                }
             } catch (err) {
-                throwWithLabel(err, 'messagesStore.activateConversation()')
+                throwWithLabel(err, 'messagesStore.list()')
             }
         },
-        async sendMessage({ message, to }) {
+        async send(to) {
             const { appsyncClient } = useAppsync();
             const { id } = useTwitterMyProfile();
             try {
-                if (!message || message.length < 1 || !to) throw Error('Invalid inputs')
+                if (!this.newMessage || this.newMessage.length === 0 || !to) throw Error('Invalid inputs')
 
                 const res = await appsyncClient.sendDirectMessage({
                     otherUserId: to,
-                    message
+                    message: this.newMessage
                 })
 
-                if (res.lastMessage === message) {
+                if (res.lastMessage === this.newMessage) {
                     const newMessage = {
                         message: res.lastMessage,
                         timestamp: res.lastModified,
@@ -135,34 +78,18 @@ export const useMessages = defineStore('messages', {
                         }
                     }
 
-                    this.active.messages = [newMessage, ...this.active.messages]
+                    this.messages = [newMessage, ...this.messages];
+                    this.newMessage = ''
                 }
-
-
             } catch (err) {
-                throwWithLabel(err, 'messagesStore.sendMessage()')
+                throwWithLabel(err, 'messagesStore.send()')
             }
         },
-        addActiveMessage(message) {
-            this.active.messages = [message, ...this.active.messages]
-        },
-        updateConversation(newConv) {
-            const existingConv = this.findConversation(newConv.id);
-            if (existingConv) {
-                const newList = this.conversations.map((oldConv) => {
-                    if (oldConv.id === existingConv.id) {
-                        return newConv;
-                    }
-                    return oldConv;
-                });
-                this.conversations = newList
-            }
+        add(message) {
+            this.messages = [message, ...this.messages]
         }
     },
     getters: {
-        activeConversation: state => state.active && state.active.conversation && state.active.conversation.id,
-        activeOtherUserId: state => state.active && state.active.otherUserId,
-        activeMessages: state => state.active && state.active.messages,
-        conversationsAmount: state => state.conversations && state.conversations.length
+        size: state => state.messages.length
     }
 });
