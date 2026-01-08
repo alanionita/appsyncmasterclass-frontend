@@ -3,12 +3,18 @@ import { useMessages } from '@/stores/messages';
 import { storeToRefs } from 'pinia';
 import Image from '../atoms/Image.vue';
 import LinkifyText from '../atoms/LinkifyText.vue';
+import { useConversations } from '@/stores/conversations';
 
-const storeMessages = useMessages();
-const { conversations, activeConversation } = storeToRefs(storeMessages)
+const storeConversations = useConversations();
+const { conversations, activeConversation } = storeToRefs(storeConversations)
+const storeMessage = useMessages();
 
-async function handleConversationClick(id) {
-    await storeMessages.activateConversation(id)
+async function handleConversationClick(id, otherUserId) {
+    storeConversations.setActive(id, otherUserId)
+
+    const selectedConv = storeConversations.find(id);
+
+    await storeMessage.list(selectedConv)
 }
 
 function showNewBadge(conversation) { 
@@ -18,7 +24,7 @@ function showNewBadge(conversation) {
 </script>
 
 <template>
-    <section v-if="storeMessages.conversationsAmount === 0"
+    <section v-if="storeConversations.size === 0"
         class="flex flex-col px-8 py-12 border-b border-lighter text-xl font-bold">
         <p class="font-bold text-lg">
             No conversations yet
@@ -33,7 +39,7 @@ function showNewBadge(conversation) {
         <li v-for="conversation in conversations" v-bind:key="`${conversation.id}-${conversation.lastModified}`"
             class="grid grid-cols-(--grid-cols-6-avatar) grid-rows-3 p-2 pl-4 border-b border-lighter hover:bg-lightest cursor-pointer data-active:bg-lightblue"
             :data-active="conversation.id === activeConversation || undefined"
-            @click="handleConversationClick(conversation.id)">
+            @click="handleConversationClick(conversation.id, conversation.otherUser.id)">
             <a class="col-start-1 col-span-1 row-start-1 row-span-3 w-fit flex flex-col justify-center" :href="`#/${conversation.otherUser.screenName}`">
                 <Image :src="conversation.otherUser.imgUrl" :classStr="`h-12 w-12 rounded-full flex-none`"/>
             </a>
