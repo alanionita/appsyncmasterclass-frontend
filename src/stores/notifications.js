@@ -6,6 +6,8 @@ import { useMessages } from './messages';
 import { useAppsync } from './appsync';
 import { throwWithLabel } from '@/utils/error';
 import { Conversation, Message } from '@/utils/entities';
+import { useConversations } from './conversations';
+import { useUi } from './ui';
 
 const defaultState = {
     all: [],
@@ -42,12 +44,14 @@ export const useNotifications = defineStore('notifications', {
         },
         addNotification(notification) {
             const storeMessages = useMessages();
+            const storeConversations = useConversations();
             const storeMyProfile = useTwitterMyProfile();
+            const storeUi = useUi();
             if (notification) {
                 if (notification.type === "DMed") {
                     const conversationId = Conversation.generateId(notification.userId, notification.otherUserId);
                     const isReceiver = notification.otherProfileId !== storeMyProfile.id
-                    const isActive = storeMessages.activeConversation && storeMessages.activeConversation === conversationId
+                    const isActive = storeConversations.activeConversation && storeConversations.activeConversation === conversationId
 
                     const newConversation = Conversation.buildFrom({
                         id: conversationId,
@@ -55,15 +59,15 @@ export const useNotifications = defineStore('notifications', {
                     })
 
                     newConversation.hasNewMessages = !isActive ? true : false
-                    storeMessages.updateConversation(newConversation)
+                    storeConversations.update(newConversation)
                     
                     if (!isActive && isReceiver) {
-                        storeMessages.newBadge += 1    
+                        storeUi.newMessageBadge += 1    
                     }
                     
                     if (isActive) {
                         const newMessage = Message.buildFromNotification(notification)
-                        storeMessages.addActiveMessage(newMessage)
+                        storeMessages.add(newMessage)
                     }
 
                     return;
