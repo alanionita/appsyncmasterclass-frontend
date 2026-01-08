@@ -21,9 +21,9 @@ onMounted(async () => {
 
 <template>
   <TwoColTemplate>
-    <div class="grid grid-cols-12 auto-cols-fr auto-rows-fr w-full h-full overflow-hidden">
+    <div class="grid grid-cols-12 auto-cols-fr auto-rows-fr w-full h-screen overflow-hidden">
       <!-- LEFT COLUMN -->
-      <section class="col-span-5 h-full border-r border-lighter">
+      <section class="col-span-5 h-screen border-r border-lighter">
         <header class="p-4 border-b border-lighter flex items-center gap-4">
           <h1 class="text-xl font-bold flex-1">Messages</h1>
           <i class="fas fa-cog text-xl text-blue cursor-pointer"></i>
@@ -33,7 +33,7 @@ onMounted(async () => {
         <ConversationsList v-else />
       </section>
       <!-- RIGHT COLUMN -->
-      <section class="col-span-7 h-full border-r border-lighter">
+      <section class="col-span-7 h-full border-r border-lighter overflow-hidden">
         <MessagesList />
       </section>
     </div>
