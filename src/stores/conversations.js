@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
-import { ulid } from 'ulid';
 import { useTwitterMyProfile } from './twitterMyProfile';
 import { useAppsync } from './appsync';
 import { throwWithLabel } from '@/utils/error';
 import { useUi } from './ui';
 import { Conversation } from '@/utils/entities';
+import { useMessages } from './messages';
 
 const defaultState = {
     conversations: [],
@@ -13,8 +13,10 @@ const defaultState = {
     totalCount: 0,
     hasMore: true,
     fetchedCount: 0,
-    activeConversation: null,
-    activeOtherUserId: null
+    activeConversationId: null,
+    activeOtherUserId: null,
+    activeOtherUserScreenName: null,
+    activeConversationIsNew: false,
 }
 
 export const useConversations = defineStore('conversations', {
@@ -26,12 +28,17 @@ export const useConversations = defineStore('conversations', {
             this.totalCount = 0;
             this.hasMore = true;
             this.fetchedCount = 0;
-            this.activeConversation = null
+            this.activeConversationId = null
             this.activeOtherUserId = null
+            this.activeOtherUserScreenName = null
+            this.activeConversationIsNew = false
         },
         resetConversation(conv) {
             const newConv = Conversation.resetNewMessages(conv)
             this.update(newConv)
+        },
+        toggleActiveConversationIsNew() {
+            this.activeConversationIsNew = !this.activeConversationIsNew
         },
         async list() {
             const { appsyncClient } = useAppsync();
@@ -78,9 +85,39 @@ export const useConversations = defineStore('conversations', {
                 this.conversations = newList
             }
         },
-        setActive(convId, otherUserId) {
-            this.activeConversation = convId;
-            this.activeOtherUserId = otherUserId
+        setActive(conversation) {
+            const { id, otherUser, isNew } = conversation;
+            this.activeConversationId = id;
+            this.activeOtherUserId = otherUser.id;
+            this.activeOtherUserScreenName = otherUser.screenName;
+            this.activeConversationIsNew = isNew
+        },
+        new(otherUser) {
+            const storeMyProfile = useTwitterMyProfile();
+            const newConvId = Conversation.generateId(storeMyProfile.id, otherUser.id)
+
+            const convExits = this.find(newConvId)
+
+            if (convExits) {
+                const storeMessages = useMessages();
+                this.setActive(convExits)
+
+                storeMessages.list(convExits)
+                return;
+            }
+
+            const newConversation = {
+                id: newConvId,
+                lastMessage: null,
+                lastModified: Date.now(),
+                otherUser: { ...otherUser },
+                hasNewMessages: false,
+                isNew: true
+            };
+
+            this.conversations.push(newConversation);
+
+            this.setActive(newConversation);
         }
     },
     getters: {

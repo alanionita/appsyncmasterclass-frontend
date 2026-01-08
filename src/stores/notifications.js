@@ -51,7 +51,7 @@ export const useNotifications = defineStore('notifications', {
                 if (notification.type === "DMed") {
                     const conversationId = Conversation.generateId(notification.userId, notification.otherUserId);
                     const isReceiver = notification.otherProfileId !== storeMyProfile.id
-                    const isActive = storeConversations.activeConversation && storeConversations.activeConversation === conversationId
+                    const isActive = storeConversations.activeConversationId && storeConversations.activeConversationId === conversationId
 
                     const newConversation = Conversation.buildFrom({
                         id: conversationId,

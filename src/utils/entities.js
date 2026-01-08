@@ -1,5 +1,9 @@
 import { ulid } from "ulid"
 
+export const conversationExpansionFields = {
+    hasNewMessages: false,
+    isNew: false
+}
 
 export const Conversation = {
     generateId: (aId, bId) => {
@@ -20,7 +24,8 @@ export const Conversation = {
     },
     expandAll(conversations) {
         const expandFields = {
-            hasNewMessages: false
+            hasNewMessages: false,
+            isNew: false
         }
         try {
             if (!conversations || conversations.length < 1) throw Error('Invalid input');
