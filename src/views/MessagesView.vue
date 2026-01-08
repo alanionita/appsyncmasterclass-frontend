@@ -4,17 +4,17 @@ import ConversationsList from '@/components/molecules/ConversationsList.vue';
 import MessagesList from '@/components/molecules/MessagesList.vue';
 import NewMessageOverlay from '@/components/organisms/NewMessageOverlay.vue';
 import TwoColTemplate from '@/components/templates/TwoCol.vue';
-import { useMessages } from '@/stores/messages';
+import { useConversations } from '@/stores/conversations';
 import { useUi } from '@/stores/ui';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 
 const storeUi = useUi();
-const storeMessages = useMessages();
+const storeConversations = useConversations();
 const { loading, newMessageModal } = storeToRefs(storeUi)
 
 onMounted(async () => {
-  await storeMessages.list();
+  await storeConversations.list();
 })
 
 </script>
