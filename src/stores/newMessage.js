@@ -12,10 +12,10 @@ export const useNewMessage = defineStore('newMessage', {
         selectedUserExists(id) {
             return this.selectedUsers.has(id)
         },
-        selectUser({ id, screenName, imgUrl }) {
+        selectUser({ id, screenName, imgUrl, name }) {
             const userPresent = this.selectedUserExists(id)
             if (!userPresent) {
-                this.selectedUsers.set(id, { screenName, imgUrl, id })
+                this.selectedUsers.set(id, { screenName, imgUrl, id, name })
             }
         },
         removeUser({ id }) {
@@ -23,5 +23,6 @@ export const useNewMessage = defineStore('newMessage', {
         },
     },
     getters: {
+        asArray: state => Array.from(state.selectedUsers, ([_, values]) => ({ ...values }))
     }
 });
