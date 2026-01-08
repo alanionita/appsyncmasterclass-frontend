@@ -1,10 +1,13 @@
 <script setup>
-import { useMessages } from '@/stores/messages';
-const storeMessages = useMessages();
+import { useUi } from '@/stores/ui';
+import { storeToRefs } from 'pinia';
+
+const storeUi = useUi();
+const { newMessageBadge } = storeToRefs(storeUi)
 </script>
 
 <template>
-    <figure v-if="storeMessages.newBadge > 0" class="absolute -mt-6 ml-2" role="figure" aria-labelledby="notification-badge">
+    <figure v-if="newMessageBadge > 0" class="absolute -mt-6 ml-2" role="figure" aria-labelledby="notification-badge">
         <svg class="size-6" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
             <circle cx="50" cy="50" r="45" fill="var(--color-blue)" stroke="var(--color-blue)" stroke-width="2" />
             <text x="50" y="55" 
@@ -14,7 +17,7 @@ const storeMessages = useMessages();
                 font-size="48" 
                 font-family="Arial, sans-serif"
                 font-weight="bold">
-                    {{ storeMessages.newBadge }}
+                    {{ newMessageBadge }}
             </text>
         </svg>
     </figure>

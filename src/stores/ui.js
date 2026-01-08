@@ -10,6 +10,7 @@ export const useUi = defineStore('ui', {
         noProfile: false,
         loadingMessages: false,
         newMessageModal: false,
+        newMessageBadge: 0,
         loadingNewMessageModal: false
     }),
     actions: {
@@ -29,6 +30,9 @@ export const useUi = defineStore('ui', {
         },
         reset() {
             this.noProfile = false
+        },
+        resetNewMessageBadge() {
+            this.newMessageBadge = 0
         },
         toggleLoadingMessages() {
             this.loadingMessages = !this.loadingMessages
