@@ -115,7 +115,7 @@ export const useConversations = defineStore('conversations', {
                 isNew: true
             };
 
-            this.conversations.push(newConversation);
+            this.conversations = [newConversation, ...this.conversations];
 
             this.setActive(newConversation);
         }

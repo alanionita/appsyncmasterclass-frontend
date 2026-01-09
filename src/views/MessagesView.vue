@@ -5,13 +5,31 @@ import MessagesList from '@/components/molecules/MessagesList.vue';
 import NewMessageOverlay from '@/components/organisms/NewMessageOverlay.vue';
 import TwoColTemplate from '@/components/templates/TwoCol.vue';
 import { useConversations } from '@/stores/conversations';
+import { useTwitterTheirProfile } from '@/stores/twitterTheirProfile';
 import { useUi } from '@/stores/ui';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-const storeUi = useUi();
-const storeConversations = useConversations();
+const storeConversations = useConversations()
+const storeTheirProfile = useTwitterTheirProfile()
+const route = useRoute()
+const storeUi = useUi()
 const { loading, newMessageModal } = storeToRefs(storeUi)
+
+async function handleRouteWithQueries() {
+  await storeConversations.list();
+  const { screenName } = route.query
+  
+  const urlValid = screenName && storeTheirProfile.screenName === screenName
+  
+  if (urlValid) {
+    const { id, name, screenName, imgUrl } = storeTheirProfile
+    storeConversations.new({ id, name, screenName, imgUrl })
+  }
+}
+
+watch(() => route.query.screenName, handleRouteWithQueries, { immediate: true })
 
 onMounted(async () => {
   await storeConversations.list();
