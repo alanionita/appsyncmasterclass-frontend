@@ -1,14 +1,17 @@
 <script setup>
-
-import Loader from '../atoms/Loader.vue'
-import { useUi } from '@/stores/ui';
-import { storeToRefs } from 'pinia';
-import { useSearchUsers } from '@/stores/searchUsers';
-import NewMessageResults from '../molecules/NewMessageResults.vue';
-import Image from '../atoms/Image.vue';
-import { useNewMessage } from '@/stores/newMessage';
-import Overlay from '../templates/Overlay.vue';
 import { onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import Image from '../atoms/Image.vue';
+import Loader from '../atoms/Loader.vue'
+import NewMessageResults from '../molecules/NewMessageResults.vue';
+import Overlay from '../templates/Overlay.vue';
+
+import { useSearchUsers } from '@/stores/searchUsers';
+import { useUi } from '@/stores/ui';
+import { useNewMessage } from '@/stores/newMessage';
+import { useConversations } from '@/stores/conversations';
+import { useMessages } from '@/stores/messages';
 
 const mainFocus = ref(null);
 
@@ -20,6 +23,8 @@ const storeSearch = useSearchUsers();
 const { query, results } = storeToRefs(storeSearch)
 const { handleSearch } = storeSearch;
 const storeNewMessage = useNewMessage();
+const storeConversations = useConversations();
+const storeMessages = useMessages();
 
 async function searchSubmit() {
     storeUi.toggleLoadingNewMessageModal()
@@ -27,9 +32,18 @@ async function searchSubmit() {
     storeUi.toggleLoadingNewMessageModal()
 }
 
-function newMessage() {
-    // TODO: adds server logic to post new message
-    closeNewMessageModal()
+function handleNewConversation(selectedUsers) {
+    if (selectedUsers.length > 0) {
+        // Required: only supports 1-2-1 conversations
+        const [user, ...rest] = selectedUsers;
+        storeConversations.new(user)
+
+        // Clean up states
+        closeNewMessageModal();
+        storeMessages.reset();
+        storeNewMessage.reset();
+        storeSearch.reset();
+    }
 }
 
 onMounted(() => {
@@ -44,7 +58,7 @@ onMounted(() => {
     <Overlay @hide="() => closeNewMessageModal()" :classStr="`flex flex-col h-full`">
         <template #content>
             <header class="p-4 pl-2 border-b-2 border-lightblue">
-                <button @click="newMessage()"
+                <button @click="() => handleNewConversation(storeNewMessage.asArray)"
                     class="rounded-full bg-blue font-bold text-white relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-darkblue">
                     Next
                 </button>
