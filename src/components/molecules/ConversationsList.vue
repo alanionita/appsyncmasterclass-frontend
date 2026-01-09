@@ -5,6 +5,7 @@ import Image from '../atoms/Image.vue';
 import LinkifyText from '../atoms/LinkifyText.vue';
 import { useConversations } from '@/stores/conversations';
 import { useUi } from '@/stores/ui';
+import { vScrollend } from '@/directives';
 
 const storeConversations = useConversations();
 const storeUi = useUi();
@@ -24,6 +25,10 @@ async function handleConversationClick(_conversation) {
     }
 }
 
+async function handleVScrollBottom() {
+    await storeConversations.listMore()
+}
+
 function showNewBadge(conversation) {
     return conversation.hasNewMessages
 }
@@ -40,7 +45,7 @@ function showNewBadge(conversation) {
             Send a new message or wait until someone starts a conversation.
         </p>
     </section>
-    <ul v-else role="list" class="list-none h-full w-full overflow-y-auto">
+    <ul v-else role="list" class="list-none h-full w-full overflow-y-auto pb-40" v-scrollend:bottom="handleVScrollBottom">
         <li v-for="conversation in conversations" v-bind:key="`${conversation.id}-${conversation.lastModified}`"
             class="grid grid-cols-(--grid-cols-6-avatar) grid-rows-3 p-2 pl-4 border-b border-lighter hover:bg-lightest cursor-pointer data-active:bg-lightblue"
             :data-active="conversation.id === activeConversationId || undefined"

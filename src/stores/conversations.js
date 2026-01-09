@@ -9,10 +9,8 @@ import { useMessages } from './messages';
 const defaultState = {
     conversations: [],
     nextToken: null,
-    limit: 10,
-    totalCount: 0,
+    limit: 15,
     hasMore: true,
-    fetchedCount: 0,
     activeConversationId: null,
     activeOtherUserId: null,
     activeOtherUserScreenName: null,
@@ -25,13 +23,11 @@ export const useConversations = defineStore('conversations', {
         async reset() {
             this.conversations = [];
             this.nextToken = null;
-            this.totalCount = 0;
-            this.hasMore = true;
-            this.fetchedCount = 0;
             this.activeConversationId = null
             this.activeOtherUserId = null
             this.activeOtherUserScreenName = null
             this.activeConversationIsNew = false
+            this.hasMore = true
         },
         resetConversation(conv) {
             const newConv = Conversation.resetNewMessages(conv)
@@ -41,29 +37,62 @@ export const useConversations = defineStore('conversations', {
             this.activeConversationIsNew = !this.activeConversationIsNew
         },
         async list() {
-            const { appsyncClient } = useAppsync();
-            const { loadingOn, loadingOff } = useUi();
+            try {
+                const { appsyncClient } = useAppsync();
+                const { loadingOn, loadingOff } = useUi();
 
-            loadingOn();
-            const resp = await appsyncClient.listConversations({
-                limit: this.limit,
-                nextToken: this.nextToken
-            })
+                loadingOn();
+                const resp = await appsyncClient.listConversations({
+                    limit: this.limit,
+                })
 
-            const { conversations, nextToken } = resp; // TODO: add totalCount here and set it below, once backend supports it
+                const { conversations, nextToken } = resp; // TODO: add totalCount here and set it below, once backend supports it
 
-            if (conversations) {
-                const expandedConversations = Conversation.expandAll(conversations)
+                if (conversations) {
+                    const expandedConversations = Conversation.expandAll(conversations)
 
-                this.conversations = expandedConversations;
-                this.fetchedCount += conversations.length;
+                    this.conversations = expandedConversations;
+                }
+
+                if (nextToken) {
+                    this.nextToken = nextToken;
+                }
+
+                loadingOff()
+            } catch (err) {
+                throwWithLabel(err, 'store/conversations.list()')
             }
+        },
+        async listMore() {
+            try {
+                if (!this.hasMore) return;
 
-            if (nextToken) {
-                this.nextToken = nextToken;
+                const { appsyncClient } = useAppsync();
+
+                const resp = await appsyncClient.listConversations({
+                    limit: this.limit,
+                    givenNextToken: this.nextToken
+                })
+
+                const { conversations, nextToken } = resp;
+
+                if (conversations) {
+                    const expandedConversations = Conversation.expandAll(conversations)
+
+                    const updatedConversations = [...this.conversations, ...expandedConversations]
+
+                    this.conversations = updatedConversations;
+                }
+                
+                if (nextToken) {
+                    this.nextToken = nextToken;
+                } else {
+                    this.nextToken = null;
+                    this.hasMore = false;
+                }
+            } catch (err) {
+                throwWithLabel(err, 'store/conversations.list()')
             }
-
-            loadingOff()
         },
         find(conversationID = null) {
             try {
