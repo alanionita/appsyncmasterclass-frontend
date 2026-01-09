@@ -1,5 +1,5 @@
 import { throwWithLabel } from "@/utils/error";
-import { formatDistanceToNow, format, formatRelative } from "date-fns";
+import { format, formatDistanceToNowStrict } from "date-fns";
 import { enGB } from 'date-fns/locale';
 
 function dateDiffInDays(incoming) {
@@ -13,10 +13,11 @@ function dateDiffInDays(incoming) {
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+// Internally edits the formatDistance() templating to return: Now, 15s, 5m, 3h, 8 Jan
 function formatHHMMSS(unit, count) {
     switch (true) {
         case unit === 'xSeconds':
-            return `${count}s`;
+            return count === 0 ? 'Now' : `${count}s`;
         case unit === 'lessThanXMinutes':
             return 'Now'
         case unit === 'xMinutes':
@@ -37,7 +38,9 @@ export default function timeago(date) {
     try {
         const distance = dateDiffInDays(date);
         if (distance === 0) {
-            return formatDistanceToNow(date, { addSuffix: true, locale: customLocale });    // Now, 15s, 5m, 3h
+            const options = { addSuffix: true, locale: customLocale }
+            const toNow = formatDistanceToNowStrict(new Date(date), options);    
+            return toNow
         }
         return format(new Date(date), "d MMM", { locale: enGB });  // Jan 31
     } catch (err) {
