@@ -62,6 +62,6 @@ onUpdated(() => {
             <Tweet v-if="!tweet.retweetOf" :tweet="tweet" :key="tweet.id" />
 
             <Retweet v-if="tweet.retweetOf" :tweet="tweet" :key="tweet.id"/>
-        </template>>
+        </template>
     </ul>
 </template>
