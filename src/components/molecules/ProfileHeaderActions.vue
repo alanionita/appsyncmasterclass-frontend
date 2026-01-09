@@ -2,10 +2,22 @@
 import { useUi } from '@/stores/ui';
 import FollowButton from '../atoms/FollowButton.vue';
 import Image from '../atoms/Image.vue';
+import { useRouter } from 'vue-router';
+import { ROUTE_NAMES } from '@/utils/constants';
 
 const { toggleEditProfile, toggleSetupProfile, profile } = defineProps(['toggleSetupProfile', 'toggleEditProfile', 'profile'])
 
 const storeUi = useUi();
+const router = useRouter()
+
+function handleMessageClick(screenName) {
+    router.push({
+        name: ROUTE_NAMES.Messages,
+        query: {
+            screenName
+        }
+    })
+}
 
 </script>
 
@@ -33,7 +45,9 @@ const storeUi = useUi();
             <button class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue">
                 <i class="fas fa-ellipsis-h"></i>
             </button>
-            <button class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue">
+            <button
+                @click.prevent="() => handleMessageClick(profile.screenName)"
+                class="text-blue font-bold px-4 py-3 rounded-full border border-blue hover:bg-lightblue cursor-pointer">
                 <i class="fas fa-envelope"></i>
             </button>
             <FollowButton />
