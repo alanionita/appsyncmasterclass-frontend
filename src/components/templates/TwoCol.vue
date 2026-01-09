@@ -4,7 +4,7 @@ import SideNav from '@/components/organisms/SideNav.vue'
 </script>
 
 <template>
-  <main class="flex container h-screen w-screen m-auto gap-0 p-4">
+  <main class="flex container h-screen w-screen m-auto">
     <section class="flex-1/12 lg:flex-3/12 flex flex-col">
       <SideNav />
     </section>

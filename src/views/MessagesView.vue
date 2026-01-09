@@ -25,7 +25,7 @@ onMounted(async () => {
       <!-- LEFT COLUMN -->
       <section class="col-span-5 h-screen border-r border-lighter">
         <header class="p-4 border-b border-lighter flex items-center gap-4">
-          <h1 class="text-xl font-bold flex-1">Messages</h1>
+          <h1 class="text-2xl font-bold flex-1">Messages</h1>
           <i class="fas fa-cog text-xl text-blue cursor-pointer"></i>
           <i @click="storeUi.openNewMessageModal()" class="fas fa-plus-circle text-xl text-blue cursor-pointer"></i>
         </header>
