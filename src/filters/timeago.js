@@ -1,3 +1,4 @@
+import { throwWithLabel } from "@/utils/error";
 import { formatDistanceToNow, format, formatRelative } from "date-fns";
 import { enGB } from 'date-fns/locale';
 
@@ -33,10 +34,13 @@ const customLocale = {
 };
 
 export default function timeago(date) {
-    const distance = dateDiffInDays(date);
-    if (distance === 0) {
-        return formatDistanceToNow(date, { addSuffix: true, locale: customLocale });    // Now, 15s, 5m, 3h
-    } else {
-        return format(new Date(date), "MMM d", { locale: enGB });  // Jan 31
+    try {
+        const distance = dateDiffInDays(date);
+        if (distance === 0) {
+            return formatDistanceToNow(date, { addSuffix: true, locale: customLocale });    // Now, 15s, 5m, 3h
+        }
+        return format(new Date(date), "d MMM", { locale: enGB });  // Jan 31
+    } catch (err) {
+        throwWithLabel(err, '$filters.timeago')
     }
 }
