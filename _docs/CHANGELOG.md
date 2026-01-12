@@ -564,3 +564,5 @@ Diffs:
     - Contains `.list()`, `.listMore()` (related to TWITTER_MESSAGES_LOAD and *_LOAD_MORE)
     - Contains `.send()` (related to TWITTER_MESSAGES_SEND): calls the backend and optimistically updates messages list and badges
     - Resets the conversation state of .isNew() for new conversations (ie. a conversation without any messages)
+
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/07-04-Messages_page
