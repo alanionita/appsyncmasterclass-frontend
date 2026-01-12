@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { ulid } from 'ulid';
 import { useTwitterMyProfile } from './twitterMyProfile';
 import { useAppsync } from './appsync';
@@ -9,10 +9,8 @@ import { useConversations } from './conversations';
 const defaultState = {
     messages: [],
     nextToken: null,
-    limit: 10,
-    totalCount: 0,
+    limit: 16,
     hasMore: true,
-    fetchedCount: 0,
     newMessage: '',
 }
 
@@ -37,8 +35,7 @@ export const useMessages = defineStore('messages', {
 
                 const { messages, nextToken } = await appsyncClient.getDirectMessages({
                     otherUserId: conversation.otherUser.id,
-                    limit: this.limit,
-                    nextToken: this.nextToken
+                    limit: this.limit
                 })
 
                 if (!messages) throw Error('Error in retrieving messages')
@@ -57,9 +54,41 @@ export const useMessages = defineStore('messages', {
                 throwWithLabel(err, 'messagesStore.list()')
             }
         },
+        async listMore() {
+            try {
+                if (!this.hasMore) return;
+
+                const { appsyncClient } = useAppsync();
+                const { resetNewMessageBadge } = useUi();
+                const storeConversations = useConversations();
+                const { activeOtherUserId } = storeToRefs(storeConversations);
+
+                const { messages, nextToken } = await appsyncClient.getDirectMessages({
+                    otherUserId: activeOtherUserId.value,
+                    limit: this.limit,
+                    nextToken: this.nextToken
+                })
+
+                if (!messages) throw Error('Error in retrieving messages')
+
+                if (messages && messages.length > 0) {
+                    this.messages = [...this.messages, ...messages]
+                    resetNewMessageBadge()
+                }
+                if (nextToken) {
+                    this.nextToken = nextToken;
+                } else {
+                    this.nextToken = null;
+                    this.hasMore = false;
+                }
+            } catch (err) {
+                throwWithLabel(err, 'store/messages.listMore()')
+            }
+        },
         async send(to) {
             const { appsyncClient } = useAppsync();
             const { id } = useTwitterMyProfile();
+            const { activeConversationIsNew, toggleActiveConversationIsNew } = useConversations();
             try {
                 if (!this.newMessage || this.newMessage.length === 0 || !to) throw Error('Invalid inputs')
 
@@ -80,6 +109,9 @@ export const useMessages = defineStore('messages', {
 
                     this.messages = [newMessage, ...this.messages];
                     this.newMessage = ''
+                    if (activeConversationIsNew) {
+                        toggleActiveConversationIsNew()
+                    }
                 }
             } catch (err) {
                 throwWithLabel(err, 'messagesStore.send()')

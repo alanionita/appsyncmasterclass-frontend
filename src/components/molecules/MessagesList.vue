@@ -29,6 +29,10 @@ async function handleSendMessage(to) {
     }
 }
 
+async function handleVScrollTop() {
+    await storeMessages.listMore()
+}
+
 onUpdated(() => {
     // Required: onMount does not focus, likely a timing issues with the component load
     if (mainFocus.value) {
@@ -56,7 +60,7 @@ onUpdated(() => {
         <div v-if="loadingMessages" class="flex flex-col h-full justify-center">
             <Loader />
         </div>
-        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse grow" role="list">
+        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse grow" role="list" v-on:scrollend.top="handleVScrollTop">
             <li v-for="message in messages" :key="message.messageId" :id="`message-${message.messageId}`"
                 class="grid grid-col-6 grid-rows-1 gap-y-4 p-4 hover:bg-lightest cursor-text">
                 <Message :message="message" />
