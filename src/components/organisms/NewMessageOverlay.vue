@@ -59,7 +59,8 @@ onMounted(() => {
         <template #content>
             <header class="p-4 pl-2 border-b-2 border-lightblue">
                 <button @click="() => handleNewConversation(storeNewMessage.asArray)"
-                    class="rounded-full bg-blue font-bold text-white relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-darkblue">
+                    :disabled="results.length === 0 || storeNewMessage.asArray.length === 0"
+                    class="rounded-full bg-blue font-bold text-white relative px-4 py-2 right-0 float-right focus:outline-none hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed">
                     Next
                 </button>
                 <span class="flex flex-row items-center gap-4">
