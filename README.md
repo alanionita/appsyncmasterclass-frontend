@@ -1,5 +1,16 @@
 # appsyncmasterclass-frontend
 
+Remix of original [appsyncmasterclass-frontend](https://github.com/theburningmonk/appsyncmasterclass-frontend) with a focus on new apis.
+
+Uses: 
+- Vue v3
+- Pinia - stores
+- date-fns
+- All new patterns, principles, APIs
+
+Follows the original course release structure, see [Releases](https://github.com/alanionita/appsyncmasterclass-frontend/releases)
+
+For a detailed list of all changes, see [Changelog](/_docs/DIFFS.md)
 
 ## Environment 
 

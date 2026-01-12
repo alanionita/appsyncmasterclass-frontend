@@ -466,3 +466,101 @@ Diffs:
 Release (backend): https://github.com/alanionita/appsyncmasterclass-backend/releases/tag/07-03-Notifications_page
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/07-03-Notifications_page
+
+# 07-04-Messages_page
+# 07-05-Direct_messages
+# 07-06-Messages_integration
+
+> Note: 
+> In course repo `07-04` contained all the changes for subsequent releases `07-05`, `07-06`
+> Implemented here in the same way
+
+Usage:
+- consider with backend/07-03
+- compare against 07-03
+
+
+Diffs:
+- routing: 
+    - Video and original code recommends the use of an "artificial" param, a param that's not effectively used in the path; this represents a routing anti-pattern and is now guarded against in Vue Router - https://github.com/vuejs/router/commit/e8875705eb8b8a0756544174b85a1a3c2de55ff6
+    - New implementation uses a query parameter for `screenName` which is then use to build up the conversationId (akin to conversation param); this query parameter `/messages?screenName=""` reads as 'Messages between me and screenName'
+- html: 
+    - Updates html semantics, visual lists being html list
+    - Implements link states active and unavailble with native html and css
+    - Wont implement the tailwind settings change for maxHeight.full, since it represents an anti-pattern
+    - Wont implement styling changes to do with height changes; the use of existing templates, and responsive patterns was enough to pin the elements to the screen
+- components: Generally abstracted parts of the old UI into single purpose, reusable components; making it easier to reason and update code
+- store/*: 
+    - Video recommends the use of a deeply nested store
+    - Newer guidelines recommend abstraction and flat stores to avoid reactivity issues
+    - New implementation uses entity based stores, component-based stores, as well as existing stores
+    - New implementation favours flat states, single-purpose stores, nested instances of one store within another
+- view/MessagesView: 
+    - Implemented using existing layout pattern, but via a new columnar layout and template <TwoCol/>
+    - Original `selected()` logic largely covered by `store/conversations.new`
+- components/SideNav: 
+    - MessageBadge implemented in modular way similar to Notifications badge
+    - Badge state moved to store/ui since it represents 2 entities
+- filters/*: 
+    - Implemented using `date-fns` date library instead of `moment` (deprecated)
+    - Refactors the .timeago() filter to use strict method from `date-fns`
+- directives/*: previously renamed to `vScrollend` to avoid clashes with `v-scroll`; refactored to use a switch case
+- components/NewMessageOverlay: 
+    - Implments existing `templates/Overlay` with a slight refactor for class overrides from within the child component
+    - Show/hide state included in store/ui, and passed to <Overlay/> which handles key presses and click outside of the main overlay element behaviour
+    - Against general trend, opted for less abstraction in this component, favouring local file legibility over abstraction (justified by the individual nature of this component)
+    - Implements helper components <Image/> and <Linkify/>
+    - Adds onMount focussing to the search box, and expanded 'Next' UI button rules for active and disabled
+    - Prefers the use of stores vs emits and props, reducing boilerplate 
+    - Wont implement @selected, favouring state usage; 
+    - store/newMessage.selectedUsers implemented via Map to satisfy unique list requirement
+    - search implmented as a <form/> with @submit event handling
+- UserNewMessage: Bypassed the creation of this component, most of ui is included in <NewMessageResults/>, and the logic for selecting a user is housed within store/newMessage
+- store/searchUsers: 
+    - Handles the search by 'People' only
+    - Represents some duplication of the store/search logic, but created in order to simplify legibility
+    - Used in <NewMessageOverlay/>
+- components/ResultsNewMessage: 
+    - Renamed to `<NewMessageResults/>`
+    - Implements the `store/searchUsers` and `*/newMessage`
+    - Reuses <Overlay/> template for modal behaviour and core styles
+    - Implements semantic html structures where possible: <form/>, <ul/>, <li/>
+    - Implements a dynamic user selection area that supports for than 1 users (BE only supports 1-2-1 conversations); including a feature to remove added selection
+    - Won't implement the `user.followedBy` restriction, despite it being a Twitter business logic rule
+- components/MessagesList: 
+    - Navigates to /messages done using a query param of screenName
+    - Avoids the antipattern of unused route.params (see above)
+    - scrollToMe() and helper renamed to `scrollAnchor` and `handle*`
+- store/notifications: 
+    - When a DM notification is received the badge and all the new stores (conversations, messages) are optimistically updated
+    - There are two UI states that are receive updates: the generic ui/newMessageBadge (used in Sidebar), and a conversation specific hasNewMessage badge
+    - Follows UX rules: 
+        - Active (not set) 
+            - New notification updates both badges
+            - Optimistically updates just conversations
+        - Active (set) 
+            - New notification bypases badge updates,
+            - Optimistically updates both conversation, and messages
+- [store/messages, */conversations]: 
+    - Handles the fetching of data using similar pattern `.list()` and `.listMore()`
+    - Implement backend calls via the store/appsync api
+    - Fetching states are similar for consistenty: 
+        - [LIST]    => data
+        - nextToken => used for pagination
+        - limit     => limits each fetch batch, max of 20,25
+        - hasMore   => limits the repeat fetch calls on scroll
+- store/conversations: 
+    - Contains the `.setActive()` (linked to ); different signature but works the same as _SET_ACTIVE
+    - Implements `.list()` (linked to mutations/TWITTER_CONVERSATIONS_LOAD)
+    - `.new()` (linked to mutations/TWITTER_MESSAGES_NEW)
+    - TWITTER_CONVERSATION_ACTIVE_SET represented via .setActive and flat active states [activeConversationId, activeOtherUserId, activeOtherUserScreenName, activeConversationIsNew] - 
+    - Opted for flat states vs deep nests
+    - Wont implement `conversationSet`
+        - New logic updates each conversation with new expanded fields
+        - Expanded fields: 
+            - hasNewMessages => shows whether a conversation has new messages (UI element)
+            - isNew          => shows if a conversation has no message, ie. a new conversation (UI element)
+- store/messages: 
+    - Contains `.list()`, `.listMore()` (related to TWITTER_MESSAGES_LOAD and *_LOAD_MORE)
+    - Contains `.send()` (related to TWITTER_MESSAGES_SEND): calls the backend and optimistically updates messages list and badges
+    - Resets the conversation state of .isNew() for new conversations (ie. a conversation without any messages)
