@@ -2,13 +2,18 @@ export const vScrollend = {
     mounted: function (el, binding) {
         if (typeof binding.value !== 'function') return;
         el.__callback__ = (event) => {
-            if (binding.arg == 'bottom') {
-                if (!el) return;
-                const isBottom = Math.ceil(el.offsetHeight + el.scrollTop) >= el.scrollHeight;
-                if (!isBottom) return;
-                binding.value(event, el);
-            } else {
-                binding.value(event, el);
+            if (!el) return;
+            switch(binding.arg) {
+                case 'bottom':
+                    const isBottom = Math.ceil(el.offsetHeight + el.scrollTop) >= el.scrollHeight;
+                    if (!isBottom) return;
+                    binding.value(event, el);
+                case 'top':
+                    const isTop = el.scrollTop==0;
+                    if (!isTop) return;
+                    binding.value(event, el);
+                default:
+                    binding.value(event, el);
             }
         }
         el.addEventListener('scroll', el.__callback__);
