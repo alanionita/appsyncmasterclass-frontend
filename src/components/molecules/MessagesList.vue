@@ -9,6 +9,7 @@ import { throwWithLabel } from '@/utils/error';
 import { useConversations } from '@/stores/conversations';
 import LinkifyText from '../atoms/LinkifyText.vue';
 import Image from '../atoms/Image.vue';
+import { vScrollend } from '@/directives';
 
 const storeUi = useUi();
 const { loadingMessages } = storeToRefs(storeUi)
@@ -74,8 +75,8 @@ onUpdated(() => {
         <div v-if="loadingMessages" class="flex flex-col h-full justify-center">
             <Loader />
         </div>
-        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse grow" role="list"
-            v-on:scrollend.top="handleVScrollTop">
+        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse flex-1 grow pt-32" role="list"
+            v-scrollend:top="handleVScrollTop">
             <li v-for="message in messages" :key="message.messageId" :id="`message-${message.messageId}`"
                 class="grid grid-col-6 grid-rows-1 gap-y-4 p-4 hover:bg-lightest cursor-text">
                 <Message :message="message" />
