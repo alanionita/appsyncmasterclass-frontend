@@ -10,7 +10,7 @@ Uses:
 
 Follows the original course release structure, see [Releases](https://github.com/alanionita/appsyncmasterclass-frontend/releases)
 
-For a detailed list of all changes, see [Changelog](/_docs/DIFFS.md)
+For a detailed list of all changes, see [Changelog](/_docs/CHANGELOG.md)
 
 ## Environment 
 
