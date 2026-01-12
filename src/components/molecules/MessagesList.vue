@@ -11,6 +11,8 @@ import LinkifyText from '../atoms/LinkifyText.vue';
 import Image from '../atoms/Image.vue';
 import { vScrollend } from '@/directives';
 
+const scrollAnchor = ref(null);
+
 const storeUi = useUi();
 const { loadingMessages } = storeToRefs(storeUi)
 const storeMessages = useMessages();
@@ -25,9 +27,16 @@ async function handleSendMessage(to) {
     try {
         disabled.value = true
         await storeMessages.send(to)
-        disabled.value = false
+        disabled.value = false;
+        handleScrollToAnchor();
     } catch (err) {
         throwWithLabel(err, 'MessagesList/handleSendMessage()')
+    }
+}
+
+function handleScrollToAnchor() {
+    if (scrollAnchor && scrollAnchor.value) {
+        scrollAnchor.value.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
@@ -65,7 +74,7 @@ onUpdated(() => {
     </section>
     <section v-else class="h-full flex flex-col justify-between">
         <header class="py-2 px-4 border-b border-lighter flex items-center gap-4">
-            <Image :src="getActiveOtherUser().imgUrl" :classStr="`size-8 rounded-full`"/>
+            <Image :src="getActiveOtherUser().imgUrl" :classStr="`size-8 rounded-full`" />
             <section class="flex-1 flex flex-col">
                 <h2 class="text-xl font-semibold flex-1">{{ getActiveOtherUser().name }}</h2>
                 <p class="text-sm text-dark flex-1">{{ "@" + getActiveOtherUser().screenName }}</p>
@@ -75,8 +84,10 @@ onUpdated(() => {
         <div v-if="loadingMessages" class="flex flex-col h-full justify-center">
             <Loader />
         </div>
-        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse flex-1 grow pt-32" role="list"
+        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse flex-1 grow pt-32" 
+            role="list"
             v-scrollend:top="handleVScrollTop">
+            <span ref="scrollAnchor" class="size-1 opacity-0"></span>
             <li v-for="message in messages" :key="message.messageId" :id="`message-${message.messageId}`"
                 class="grid grid-col-6 grid-rows-1 gap-y-4 p-4 hover:bg-lightest cursor-text">
                 <Message :message="message" />
