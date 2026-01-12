@@ -87,7 +87,7 @@ export const useMessages = defineStore('messages', {
         },
         async send(to) {
             const { appsyncClient } = useAppsync();
-            const { id } = useTwitterMyProfile();
+            const { id, name, screenName, imgUrl } = useTwitterMyProfile();
             const { activeConversationIsNew, toggleActiveConversationIsNew } = useConversations();
             try {
                 if (!this.newMessage || this.newMessage.length === 0 || !to) throw Error('Invalid inputs')
@@ -103,7 +103,11 @@ export const useMessages = defineStore('messages', {
                         timestamp: res.lastModified,
                         messageId: ulid(),
                         from: {
-                            id
+                            id,
+                            name, 
+                            screenName, 
+                            imgUrl,
+                            __typename: "MyProfile"
                         }
                     }
 

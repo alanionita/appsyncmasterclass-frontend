@@ -1,15 +1,11 @@
 <script setup>
-import { useTwitterMyProfile } from '@/stores/twitterMyProfile';
 import Image from './Image.vue';
 import LinkifyText from './LinkifyText.vue';
 
 const { message } = defineProps(['message'])
-const storeMyProfile = useTwitterMyProfile();
 
 function isMyMessage(_message) {
-    if (_message && _message.from && _message.from.id) {
-        return storeMyProfile.id === _message.from.id
-    }
+    return _message.from.__typename === 'MyProfile'
 }
 
 </script>
