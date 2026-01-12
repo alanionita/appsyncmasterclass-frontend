@@ -8,6 +8,7 @@ import { onUpdated, ref } from 'vue';
 import { throwWithLabel } from '@/utils/error';
 import { useConversations } from '@/stores/conversations';
 import LinkifyText from '../atoms/LinkifyText.vue';
+import Image from '../atoms/Image.vue';
 
 const storeUi = useUi();
 const { loadingMessages } = storeToRefs(storeUi)
@@ -31,6 +32,11 @@ async function handleSendMessage(to) {
 
 async function handleVScrollTop() {
     await storeMessages.listMore()
+}
+
+function getActiveOtherUser() {
+    const conversation = activeConversationId.value && storeConversations.find(activeConversationId.value)
+    return { ...conversation.otherUser }
 }
 
 onUpdated(() => {
@@ -57,10 +63,19 @@ onUpdated(() => {
 
     </section>
     <section v-else class="h-full flex flex-col justify-between">
+        <header class="py-2 px-4 border-b border-lighter flex items-center gap-4">
+            <Image :src="getActiveOtherUser().imgUrl" :classStr="`size-8 rounded-full`"/>
+            <section class="flex-1 flex flex-col">
+                <h2 class="text-xl font-semibold flex-1">{{ getActiveOtherUser().name }}</h2>
+                <p class="text-sm text-dark flex-1">{{ "@" + getActiveOtherUser().screenName }}</p>
+            </section>
+            <i class="fas fa-circle-info text-xl text-blue"></i>
+        </header>
         <div v-if="loadingMessages" class="flex flex-col h-full justify-center">
             <Loader />
         </div>
-        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse grow" role="list" v-on:scrollend.top="handleVScrollTop">
+        <ul v-else class="list-none w-full h-fit overflow-y-auto flex flex-col-reverse grow" role="list"
+            v-on:scrollend.top="handleVScrollTop">
             <li v-for="message in messages" :key="message.messageId" :id="`message-${message.messageId}`"
                 class="grid grid-col-6 grid-rows-1 gap-y-4 p-4 hover:bg-lightest cursor-text">
                 <Message :message="message" />
