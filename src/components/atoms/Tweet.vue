@@ -62,20 +62,20 @@ async function handleReplyBtn() {
 </script>
 
 <template>
-    <li v-if="tweet" :id="tweet.id" class="w-full p-4 border-b border-lighter hover:bg-lightest flex">
-        <div class="flex-none mr-4">
+    <li v-if="tweet" :id="tweet.id" class="w-full p-2 md:px-4 md:py-4 border-b border-lighter hover:bg-lightest flex">
+        <div class="flex-none mr-2 md:mr-4">
             <a :href="`/${tweet.profile.screenName}`">
-                <Image :src="tweet.profile.imgUrl" :classStr="`h-12 w-12 rounded-full flex-none`" />
+                <Image :src="tweet.profile.imgUrl" :classStr="`size-5 md:size-12 rounded-full flex-none`" />
             </a>
         </div>
         <div class="w-full">
             <div class="flex items-center w-full justify-between">
-                <a id="custom-link" :href="`/${tweet.profile.screenName}`" class="flex items-center w-auto grow-0">
-                    <p class="font-semibold">{{ tweet.profile.name }}</p>
-                    <p class="text-sm text-dark ml-2">@{{ tweet.profile.screenName }}</p>
+                <a id="custom-link" :href="`/${tweet.profile.screenName}`" class="flex items-start md:items-center w-auto grow-0">
+                    <p class="font-semibold sm:truncate ">{{ tweet.profile.name }}</p>
+                    <p class="text-sm text-dark ml-2 sm:truncate">@{{ tweet.profile.screenName }}</p>
                     <p class="text-sm text-dark ml-2">{{ $filters.timeago(tweet.createdAt) }}</p>
                 </a>
-                <i class="fas fa-angle-down text-sm ml-auto"></i>
+                <i class="fas fa-angle-down text-sm ml-auto sm:opacity-0"></i>
             </div>
 
             <p v-if="tweet.inReplyToUsers && tweet.inReplyToUsers.length > 0" class="text-dark">
