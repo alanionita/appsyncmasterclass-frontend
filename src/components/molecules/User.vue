@@ -64,13 +64,13 @@ onMounted(() => {
 
 <template>
     <li class="grid grid-cols-8 grid-rows-1 w-full p-4 gap-2 border-b border-lighter hover:bg-lightest">
-        <a :href="`/${user.screenName}`" class="col-start-0 col-span-1 self-center">
-            <img :src="`${userImgUrl}`" @error="handleImageError" class="h-12 w-12 rounded-full" />
+        <a :href="`/${user.screenName}`" class="col-start-0 col-span-3 md:col-span-1 self-center">
+            <img :src="`${userImgUrl}`" @error="handleImageError" class="size-12 rounded-full" />
         </a>
-        <section class="col-start-2 col-span-8">
+        <section class="col-start-4 md:col-start-2 col-span-4 md:col-span-8">
             <a id="custom-link" :href="`/${user.screenName}`" class="">
                 <p class="font-bold">{{ user.name }}</p>
-                <p class="text-dark text-sm">@{{ user.screenName }}</p>
+                <p class="text-dark text-sm sm:truncate">@{{ user.screenName }}</p>
             </a>
             <p ref="userBioEl" class="w-auto" v-html="userBioElHtml"></p>
         </section>

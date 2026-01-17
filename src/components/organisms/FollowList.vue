@@ -34,15 +34,15 @@ function goTo(route) {
 
 <template>
 
-    <div class="py-2 flex items-center">
+    <section class="py-2 flex items-center">
         <button @click="goTo('Profile')" class="rounded-full p-3 px-4 focus:outline-none hover:bg-lightblue">
             <i class="fas fa-arrow-left text-blue"></i>
         </button>
-        <div class="lg:block ml-4">
+        <section class="lg:block ml-4">
             <h1 class="text-xl font-bold">{{ profileName }}</h1>
             <p class="text-left text-sm leading-tight text-dark">@{{ profileScreenName }}</p>
-        </div>
-    </div>
+        </section>
+    </section>
 
     <ul class="flex flex-row justify-evenly mt-2 list-none" role="tablist">
         <li v-for="(tab) in tabs" class="w-1/2 font-bold " role="presentation">
