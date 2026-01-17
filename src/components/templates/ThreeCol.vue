@@ -7,8 +7,8 @@ const { trending, followWho, search } = defineProps(['trending', 'follow-who', '
 </script>
 
 <template>
-  <main class="flex container h-screen w-screen m-auto">
-    <section class="flex-1/12 lg:flex-3/12 flex flex-col">
+  <main class="flex md:container h-screen w-screen md:m-auto">
+    <section class="flex-none w-16 md:flex-3/12 lg:flex-3/12 flex flex-col justify-center">
       <SideNav />
     </section>
     <section class="flex-11/12 lg:flex-6/12 flex flex-col">

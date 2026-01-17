@@ -9,6 +9,7 @@ import { vScrollend } from '@/directives/index';
 import { useUi } from '@/stores/ui';
 import { debounce } from '@/utils/timing';
 import { storeToRefs } from 'pinia';
+import Image from '@/components/atoms/Image.vue';
 
 const tweet = defineModel('tweet', {
   default: ''
@@ -54,15 +55,15 @@ onMounted(async () => {
   <ThreeColTemplate :trending="true" :follow-who="true" :search="true">
     <template #middle>
       <div v-if="profile" v-scrollend:bottom="() => loadMoreTweets()" class="flex h-full flex-col overflow-y-auto">
-        <section class="border-b border-lighter flex items-center justify-between p-4">
+        <section class="border-b border-lighter flex items-center justify-between p-2 md:p-4">
           <h1 class="text-2xl font-semibold">Home</h1>
           <i class="far fa-star text-xl text-blue"></i>
         </section>
-        <section class="border-b border-lighter flex gap-4 p-4">
+        <section class="border-b border-lighter flex gap-4 p-2 md:p-4">
           <form class="flex flex-col w-full relative gap-4" @submit.prevent="postNewTweet">
             <div class="flex justify-center gap-4">
               <figure class="flex-none">
-                <img :src="`${profile.imgUrl}`" class="flex-none size-12 rounded-full" />
+                <Image :src="profile.imgUrl" classStr="flex-none size-8 md:size-12 rounded-full"/>
               </figure>
               <textarea v-model="tweet" placeholder="What's happening?"
                 class="flex-1 w-full focus:outline-none py-2"></textarea>

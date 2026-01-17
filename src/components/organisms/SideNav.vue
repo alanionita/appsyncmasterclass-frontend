@@ -62,17 +62,17 @@ async function handleTabClick(target) {
 
 <template>
     <section
-        class="h-screen border-r border-lighter lg:pr-4 flex flex-col items-center md:items-start min-w-max gap-4 justify-between">
-        <nav class="w-full flex flex-col gap-4">
-            <button class="size-16 hover:bg-lightblue text-3xl text-blue rounded-full">
-                <i class="fab fa-twitter"></i>
+        class="h-screen md:w-60 border-r border-lighter lg:pr-4 flex flex-col items-center ml-auto md:items-end gap-4 justify-between">
+        <nav class="w-full flex flex-col gap-4 items-center md:items-start">
+            <button class="size-16 hover:bg-lightblue text-blue rounded-full">
+                <i class="fab fa-twitter text-3xl md:text-2xl"></i>
             </button>
-            <ul class="grid grid-cols-1 gap-4">
+            <ul class="grid grid-cols-1 gap-4 items-center">
                 <li v-for="tab in tabs" :key="tab.id" class="row-span-1">
                     <a id="nav-link" target="_blank" @click="tab.target && handleTabClick(tab.target)" role="button"
                         :data-active="tab.id === route.name" 
                         :data-available="tab.target || false"
-                        class="flex items-center w-full justify-between px-4 py-2 rounded-full cursor-pointer data-[active=true]:bg-lightblue data-[available=false]:cursor-not-allowed"
+                        class="flex items-center w-full justify-center md:justify-between px-4 py-2 rounded-full cursor-pointer data-[active=true]:bg-lightblue data-[available=false]:cursor-not-allowed"
                         :class="tab.id === route.name ? 'gap-5' : 'gap-6'">
                         <i :class="tab.id === route.name ? tab.iconActive : tab.icon"></i>
                         <p class="flex-1 text-lg font-semibold text-left hidden lg:block"> 
