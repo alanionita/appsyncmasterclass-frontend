@@ -585,4 +585,4 @@ view/Root:
 Skipped:
 - Messages view since it requires a bit more thought and research
 
-Release:
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/09-01-Mobile_styling
