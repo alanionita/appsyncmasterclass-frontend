@@ -566,3 +566,23 @@ Diffs:
     - Resets the conversation state of .isNew() for new conversations (ie. a conversation without any messages)
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/07-04-Messages_page
+
+# 09-01-Mobile_styling
+
+General:
+- list of views updated for responsive styles: Root, Login, Home, Profile, Following, Followers
+
+Tailwind config: 
+- Breakpoints defined using v4 css variable syntax and @them
+- Breakpoints defined in rem for max responsiveness and compatibility, calculated with a base of 16px
+
+view/Root:
+- Adds mobile styles as requested
+- Refactors elements using semantic HTML elements
+- Refactors to use responsive contaienrs vs floating elements; allowing the removal of styling-specific elements
+- Standardises the padding and gaps to an 8pt grid; where possible uses the '12 col grid', made famous by twitter - improving the overall symmetry of the page
+
+Skipped:
+- Messages view since it requires a bit more thought and research
+
+Release:
