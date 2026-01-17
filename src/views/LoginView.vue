@@ -35,17 +35,17 @@ async function handleLogin() {
 </script>
 
 <template>
-    <form @submit.prevent="handleLogin" class="w-full flex flex-col justify-center items-center p-8 gap-4">
+    <form @submit.prevent="handleLogin" class="w-full md:w-1/2 mx-auto flex flex-col justify-center items-center p-8 gap-4">
         <i class="fab fa-twitter text-blue text-4xl"></i>
         <p class="font-semibold text-xl">Log into Twitter</p>
-        <fieldset class="w-1/3 bg-lightblue border-b-2 border-dark p-2">
+        <fieldset class="w-full md:w-1/3 bg-lightblue border-b-2 border-lighter p-2">
             <InputText ref="emailEl" v-model="email" label="Phone, email, or username" name="email" />
         </fieldset>
-        <fieldset class="w-1/3 bg-lightblue border-b-2 border-dark p-2">
+        <fieldset class="w-full md:w-1/3 bg-lightblue border-b-2 border-lighter p-2">
             <InputPassword v-model="password" label="Enter password" />
         </fieldset>
         <button
-            class="rounded-full bg-blue font-semibold text-white px-8 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed">
+            class="w-full md:w-1/3 rounded-full bg-blue font-semibold text-white px-6 py-4 hover:bg-darkblue disabled:opacity-50 disabled:cursor-not-allowed">
             Log in
         </button>
     </form>
