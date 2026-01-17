@@ -27,7 +27,7 @@ function handleMessageClick(screenName) {
         <Image 
             :key="JSON.stringify(profile)"
             :src="profile && profile.imgUrl" 
-            :classStr="`size-32 -mt-16 rounded-full border-white border-4`" />
+            :classStr="`size-28 md:size-32 -mt-16 rounded-full border-white border-4`" />
         <!-- My Profile Actions -->
         <section v-if="storeUi.ownProfile" class="flex gap-4 py-4">
             <button v-if="profile.imgUrl === null || profile.imgUrl === 'default_profile.png'" @click.prevent="toggleSetupProfile"

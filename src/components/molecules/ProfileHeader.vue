@@ -12,8 +12,8 @@ async function handleImageError() {
 
 <template>
     <header>
-        <section class="flex gap-4 py-4 border-b border-lighter items-center">
-            <a :href="`/home`" class="rounded-full p-3 px-4 focus:outline-none hover:bg-lightblue">
+        <section class="flex gap-2 py-4 border-b border-lighter items-center">
+            <a :href="`/home`" class="rounded-full p-2 px-4 focus:outline-none hover:bg-lightblue">
                 <i class="fas fa-arrow-left text-blue"></i>
             </a>
             <div class="lg:block">
@@ -23,8 +23,8 @@ async function handleImageError() {
         </section>
 
         <!-- background image -->
-        <section class="border-b-1 border-lighter fl  ex" style="height:240px; display:block">
-            <figure v-if="bgImgUrl" class="h-full max-h-full">
+        <section class="h-32 md:h-64 w-full border-b-1 border-lighter flex">
+            <figure v-if="bgImgUrl" class="h-full max-h-full w-full overflow-clip">
                 <img :src="bgImgUrl" @error="handleImageError" class="h-full w-full object-cover" />
             </figure>
             <figure v-if="!bgImgUrl" class="bg-gray-400 h-full max-h-full">

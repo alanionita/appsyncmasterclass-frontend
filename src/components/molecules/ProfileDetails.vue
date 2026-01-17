@@ -5,13 +5,13 @@ const { name, screenName, bio, location, website, joinedDate, followingCount, fo
 </script>
 
 <template>
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-2 md:gap-4">
         <section class="flex flex-col gap-1">
             <p class="font-bold text-xl">{{ name }}</p>
             <p class="text-dark">@{{ screenName }}</p>
         </section>
         <p v-if="bio">{{ bio }}</p>
-        <section class="flex flex-row gap-4">
+        <section class="flex flex-col md:flex-row gap-4">
             <div v-if="location" class="flex flex-row gap-2">
                 <i class="fas fa-map-marker-alt text-dark align-text-bottom"></i>
                 <p class="text-dark">{{ location }}</p>

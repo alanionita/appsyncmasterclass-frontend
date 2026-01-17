@@ -50,12 +50,12 @@ function toggleSetupProfile() {
       <ProfileDetails :name="profile.name" :screen-name="profile.screenName" :bio="profile.bio"
         :location="profile.location" :website="profile.website" :joined-date="profile.joinedDate"
         :followers-count="profile.followersCount" :following-count="profile.followingCount" />
-      <div class="flex flex-row justify-between pt-4">
-        <button class="grow text-dark font-bold border-b-2 border-blue px-10 py-4 hover:bg-lightblue">Tweets</button>
-        <button class="grow text-dark font-bold border-b-2 border-lighter px-10 py-4 hover:bg-lightblue">Tweets &
+      <div class="w-full flex flex-row justify-between pt-4">
+        <button class="grow text-dark font-bold border-b-2 border-blue px-2 md:px-10 py-4 hover:bg-lightblue">Tweets</button>
+        <button class="grow text-dark font-bold border-b-2 border-lighter px-2 md:px-10 py-4 hover:bg-lightblue">Tweets &
           replies</button>
-        <button class="grow text-dark font-bold border-b-2 border-lighter px-10 py-4 hover:bg-lightblue">Media</button>
-        <button class="grow text-dark font-bold border-b-2 border-lighter px-10 py-4 hover:bg-lightblue">Like</button>
+        <button class="grow text-dark font-bold border-b-2 border-lighter px-2 md:px-10 py-4 hover:bg-lightblue">Media</button>
+        <button class="grow text-dark font-bold border-b-2 border-lighter px-2 md:px-10 py-4 hover:bg-lightblue">Like</button>
       </div>
     </section>
     <Timeline v-if="!noProfile" :tweets="tweets" />
