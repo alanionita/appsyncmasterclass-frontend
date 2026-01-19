@@ -596,3 +596,10 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 + Does represent a pattern change: the original includes a `public/manifest` which can later be expanded upon; whereby in this version, the manifest is generate and injected into the app at the build step; further config required to replicate the original behaviour and turn off the generation and injection of the manifest see -> [Service Worker Strategies And Behaviors ](https://vite-pwa-org.netlify.app/guide/service-worker-strategies-and-behaviors.html)
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/09-02-PWA
+
+#  09-03-Get_credentials 
+
+- Uses @aws-sdk v3 modules and patterns, similar to the backend implementation; Installs `@aws-sdk/credential-providers` from where we get the `fromCognitoIdentityPool()` which outputs Cognito IDP credentials
+- Continues to use the store to contain backend comms; in this case creating a local events store for debugging, and a hidden credentials function to be used by the postEvent() method; follows similar pattern from backend test script
+
+Release
