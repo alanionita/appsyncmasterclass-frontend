@@ -586,3 +586,13 @@ Skipped:
 - Messages view since it requires a bit more thought and research
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/09-01-Mobile_styling
+
+# 09-02-PWA
+
+- @vue-cli/*: no longer considered the recommended approach for new projects, favouring vite builds instead 
+- Instead installed `@vitejs/plugin-vue` and configured it in vite.config 
+- vite.config: import the VitePWA fn from `vite-plugin-pwa` and calling it within `config.plugins[..., ViewPWA()]` was enough to pass the test; all assets rendered, no further changes needed; 
+    - Added assets and config to match [PWA Minimal Requirements ](https://vite-pwa-org.netlify.app/guide/pwa-minimal-requirements.html) and provide more parity to corresponding release
++ Does represent a pattern change: the original includes a `public/manifest` which can later be expanded upon; whereby in this version, the manifest is generate and injected into the app at the build step; further config required to replicate the original behaviour and turn off the generation and injection of the manifest see -> [Service Worker Strategies And Behaviors ](https://vite-pwa-org.netlify.app/guide/service-worker-strategies-and-behaviors.html)
+
+Release:
