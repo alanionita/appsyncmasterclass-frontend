@@ -6,9 +6,11 @@ import { RouterLink } from 'vue-router'
 
 import InputPassword from "@/components/atoms/InputPassword.vue";
 import InputText from "@/components/atoms/InputText.vue";
+import { useAnalytics } from '@/stores/analytics';
 
 const authStore = useAuthStore();
 const signUpStore = useSignupStore();
+const analyticsStore = useAnalytics();
 
 const showPassword = ref(false);
 const localIsSignUpComplete = ref('');
@@ -34,8 +36,18 @@ onMounted(() => {
   }
 })
 
-function goTo(step) {
+async function goTo(step) {
+  if (step !== 'step1') {
+    await analyticsStore.trackEvent({
+      eventType: 'signup_step_change',
+      step
+    });
+  }
   switch (step) {
+    case 'step1':
+      await analyticsStore.trackEvent({
+        eventType: 'signup_begin',
+      });
     case 'step2':
       if (!name && !email && !birthdate && !phone) {
         return;
@@ -109,6 +121,9 @@ async function handleCompleteSignUp() {
 
     if (isSignUpComplete) localIsSignUpComplete.value = isSignUpComplete;
     if (nextStep) localNextStep.value = nextStep
+    analyticsStore.trackEvent({
+      eventType: 'signup_end',
+    })
     showSignUpComplete()
   } catch (err) {
     alert('Error confirming verification code!')
@@ -117,17 +132,38 @@ async function handleCompleteSignUp() {
   }
 }
 
+// Login logic for right side, top login form
 async function handleLogin() {
   try {
+    analyticsStore.trackEvent({
+      eventType: 'login_start',
+    })
     const { nextStep } = await authStore.signIn({
       email: email.value, password: password.value
     })
     console.info('nextStep', JSON.stringify(nextStep));
+    if (nextStep) {
+      analyticsStore.trackEvent({
+        eventType: 'login_end',
+      })
+    }
   } catch (err) {
     alert('Error with log in!')
     console.error('Err [handleLogin] : ' + err.message)
+    const truncateError = JSON.stringify(err.stack).slice(0, 100)
+    analyticsStore.trackEvent({
+      eventType: 'login_error',
+      error: truncateError
+    })
     await authStore.logout()
   }
+}
+
+// Login logic for right side, bottom 'login' btn
+async function handleLoginBtn() {
+  analyticsStore.trackEvent({
+    eventType: 'login_start',
+  })
 }
 
 function generateResendMsg({ destination, deliveryMedium }) {
@@ -203,7 +239,7 @@ function showSignUpComplete() {
             Sign up
           </button>
           <RouterLink to="/login">
-            <button
+            <button @click="handleLoginBtn"
               class="w-full rounded-full border border-blue bg-white font-semibold text-lg text-blue p-4 hover:bg-blue hover:text-white ">
               Log in
             </button>

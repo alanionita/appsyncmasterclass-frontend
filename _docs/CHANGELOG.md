@@ -603,3 +603,13 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 - Continues to use the store to contain backend comms; in this case creating a local events store for debugging, and a hidden credentials function to be used by the postEvent() method; follows similar pattern from backend test script
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/09-03-Get_credentials
+
+# 09-04-Track_events
+
+- Calls Firehose put() using aws-sdk v3 and command style api; Implemented within a hidden method within analytics; Updates the store history Set once a Firehose req is successful 
+- store/analytics: adds public trackEvent method
+- UI: wrapped all the flows on view/Root with trackEvent()
+- Events: constructed the event payloads to be closer to [Google Analytics refrence events](https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag); Opted for a flat structures with core key of `eventType` and extra keys where required
+- .env-example: adds environment variable reference
+
+Release: 

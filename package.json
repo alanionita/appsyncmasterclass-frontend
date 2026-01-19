@@ -16,6 +16,7 @@
   "dependencies": {
     "@apollo/client": "^4.0.9",
     "@aws-amplify/ui-vue": "^4.3.3",
+    "@aws-sdk/client-firehose": "^3.971.0",
     "@aws-sdk/credential-providers": "^3.971.0",
     "@tailwindcss/vite": "^4.1.8",
     "aws-amplify": "^6.15.0",
