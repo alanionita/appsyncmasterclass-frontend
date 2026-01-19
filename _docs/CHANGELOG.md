@@ -597,9 +597,9 @@ Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/
 
 Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/09-02-PWA
 
-#  09-03-Get_credentials 
+# 09-03-Get_credentials
 
 - Uses @aws-sdk v3 modules and patterns, similar to the backend implementation; Installs `@aws-sdk/credential-providers` from where we get the `fromCognitoIdentityPool()` which outputs Cognito IDP credentials
 - Continues to use the store to contain backend comms; in this case creating a local events store for debugging, and a hidden credentials function to be used by the postEvent() method; follows similar pattern from backend test script
 
-Release
+Release: https://github.com/alanionita/appsyncmasterclass-frontend/releases/tag/09-03-Get_credentials
